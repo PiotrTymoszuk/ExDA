@@ -40,6 +40,19 @@
 
   }
 
+#' Default method for tibble conversion
+#'
+#' @description Converts objects to a tibble.
+#' @param x an object to be converted to a tibble
+#' @return a tibble
+#' @export
+
+  as_tibble.default <- function(x, ...) {
+
+    tibble::as_tibble(x, ...)
+
+  }
+
 # Factor conversion -----
 
 #' Convert to a factor.
@@ -93,6 +106,20 @@
   as_factor.eda <- function(eda_object) {
 
     as.factor(eda_object)
+
+  }
+
+#' Convert an object to a factor
+#'
+#' @description Default method for converting objects to factors.
+#' @param x an object.
+#' @param ... extra arguments passed to methods.
+#' @return a factor.
+#' @export
+
+  as_factor.default <- function(x, ...) {
+
+    forcats::as_factor(x, ...)
 
   }
 
@@ -165,7 +192,7 @@
 
   as_vector.default <- function(x, ...) {
 
-    base::as.vector(x, ...)
+    purrr::as_vector(x, ...)
 
   }
 

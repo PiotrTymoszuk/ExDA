@@ -141,6 +141,8 @@
                                estimate_name = stringi::stri_replace(estimate_name, fixed = 'kappa', replacement = '\u03BA'),
                                estimate_name = stringi::stri_replace(estimate_name, fixed = 'rho ', replacement = '\u03C1'),
                                estimate_name = stringi::stri_replace(estimate_name, fixed = 'tau ', replacement = '\u03C4'),
+                               estimate_name = stringi::stri_replace(estimate_name, fixed = 'median difference', replacement = '\u0394 median'),
+                               estimate_name = stringi::stri_replace(estimate_name, fixed = 'mean difference', replacement = '\u0394 median'),
                                test_stat = ifelse(is.na(df1),
                                                   paste(stat_name, '=', signif(stat, signif_digits)),
                                                   ifelse(is.na(df2),

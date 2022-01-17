@@ -119,8 +119,8 @@
                                                                            conf.int = TRUE,
                                                                            exact = exact))
 
-      test_res <- test_fun(inp_list[[1]]$value,
-                           inp_list[[2]]$value)
+      test_res <- test_fun(as_numeric(inp_list[[1]]$value),
+                           as_numeric(inp_list[[2]]$value))
 
       test <- switch(type,
                      t_test = 'unpaired two-sided T test',

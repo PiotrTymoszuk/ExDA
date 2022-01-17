@@ -96,7 +96,7 @@
 
     if(length(inp_list) > 2) {
 
-      if(type %in% c('correlation', 'covariance', 'distribution')) {
+      if(what %in% c('correlation', 'covariance', 'distribution')) {
 
         warning('Mode than two data sets provided. Only the first two will be used for the requested analysis.', call. = FALSE)
 
@@ -154,6 +154,9 @@
 #' @param adj_method the method for adjusting p values for multiple testing, as defined for \code{\link[stats]{p.adjust}},
 #' defaults to 'none'. The adjusted p value is summarized in the 'significance' column, when pub_style output is chosen.
 #' @param simplify_p logical, should p_values < 0.001 be presented in a p < 0.001 form?
+#' @param .parallel logical, should the analysis be run in parallel? Experimental, uses the parallel solutions provided by
+#' furrr package.
+#' @param .paropts an object created by \code{\link[furrr]{furrr_options}}, enabling i.e. provision of globals by the user.
 #' @export
 
   compare_variables <- function(...,
@@ -166,19 +169,44 @@
                                 pub_styled = FALSE,
                                 signif_digits = 2,
                                 adj_method = 'none',
-                                simplify_p = TRUE) {
+                                simplify_p = TRUE,
+                                .parallel = FALSE,
+                                .paropts = furrr::furrr_options(seed = TRUE)) {
 
-    test_res <- purrr::pmap_dfr(list(x = variables,
-                                     y = types),
-                                function(x, y) exda:::compare(...,
-                                                              variable = x,
-                                                              what = what,
-                                                              type = y,
-                                                              exact = exact,
-                                                              ci = ci,
-                                                              boot_method = boot_method,
-                                                              pub_styled = pub_styled,
-                                                              signif_digits = signif_digits))
+    if(!.parallel) {
+
+      test_res <- purrr::pmap_dfr(list(x = variables,
+                                       y = types),
+                                  function(x, y) exda:::compare(...,
+                                                                variable = x,
+                                                                what = what,
+                                                                type = y,
+                                                                exact = exact,
+                                                                ci = ci,
+                                                                boot_method = boot_method,
+                                                                pub_styled = pub_styled,
+                                                                signif_digits = signif_digits))
+
+    } else {
+
+      future::plan('multisession')
+
+      test_res <- furrr::future_pmap_dfr(list(x = variables,
+                                              y = types),
+                                         function(x, y) exda:::compare(...,
+                                                                       variable = x,
+                                                                       what = what,
+                                                                       type = y,
+                                                                       exact = exact,
+                                                                       ci = ci,
+                                                                       boot_method = boot_method,
+                                                                       pub_styled = pub_styled,
+                                                                       signif_digits = signif_digits),
+                                         .options = .paropts)
+
+      future::plan('sequential')
+
+    }
 
     test_res <- dplyr::mutate(test_res,
                               variable = variables,

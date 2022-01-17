@@ -15,7 +15,9 @@ compare_variables(
   pub_styled = FALSE,
   signif_digits = 2,
   adj_method = "none",
-  simplify_p = TRUE
+  simplify_p = TRUE,
+  .parallel = FALSE,
+  .paropts = furrr::furrr_options(seed = TRUE)
 )
 }
 \arguments{
@@ -43,6 +45,11 @@ Can be any of 'percentile', 'bca', or 'normality', defaults to 'percentile'.}
 defaults to 'none'. The adjusted p value is summarized in the 'significance' column, when pub_style output is chosen.}
 
 \item{simplify_p}{logical, should p_values < 0.001 be presented in a p < 0.001 form?}
+
+\item{.parallel}{logical, should the analysis be run in parallel? Experimental, uses the parallel solutions provided by
+furrr package.}
+
+\item{.paropts}{an object created by \code{\link[furrr]{furrr_options}}, enabling i.e. provision of globals by the user.}
 }
 \description{
 Compares the given variable between the provided data sets
