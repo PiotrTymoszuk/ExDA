@@ -37,7 +37,7 @@ compare_variables(
 \item{boot_method}{indicates how the bootstrap confidence intervals are calculated.
 Can be any of 'percentile', 'bca', or 'normality', defaults to 'percentile'.}
 
-\item{pub_styled}{logical, should the output be publication-ready formatted? See the details.}
+\item{pub_styled}{logical, should the output be publication-ready formatted?}
 
 \item{signif_digits}{significant digits used for rounding in the publication-style output.}
 

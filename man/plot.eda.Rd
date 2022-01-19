@@ -25,7 +25,7 @@
 \item{eda_object}{eda object, created by \code{\link{eda}}.}
 
 \item{type}{plot type. 'default' is bar for factors and violin for numerics. 'bar' is available for factor-type EDAs.
-'violin', 'box', 'hist' and 'qq' are available for numeric-type objects. Defaults to 'bar'.}
+'violin', 'box', 'hist' and 'qq' are available for numeric-type objects.}
 
 \item{point_color}{color of the plot points.}
 

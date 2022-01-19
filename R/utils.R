@@ -71,14 +71,16 @@
 #' in (\code{\link[stats]{chisq.test}}).
 #' @param ... EDA objects.
 #' @param test_mtx logical, should a test matrix be returned instead of test results?
+#' @param test_tbl logical, should a tibble with counts be returned instead of test results?
 #' @param coerce logial, coerce the input to factors prior to analysis?
 #' @return a tibble with Chi squared, DF and p values.
 
-   chi_tester <- function(..., test_mtx = FALSE, coerce = FALSE) {
+   chi_tester <- function(..., test_mtx = FALSE, test_tbl = FALSE, coerce = FALSE) {
 
      ## entry testing
 
      stopifnot(is.logical(test_mtx))
+     stopifnot(is.logical(test_tbl))
      stopifnot(is.logical(coerce))
 
      edas <- rlang::list2(...)
@@ -111,7 +113,13 @@
 
      tst_mtx <- purrr::map(tst_mtx, na.omit)
 
-     tst_mtx <- purrr::map(tst_mtx, ~count(.x, .drop = FALSE)[['n']])
+     tst_mtx <- purrr::map(tst_mtx, ~count(.x, .drop = FALSE))
+
+     if(test_tbl) return(purrr::map2_dfr(tst_mtx,
+                                         paste0('G', 1:length(edas)),
+                                         ~mutate(.x, group = factor(.y))))
+
+     tst_mtx <- purrr::map(tst_mtx, ~.x[['n']])
 
      tst_mtx <- purrr::reduce(tst_mtx, cbind)
 
@@ -123,7 +131,7 @@
 
         test_res <- stats::chisq.test(tst_mtx)
 
-        exda::etest(test = 'Chi-squared',
+        exda::etest(test = 'Chi-squared test',
                     stat_name = 'chi sqared',
                     stat = test_res[['statistic']],
                     df1 = test_res[['parameter']],

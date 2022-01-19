@@ -7,7 +7,7 @@
 compare(
   ...,
   variable,
-  what = c("test", "distribution", "variance", "correlation", "covariance"),
+  what = c("test", "distribution", "variance", "correlation", "covariance", "plot"),
   type = "t_test",
   exact = TRUE,
   ci = TRUE,
@@ -21,10 +21,11 @@ compare(
 
 \item{variable}{a variable name.}
 
-\item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation' or 'covariance'. Defaults to 'test'.}
+\item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance'.
+Defaults to 'test'.}
 
 \item{type}{type of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
-\code{\link{covariance}}  for details.}
+\code{\link{covariance}} for details.}
 
 \item{exact}{logical, should exact values for Chi-squared. Mann-Whitney and Wilcoxon test be returned?}
 
@@ -33,7 +34,7 @@ compare(
 \item{boot_method}{indicates how the bootstrap confidence intervals are calculated.
 Can be any of 'percentile', 'bca', or 'normality', defaults to 'percentile'.}
 
-\item{pub_styled}{logical, should the output be publication-ready formatted? See the details.}
+\item{pub_styled}{logical, should the output be publication-ready formatted?}
 
 \item{signif_digits}{significant digits used for rounding in the publication-style output.}
 }

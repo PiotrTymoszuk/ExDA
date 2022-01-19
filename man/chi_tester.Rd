@@ -4,12 +4,14 @@
 \alias{chi_tester}
 \title{Multi-sample Chi squared test.}
 \usage{
-chi_tester(..., test_mtx = FALSE, coerce = FALSE)
+chi_tester(..., test_mtx = FALSE, test_tbl = FALSE, coerce = FALSE)
 }
 \arguments{
 \item{...}{EDA objects.}
 
 \item{test_mtx}{logical, should a test matrix be returned instead of test results?}
+
+\item{test_tbl}{logical, should a tibble with counts be returned instead of test results?}
 
 \item{coerce}{logial, coerce the input to factors prior to analysis?}
 }

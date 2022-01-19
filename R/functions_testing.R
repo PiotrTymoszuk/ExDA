@@ -126,7 +126,7 @@
                      t_test = 'unpaired two-sided T test',
                      paired_t_test = 'paired two-sided T test',
                      sign_test = 'sign test',
-                     mann_whitney_test = 'Mann-whitney test',
+                     mann_whitney_test = 'Mann-Whitney test',
                      wilcoxon_test = 'paired Wilcoxon test')
 
       stat_name <- switch(type,

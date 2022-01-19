@@ -7,7 +7,10 @@
 explore(
   data,
   variables = names(data),
-  what = c("list", "table", "plota", "raw"),
+  what = c("list", "table", "plots", "raw", "normality", "skewness", "kurtosis"),
+  pub_styled = TRUE,
+  signif_digits = 2,
+  simplify_p = TRUE,
   ...
 )
 }
@@ -18,7 +21,14 @@ explore(
 
 \item{what}{the type of output: 'list' returns a list of distribution statistics, 'table' returns
 a publication-ready table with the distribution stats, 'plots' returns a list of plots,
-'raw' returns a list of EDA objects (\code{\link{eda}}).}
+'raw' returns a list of EDA objects (\code{\link{eda}}), 'normality' returns a table with
+results of Shapiro-Wilk test, 'skewness' and 'kurtosis' return tables with the requested statistics.}
+
+\item{pub_styled}{logical, should the output be publication-ready formatted?}
+
+\item{signif_digits}{significant digits used for rounding in the publication-style output.}
+
+\item{simplify_p}{logical, should p_values < 0.001 be presented in a p < 0.001 form?}
 
 \item{...}{additional arguments passed to \code{\link{summary.eda}} or \code{\link{plot.eda}}.}
 }
