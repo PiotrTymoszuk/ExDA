@@ -7,6 +7,7 @@
 plot_variable(
   ...,
   variable,
+  split_factor = NULL,
   data_names = NULL,
   type = c("default", "bar", "violin", "box", "hist", "correlation", "paired"),
   scale = c("none", "fraction", "percent"),
@@ -34,6 +35,8 @@ plot_variable(
 \item{...}{data sets.}
 
 \item{variable}{variable name.}
+
+\item{split_factor}{optional, the name of a factor used for splitting the variables of interest into analysis groups.}
 
 \item{data_names}{a vector with names of the data sets.}
 
@@ -85,5 +88,6 @@ Plots values of two or more EDA objects as a classical bar, violin,
 boxplot or correlation point plot representation.
 }
 \details{
-the particular EDA objects are color coded.
+the particular EDA objects are color coded. In case, the split_factor is provided, only the first
+of the input data frames will be plotted
 }

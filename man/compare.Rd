@@ -7,6 +7,7 @@
 compare(
   ...,
   variable,
+  split_factor = NULL,
   what = c("test", "distribution", "variance", "correlation", "covariance", "plot"),
   type = "t_test",
   exact = TRUE,
@@ -21,13 +22,15 @@ compare(
 
 \item{variable}{a variable name.}
 
+\item{split_factor}{optional, the name of a factor used for splitting the variables of interest into analysis groups.}
+
 \item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance'.
 Defaults to 'test'.}
 
 \item{type}{type of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
 \code{\link{covariance}} for details.}
 
-\item{exact}{logical, should exact values for Chi-squared. Mann-Whitney and Wilcoxon test be returned?}
+\item{exact}{logical, should exact values for Chi-squared, Mann-Whitney and Wilcoxon test be returned?}
 
 \item{ci}{logical, should confidence intervals for the test effect size be returned?}
 
@@ -43,4 +46,7 @@ Compares the given variable between the provided data sets
 with a range of statistical sets as described for \code{\link{test}} (statistical testing),
 \code{\link{distribution}} (distribution comparison), \code{\link{variance}} (variance comparison),
 \code{\link{correlate}} (correlation) or \code{\link{covariance}} (covariance).
+}
+\details{
+in case, the split_factor is provided, only the first of the input data frames will be analyzed.
 }

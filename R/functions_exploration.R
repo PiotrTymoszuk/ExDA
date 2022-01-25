@@ -6,6 +6,7 @@
 #' The output may include lists of distribution statistics, a publication-ready table with the distribution statistics
 #' or distribution plots.
 #' @param data a data frame.
+#' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
 #' @param variables a vector of variable names.
 #' @param what the type of output: 'list' returns a list of distribution statistics, 'table' returns
 #' a publication-ready table with the distribution stats, 'plots' returns a list of plots,
@@ -19,6 +20,7 @@
 #' @export
 
   explore <- function(data,
+                      split_factor = NULL,
                       variables = names(data),
                       what = c('list', 'table', 'plots', 'raw', 'normality', 'skewness', 'kurtosis'),
                       pub_styled = TRUE,
@@ -33,17 +35,52 @@
 
     what <- match.arg(what[1], c('list', 'table', 'plots', 'raw', 'normality', 'skewness', 'kurtosis'))
 
+    if(!is.null(split_factor)) {
+
+      if(!split_factor %in% names(data)) stop('The split_factor absent from the data.', call. = FALSE)
+
+      if(!is.factor(data[[split_factor]])) {
+
+        data <- dplyr::mutate(data, !!split_factor := factor(.data[[split_factor]]))
+
+      }
+
+      newdata <- plyr::dlply(data, split_factor)
+
+      dots <- rlang::list2(...)
+
+      calls <- purrr::map(newdata,
+                          ~rlang::call2(.fn = 'explore',
+                                        data = .x,
+                                        split_factor = NULL,
+                                        variables = variables[variables != split_factor],
+                                        what = what,
+                                        pub_styled = pub_styled,
+                                        signif_digits = signif_digits,
+                                        simplify_p = simplify_p,
+                                        !!!dots))
+
+      return(purrr::map(calls, eval))
+
+    }
+
     ## EDA object list
 
     edas <- purrr::map(data[variables], exda::eda)
 
     output <- switch(what,
-                     list = purrr::map(edas, summary, pub_styled = FALSE, ...),
-                     table = dplyr::mutate(purrr::map_dfr(edas, summary, pub_styled = TRUE, ...),
+                     list = purrr::map(edas,
+                                       summary,
+                                       pub_styled = FALSE,
+                                       signif_digits = signif_digits),
+                     table = dplyr::mutate(purrr::map_dfr(edas,
+                                                          summary,
+                                                          pub_styled = TRUE,
+                                                          signif_digits = signif_digits),
                                            variable = variables)[c('variable', 'statistic')],
                      plots = purrr::pmap(list(eda_object = edas,
                                               plot_title = variables),
-                                         plot, ...),
+                                         exda::plot.eda, ...),
                      raw = edas)
 
     if(what == 'normality') {
@@ -95,20 +132,23 @@
 #' \code{\link{correlate}} (correlation) or \code{\link{covariance}} (covariance).
 #' @param ... data frames.
 #' @param variable a variable name.
+#' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
 #' @param what the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance'.
 #' Defaults to 'test'.
 #' @param type type of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
 #' \code{\link{covariance}} for details.
-#' @param exact logical, should exact values for Chi-squared. Mann-Whitney and Wilcoxon test be returned?
+#' @param exact logical, should exact values for Chi-squared, Mann-Whitney and Wilcoxon test be returned?
 #' @param ci logical, should confidence intervals for the test effect size be returned?
 #' @param boot_method indicates how the bootstrap confidence intervals are calculated.
 #' Can be any of 'percentile', 'bca', or 'normality', defaults to 'percentile'.
 #' @param pub_styled logical, should the output be publication-ready formatted?
 #' @param signif_digits significant digits used for rounding in the publication-style output.
+#' @details in case, the split_factor is provided, only the first of the input data frames will be analyzed.
 
 
   compare <- function(...,
                       variable,
+                      split_factor = NULL,
                       what = c('test', 'distribution', 'variance', 'correlation', 'covariance', 'plot'),
                       type = 't_test',
                       exact = TRUE,
@@ -132,7 +172,7 @@
 
     if(any(!classes)) stop('Please provide data frames as an analysis input.', call. = FALSE)
 
-    if(length(inp_list) < 2) stop('At least two data frames required.', call. = FALSE)
+    if(length(inp_list) < 2 & is.null(split_factor)) stop('At least two data frames required.', call. = FALSE)
 
     vars <- purrr::map(inp_list, names)
 
@@ -144,9 +184,37 @@
 
       if(what %in% c('correlation', 'covariance', 'distribution')) {
 
-        warning('Mode than two data sets provided. Only the first two will be used for the requested analysis.', call. = FALSE)
+        warning('More than two data sets provided. Only the first two will be used for the requested analysis.', call. = FALSE)
 
       }
+
+    }
+
+    if(!is.null(split_factor)) {
+
+      data <- inp_list[[1]]
+
+      if(!split_factor %in% names(data)) stop('The split_factor absent from the data.', call. = FALSE)
+
+      if(length(inp_list) > 2) message('split_factor provided: only the first data set will be analyzed.')
+
+      if(!is.factor(data[[split_factor]])) {
+
+        data <- dplyr::mutate(data, !!split_factor := factor(.data[[split_factor]]))
+
+      }
+
+      newdata <- plyr::dlply(data, split_factor)
+
+      return(exda:::compare(!!!newdata,
+                            variable = variable,
+                            what = what,
+                            type = type,
+                            exact = exact,
+                            ci = ci,
+                            boot_method = boot_method,
+                            pub_styled = pub_styled,
+                            signif_digits = signif_digits))
 
     }
 
@@ -188,6 +256,7 @@
 #' \code{\link{correlate}} (correlation) or \code{\link{covariance}} (covariance).
 #' @param ... data frames.
 #' @param variables a vector with variable names.
+#' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
 #' @param what the requested analysis: 'test', 'distribution', 'variance', 'correlation' or 'covariance'. Defaults to 'test'.
 #' @param types a vector with the types of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
 #' \code{\link{covariance}} for details. The vector length must be either one or the length of the 'variables' vector.
@@ -203,10 +272,12 @@
 #' @param .parallel logical, should the analysis be run in parallel? Experimental, uses the parallel solutions provided by
 #' furrr package.
 #' @param .paropts an object created by \code{\link[furrr]{furrr_options}}, enabling i.e. provision of globals by the user.
+#' @details in case, the split_factor is provided, only the first of the input data frames will be analyzed.
 #' @export
 
   compare_variables <- function(...,
                                 variables,
+                                split_factor = NULL,
                                 what = c('test', 'distribution', 'variance', 'correlation', 'covariance'),
                                 types = 't_test',
                                 exact = TRUE,
@@ -225,6 +296,7 @@
                                        y = types),
                                   function(x, y) exda:::compare(...,
                                                                 variable = x,
+                                                                split_factor = split_factor,
                                                                 what = what,
                                                                 type = y,
                                                                 exact = exact,
@@ -241,6 +313,7 @@
                                               y = types),
                                          function(x, y) exda:::compare(...,
                                                                        variable = x,
+                                                                       split_factor = split_factor,
                                                                        what = what,
                                                                        type = y,
                                                                        exact = exact,
@@ -288,6 +361,7 @@
 #' boxplot or correlation point plot representation.
 #' @param ... data sets.
 #' @param variable variable name.
+#' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
 #' @param type type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
 #' 'bar' is available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
 #' are available for numeric-type objects.
@@ -312,11 +386,13 @@
 #' @param txt_size size of the text label.
 #' @param bins bin number, passed to \code{\link[ggplot2]{histogram}}.
 #' @param facet_hist 'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.
-#' @details the particular EDA objects are color coded.
+#' @details the particular EDA objects are color coded. In case, the split_factor is provided, only the first
+#' of the input data frames will be plotted
 #' @export
 
   plot_variable <- function(...,
                             variable,
+                            split_factor = NULL,
                             data_names = NULL,
                             type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired'),
                             scale = c('none', 'fraction', 'percent'),
@@ -348,12 +424,32 @@
 
     if(any(!classes)) stop('Please provide data frames as an analysis input.', call. = FALSE)
 
-    if(length(inp_list) < 2) stop('At least two data frames required.', call. = FALSE)
+    if(length(inp_list) < 2 & is.null(split_factor)) stop('At least two data frames required.', call. = FALSE)
 
     vars <- purrr::map_lgl(inp_list,
                            ~any(variable %in% .x))
 
     if(any(!classes)) stop('Variable absent from the data sets.', call. = FALSE)
+
+    if(!is.null(split_factor)) {
+
+      data <- inp_list[[1]]
+
+      if(!split_factor %in% names(data)) stop('The split_factor absent from the data.', call. = FALSE)
+
+      if(length(inp_list) > 2) message('split_factor provided: only the first data set will be analyzed.')
+
+      if(!is.factor(data[[split_factor]])) {
+
+        data <- dplyr::mutate(data, !!split_factor := factor(.data[[split_factor]]))
+
+      }
+
+      inp_list <- plyr::dlply(data, split_factor)
+
+      if(is.null(data_names)) data_names <- levels(data[[split_factor]])
+
+    }
 
     ## plotting
 

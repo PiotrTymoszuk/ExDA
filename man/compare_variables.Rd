@@ -7,6 +7,7 @@
 compare_variables(
   ...,
   variables,
+  split_factor = NULL,
   what = c("test", "distribution", "variance", "correlation", "covariance"),
   types = "t_test",
   exact = TRUE,
@@ -24,6 +25,8 @@ compare_variables(
 \item{...}{data frames.}
 
 \item{variables}{a vector with variable names.}
+
+\item{split_factor}{optional, the name of a factor used for splitting the variables of interest into analysis groups.}
 
 \item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation' or 'covariance'. Defaults to 'test'.}
 
@@ -56,4 +59,7 @@ Compares the given variable between the provided data sets
 with a range of statistical sets as described for \code{\link{test}} (statistical testing),
 \code{\link{distribution}} (distribution comparison), \code{\link{variance}} (variance comparison),
 \code{\link{correlate}} (correlation) or \code{\link{covariance}} (covariance).
+}
+\details{
+in case, the split_factor is provided, only the first of the input data frames will be analyzed.
 }

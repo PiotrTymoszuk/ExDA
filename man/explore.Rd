@@ -6,6 +6,7 @@
 \usage{
 explore(
   data,
+  split_factor = NULL,
   variables = names(data),
   what = c("list", "table", "plots", "raw", "normality", "skewness", "kurtosis"),
   pub_styled = TRUE,
@@ -16,6 +17,8 @@ explore(
 }
 \arguments{
 \item{data}{a data frame.}
+
+\item{split_factor}{optional, the name of a factor used for splitting the variables of interest into analysis groups.}
 
 \item{variables}{a vector of variable names.}
 
