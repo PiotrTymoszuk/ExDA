@@ -2,7 +2,7 @@
 % Please edit documentation in R/functions_exploration.R
 \name{plot_variable}
 \alias{plot_variable}
-\title{Plot a variable in two or more EDA objects.}
+\title{Plot a variable in two or more data sets objects.}
 \usage{
 plot_variable(
   ...,
@@ -41,11 +41,11 @@ plot_variable(
 \item{data_names}{a vector with names of the data sets.}
 
 \item{type}{type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-'bar' is available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
+'bar' and 'bubble' are available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
 are available for numeric-type objects.}
 
 \item{scale}{the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
-'fraction' presentes fraction fo complete observations.}
+'fraction' presents fraction fo complete observations.}
 
 \item{point_alpha}{alpha of the plot points.}
 
@@ -88,6 +88,6 @@ Plots values of two or more EDA objects as a classical bar, violin,
 boxplot or correlation point plot representation.
 }
 \details{
-the particular EDA objects are color coded. In case, the split_factor is provided, only the first
-of the input data frames will be plotted
+the particular data sets representations are color coded. In case, the split_factor is provided, only the first
+of the input data frames will be plotted.
 }

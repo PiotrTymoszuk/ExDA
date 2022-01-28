@@ -6,11 +6,11 @@
 #' boxplot or correlation point plot representation.
 #' @param ... numeric-type EDA objects, at least two, created by \code{\link{eda}}.
 #' @param type type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-#' 'bar' is available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
+#' 'bar' or 'bubble' are available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
 #' are available for numeric-type objects.
 #' @param eda_names a vector with names of the EDA objects.
-#' @param scale the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
-#' 'fraction' presentes fraction fo complete observations.
+#' @param scale the feature to be presented in factor bar or bubble plots.
+#' 'none' plots counts, 'percent' plots percentages, 'fraction' presents fraction fo complete observations.
 #' @param point_alpha alpha of the plot points.
 #' @param point_hjitter point jitter height.
 #' @param point_wjitter point jitter width.
@@ -34,7 +34,7 @@
 
   multiplot <- function(...,
                         eda_names = NULL,
-                        type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired'),
+                        type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble'),
                         scale = c('none', 'fraction', 'percent'),
                         point_alpha = 0.5,
                         point_hjitter = 0.05,
@@ -69,7 +69,7 @@
     stopifnot(any(class(cust_theme) == 'theme'))
 
     type <- match.arg(type[1],
-                      c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired'))
+                      c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble'))
 
     scale <- match.arg(scale[1],
                        c('none', 'fraction', 'percent'))
@@ -87,7 +87,7 @@
 
     if(!all(types == types[1])) stop('The provided EDA objects need to be of the same type.', call. = TRUE)
 
-    if(type == 'correlation' & length(edas) > 2) {
+    if(type %in% c('correlation', 'bubble') & length(edas) > 2) {
 
       warning('Multiple EDA objects provided. The first two will be presented in the plot', call. = FALSE)
 
@@ -95,7 +95,7 @@
 
     if(type == 'correlation' & length(edas[[1]]) != length(edas[[2]])) {
 
-      stop('EDA objects with teh same length are required.', call. = FALSE)
+      stop('EDA objects with the same length are required.', call. = FALSE)
 
     }
 
@@ -108,7 +108,9 @@
                            paired = exda:::convert_eda(!!!edas, paired = TRUE),
                            hist = exda:::convert_eda(!!!edas, paired = FALSE),
                            correlation = tibble(x = as_numeric(edas[[1]])$value,
-                                                y = as_numeric(edas[[2]])$value))
+                                                y = as_numeric(edas[[2]])$value),
+                           bubble = table(exda::as_factor(edas[[1]])$value,
+                                          exda::as_factor(edas[[2]])$value))
 
     if(type == 'default' & types[1] == 'factor') {
 
@@ -130,7 +132,7 @@
 
       }
 
-      if(type != 'correlation') {
+      if(!type %in% c('correlation', 'bubble')) {
 
         naming_vector <- rlang::set_names(eda_names,
                                           levels(plotting_tbl[['group']]))
@@ -142,7 +144,7 @@
 
     }
 
-    if(type != 'correlation') {
+    if(!type %in% c('correlation', 'bubble')) {
 
       if(type == 'bar' | (type == 'default' & types[1] == 'factor')) {
 
@@ -317,6 +319,77 @@
                             shape = 21) +
         ggplot2::labs(x = x_lab,
                       y = y_lab)
+
+    } else if(type == 'bubble') {
+
+      if(!is.null(eda_names)) {
+
+        x_lab <- eda_names[1]
+        y_lab <- eda_names[2]
+
+      } else {
+
+        x_lab <- 'G1'
+        y_lab <- 'G2'
+
+      }
+
+      plot_tag <- switch(scale,
+                         none = 'Count',
+                         fraction = 'Fraction',
+                         percent = '%')
+
+      plot_tag <- paste(plot_tag, sum(plotting_tbl), sep = ', complete: n = ')
+
+      plotting_tbl <- switch(scale,
+                             none = plotting_tbl,
+                             percent = plotting_tbl/sum(plotting_tbl)*100,
+                             fraction = plotting_tbl/sum(plotting_tbl))
+
+      plotting_tbl <- as.data.frame(plotting_tbl)
+
+      if(scale == 'none') {
+
+        plotting_tbl <- dplyr::mutate(plotting_tbl,
+                                      plot_lab = Freq)
+
+      } else {
+
+        plotting_tbl <- dplyr::mutate(plotting_tbl,
+                                      plot_lab = signif(Freq, signif_digits))
+
+      }
+
+      fill_lab <- switch(scale,
+                         none = 'Count',
+                         fraction = 'Fraction',
+                         percent = 'Percent')
+
+      gg_plot <- ggplot2::ggplot(plotting_tbl,
+                                 ggplot2::aes(x = .data[['Var1']],
+                                              y = .data[['Var2']],
+                                              fill = .data[['Freq']],
+                                              size = .data[['Freq']])) +
+        ggplot2::geom_point(shape = 21,
+                            alpha = point_alpha) +
+        ggplot2::scale_fill_gradient2(low = 'steelblue',
+                                      mid = 'white',
+                                      high = 'firebrick',
+                                      midpoint = mean(plotting_tbl$Freq)) +
+        ggplot2::scale_size_area() +
+        labs(x = x_lab,
+             y = y_lab,
+             fill = fill_lab,
+             size = fill_lab)
+
+      if(show_labels) {
+
+        gg_plot <- gg_plot +
+          ggplot2::geom_text(ggplot2::aes(label = plot_lab),
+                             size = txt_size,
+                             hjust = -1.8)
+
+      }
 
     }
 

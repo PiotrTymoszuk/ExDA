@@ -355,7 +355,7 @@
 
 # Compare or correlate a variable in a plot -----
 
-#' Plot a variable in two or more EDA objects.
+#' Plot a variable in two or more data sets objects.
 #'
 #' @description Plots values of two or more EDA objects as a classical bar, violin,
 #' boxplot or correlation point plot representation.
@@ -363,11 +363,11 @@
 #' @param variable variable name.
 #' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
 #' @param type type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-#' 'bar' is available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
+#' 'bar' and 'bubble' are available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
 #' are available for numeric-type objects.
 #' @param data_names a vector with names of the data sets.
 #' @param scale the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
-#' 'fraction' presentes fraction fo complete observations.
+#' 'fraction' presents fraction fo complete observations.
 #' @param point_alpha alpha of the plot points.
 #' @param point_hjitter point jitter height.
 #' @param point_wjitter point jitter width.
@@ -386,8 +386,8 @@
 #' @param txt_size size of the text label.
 #' @param bins bin number, passed to \code{\link[ggplot2]{histogram}}.
 #' @param facet_hist 'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.
-#' @details the particular EDA objects are color coded. In case, the split_factor is provided, only the first
-#' of the input data frames will be plotted
+#' @details the particular data sets representations are color coded. In case, the split_factor is provided, only the first
+#' of the input data frames will be plotted.
 #' @export
 
   plot_variable <- function(...,
@@ -427,9 +427,9 @@
     if(length(inp_list) < 2 & is.null(split_factor)) stop('At least two data frames required.', call. = FALSE)
 
     vars <- purrr::map_lgl(inp_list,
-                           ~any(variable %in% .x))
+                           ~any(variable %in% names(.x)))
 
-    if(any(!classes)) stop('Variable absent from the data sets.', call. = FALSE)
+    if(any(!vars)) stop('Variable absent from the data sets.', call. = FALSE)
 
     if(!is.null(split_factor)) {
 
@@ -477,5 +477,215 @@
               txt_size = txt_size,
               bins = bins,
               facet_hist = facet_hist)
+
+  }
+
+# Correlate variables -----
+
+#' Correlate variables in the data set.
+#'
+#' @description Correlates two variables in the provided data sets by Pearson, Spearman
+#' or Kendall method.
+#' @param ... data sets.
+#' @param variables a vector with variable names. If more than two provided, only the first two are analyzed.
+#' @param what the requested analysis: 'correlation' or 'covariance'. Defaults to 'correlation'.
+#' @param type the type of correlation/covariance: Pearson, Spearman, Kendall or Kohen's kappa. Defaults to Pearson.
+#' See: \code{\link{correlate}} and \code{\link{covariance}} for details.
+#' @param ci logical, should confidence intervals for the test effect size be returned?
+#' @param boot_method indicates how the bootstrap confidence intervals are calculated.
+#' Can be any of 'percentile', 'bca', or 'normality', defaults to 'percentile'.
+#' @param pub_styled logical, should the output be publication-ready formatted?
+#' @param signif_digits significant digits used for rounding in the publication-style output.
+#' @param adj_method the method for adjusting p values for multiple testing, as defined for \code{\link[stats]{p.adjust}},
+#' defaults to 'none'. The adjusted p value is summarized in the 'significance' column, when pub_style output is chosen.
+#' @param simplify_p logical, should p_values < 0.001 be presented in a p < 0.001 form?
+#' @export
+
+  correlate_variables <- function(...,
+                                  variables,
+                                  what = c('correlation', 'covariance'),
+                                  type = c('pearson', 'spearman', 'kendall', 'kappa'),
+                                  ci = TRUE,
+                                  boot_method = 'percentile',
+                                  pub_styled = FALSE,
+                                  signif_digits = 2,
+                                  adj_method = 'none',
+                                  simplify_p = TRUE) {
+
+    ## entry control
+
+    stopifnot(is.logical(ci))
+
+    what <- match.arg(what[1], c('correlation', 'covariance'))
+    type <- match.arg(type[1], c('pearson', 'spearman', 'kendall', 'kappa'))
+
+    inp_list <- rlang::list2(...)
+
+    classes <- purrr::map_lgl(inp_list,
+                              ~any(class(.x) == 'data.frame'))
+
+    if(any(!classes)) stop('Please provide data frames as an analysis input.', call. = FALSE)
+
+    vars <- purrr::map(inp_list, names)
+
+    vars <- purrr::reduce(vars, intersect)
+
+    if(length(variables) < 2) stop('Please provide at least two variable names.', call. = FALSE)
+
+    if(length(variables) > 2) warning('Only first two variables will be used for analysis.', call. = FALSE)
+
+    variables <- variables[1:2]
+
+    if(any(!variables %in% vars)) stop('Variable absent from the data set.', call. = FALSE)
+
+    ## analysis
+
+    eda_list1 <- purrr::map(inp_list, ~eda(.x[[variables[1]]]))
+    eda_list2 <- purrr::map(inp_list, ~eda(.x[[variables[2]]]))
+
+    if(what == 'covariance') {
+
+      test_res <- purrr::pmap(list(eda_object = eda_list1,
+                                   y = eda_list2),
+                              exda::covariance,
+                              type = type)
+
+    } else {
+
+      test_res <- purrr::pmap(list(eda_object = eda_list1,
+                                   y = eda_list2),
+                              exda::correlation,
+                              type = type,
+                              ci = ci)
+
+    }
+
+    test_res <- purrr::map_dfr(test_res,
+                               summary,
+                               pub_styled = pub_styled,
+                               signif_digits = signif_digits)
+
+    ## adjustment
+
+    test_res <- dplyr::mutate(test_res,
+                              variable1 = variables[1],
+                              variable2 = variables[2],
+                              p_adjusted = p.adjust(p_value, adj_method))
+
+    if(simplify_p) {
+
+      test_res <- dplyr::mutate(test_res,
+                                significance = ifelse(p_adjusted < 0.001,
+                                                      'p < 0.001',
+                                                      ifelse(p_adjusted < 0.05,
+                                                             paste('p =', signif(p_adjusted, signif_digits)),
+                                                             paste0('ns (p = ', signif(p_adjusted, signif_digits), ')'))))
+
+    } else {
+
+      test_res <- dplyr::mutate(test_res,
+                                significance = ifelse(p_adjusted < 0.05,
+                                                      paste('p =', signif(p_adjusted, signif_digits)),
+                                                      paste0('ns (p = ', signif(p_adjusted, signif_digits), ')')))
+
+    }
+
+    test_res[c('variable1', 'variable2', names(test_res)[!names(test_res) %in% c('variable1', 'variable2')])]
+
+
+  }
+
+# Plot correlations ------
+
+#' Plot correlation of two variables.
+#'
+#' @description plots correlation of two variables. Point plot is available for numeric features
+#' and bar plot or bubble plot of the contingency matrix for factors.
+#' @param data a data frame.
+#' @param variables a vector with variable names. If more than two provided, only the first two are analyzed.
+#' @param type type of the plot. 'correlation' returns a standard point plot, 'bar' returns a bar plot of
+#' frequencies, 'bubble' represents the contingency matrix as a bubble plot.
+#' @param scale the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
+#' 'fraction' presents fraction fo complete observations.
+#' @param point_alpha alpha of the plot points.
+#' @param point_hjitter point jitter height.
+#' @param point_wjitter point jitter width.
+#' @param point_color color of the points in the correlation plot.
+#' @param point_size size of the points in the plots.
+#' @param line_color color of the trend line in the correlation plots or the connecting lines in the paired plots.
+#' @param line_alpha opacity of the connecting lines in the paired plot.
+#' @param cust_theme custom ggplot2 theme.
+#' @param plot_title text to be presented in the plot title.
+#' @param plot_subtitle text to be presented in the plot subtitle.
+#' @param x_lab text to be presented in the X axis title.
+#' @param y_lab text to be presented in the Y axis title.
+#' @param show_trend logical, should a trend line with 95\% confidence intervals be presented in the correlation plots?
+#' @param show_labels logical, should labels with count numbers, percentages or fractions be presented in bar plots?
+#' @param signif_digits significant digits used for the label value rounding.
+#' @param txt_size size of the text label.
+#' @export
+
+  plot_correlation <- function(data,
+                               variables,
+                               type = c('correlation', 'bar', 'bubble'),
+                               scale = c('none', 'percent', 'fraction'),
+                               point_alpha = 0.5,
+                               point_hjitter = 0.05,
+                               point_wjitter = 0.1,
+                               point_color = 'steelblue',
+                               point_size = 2,
+                               line_color = 'black',
+                               line_alpha = 0.25,
+                               cust_theme = ggplot2::theme_classic(),
+                               plot_title = NULL,
+                               plot_subtitle = NULL,
+                               x_lab = NULL,
+                               y_lab = NULL,
+                               show_trend = TRUE,
+                               show_labels = TRUE,
+                               signif_digits = 2,
+                               txt_size = 2.75) {
+
+    ## entry control
+
+    if(!any(class(data) == 'data.frame')) stop('Please provide a data frame as an analysis input.', call. = FALSE)
+
+    if(length(variables) < 2) stop('Please provide at least two variable names.', call. = FALSE)
+
+    if(length(variables) > 2) warning('Only first two variables will be used for analysis.', call. = FALSE)
+
+    variables <- variables[1:2]
+
+    if(!all(variables %in% names(data))) stop('Variable absent from the data sets.', call. = FALSE)
+
+    type <- match.arg(type[1], c('correlation', 'bar', 'bubble'))
+
+    stopifnot(any(class(cust_theme) == 'theme'))
+
+    ## plotting
+
+    eda1 <- exda::eda(data[[variables[1]]])
+    eda2 <- exda::eda(data[[variables[2]]])
+
+    multiplot(eda1, eda2,
+              eda_names = variables,
+              type = type,
+              scale = scale,
+              point_alpha = point_alpha,
+              point_hjitter = point_hjitter,
+              point_wjitter = point_wjitter,
+              point_color = point_color,
+              point_size = point_size,
+              line_color = line_color,
+              line_alpha = line_alpha,
+              cust_theme = cust_theme,
+              plot_title = plot_title,
+              plot_subtitle = plot_subtitle,
+              x_lab = x_lab,
+              y_lab = y_lab,
+              show_trend = show_trend,
+              show_labels = show_labels,
+              signif_digits = signif_digits,
+              txt_size = txt_size)
 
   }
