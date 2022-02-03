@@ -8,7 +8,7 @@ compare_variables(
   ...,
   variables,
   split_factor = NULL,
-  what = c("test", "distribution", "variance", "correlation", "covariance"),
+  what = c("test", "distribution", "variance", "correlation", "covariance", "eff_size"),
   types = "t_test",
   exact = TRUE,
   ci = TRUE,

@@ -8,7 +8,7 @@ compare(
   ...,
   variable,
   split_factor = NULL,
-  what = c("test", "distribution", "variance", "correlation", "covariance", "plot"),
+  what = c("test", "distribution", "variance", "correlation", "covariance", "eff_size"),
   type = "t_test",
   exact = TRUE,
   ci = TRUE,
@@ -24,11 +24,11 @@ compare(
 
 \item{split_factor}{optional, the name of a factor used for splitting the variables of interest into analysis groups.}
 
-\item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance'.
+\item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance' or 'eff_size'.
 Defaults to 'test'.}
 
-\item{type}{type of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
-\code{\link{covariance}} for details.}
+\item{type}{type of statistical test, see \code{\link{test}}, \code{\link{correlate}},
+\code{\link{covariance}} or \code{\link{eff_size}}  for details.}
 
 \item{exact}{logical, should exact values for Chi-squared, Mann-Whitney and Wilcoxon test be returned?}
 

@@ -14,7 +14,7 @@ test(
 )
 }
 \arguments{
-\item{...}{numeric-type EDA objects, at least two, created by \code{\link{eda}}.}
+\item{...}{EDA objects, at least two, created by \code{\link{eda}}.}
 
 \item{type}{type of statistic test. For two numeric EDA objects: t test ('t_test', \code{\link[stats]{t.test}}),
 paired t test ('paired_t_test', \code{\link[stats]{t.test}}), sign test ('sign_test', \code{\link[DescTools]{SignTest}}),
@@ -34,15 +34,15 @@ may be applied ('chisq_test', \code{\link[stats]{chisq.test}}).}
 Can be any of 'percentile', 'bca', or 'normality', defaults to 'percentile'.}
 }
 \value{
-an eTest object with the test name, test statistic value and, optionally,
-the effect size with 95/% confidence intervals.
+an eTest object with the test name, test statistic value and
+the default effect/location size with 95/% confidence intervals.
 }
 \description{
 compare two or more EDA objects with a range of statistical tests.
 }
 \details{
 EDA object type is coerced to factor or numeric, as appropriate for the requested analysis.
-The default effect sizes returned as estimates with along with the test results include difference in mean for t tests,
+The default effect or location sizes returned as estimates with along with the test results include difference in mean for t tests,
 difference in (pseudo-) median for sign, Mann-Whitney and Wilcoxon tests, eta-squared (% explained variance)
 for one-way ANOVA and repeated measure one-way ANOVA, eta-square for Kruskal-Wallis test (calculated by
 \code{\link[rstatix]{kruskal_effsize}}) and Kendall W for Friedman test (\code{\link[rstatix]{friedman_effsize}}).

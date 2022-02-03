@@ -133,10 +133,10 @@
 #' @param ... data frames.
 #' @param variable a variable name.
 #' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
-#' @param what the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance'.
+#' @param what the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance' or 'eff_size'.
 #' Defaults to 'test'.
-#' @param type type of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
-#' \code{\link{covariance}} for details.
+#' @param type type of statistical test, see \code{\link{test}}, \code{\link{correlate}},
+#' \code{\link{covariance}} or \code{\link{eff_size}}  for details.
 #' @param exact logical, should exact values for Chi-squared, Mann-Whitney and Wilcoxon test be returned?
 #' @param ci logical, should confidence intervals for the test effect size be returned?
 #' @param boot_method indicates how the bootstrap confidence intervals are calculated.
@@ -149,7 +149,7 @@
   compare <- function(...,
                       variable,
                       split_factor = NULL,
-                      what = c('test', 'distribution', 'variance', 'correlation', 'covariance', 'plot'),
+                      what = c('test', 'distribution', 'variance', 'correlation', 'covariance', 'eff_size'),
                       type = 't_test',
                       exact = TRUE,
                       ci = TRUE,
@@ -163,7 +163,7 @@
     stopifnot(is.logical(ci))
 
     what <- match.arg(what[1],
-                      c('test', 'distribution', 'variance', 'correlation', 'covariance'))
+                      c('test', 'distribution', 'variance', 'correlation', 'covariance', 'eff_size'))
 
     inp_list <- rlang::list2(...)
 
@@ -237,7 +237,12 @@
                                                        ci = ci),
                        covariance = exda::covariance(eda_object = inp_list[[1]],
                                                      y = inp_list[[2]],
-                                                     type = type))
+                                                     type = type),
+                       eff_size = exda::eff_size(!!!inp_list,
+                                                 type = type,
+                                                 exact = exact,
+                                                 ci = ci,
+                                                 boot_method = boot_method))
 
 
     summary(test_res,
@@ -246,7 +251,7 @@
 
   }
 
-# Compare or correlate the selected variable between two or more collectives ----
+# Compare or correlate the selected variables between two or more collectives ----
 
 #' Compare or correlate features between collectives/cohorts.
 #'
@@ -278,7 +283,7 @@
   compare_variables <- function(...,
                                 variables,
                                 split_factor = NULL,
-                                what = c('test', 'distribution', 'variance', 'correlation', 'covariance'),
+                                what = c('test', 'distribution', 'variance', 'correlation', 'covariance', 'eff_size'),
                                 types = 't_test',
                                 exact = TRUE,
                                 ci = TRUE,
