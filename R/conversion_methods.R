@@ -3,18 +3,18 @@
 #' Convert an EDA object to a data frame.
 #'
 #' @description converts an EDA object to a one-column data frame. The data type and levels are preserved.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @param newname a name of the data frame variable.
 #' @return a data frame.
 #' @export
 
-  as.data.frame.eda <- function(eda_object, newname = 'variable') {
+  as.data.frame.eda <- function(x, newname = 'variable', ...) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
-    df <- switch(eda_object$type,
-                 numeric = data.frame(new_var = eda_object$value),
-                 factor = data.frame(new_var = factor(eda_object$value, levels = eda_object$levels)))
+    df <- switch(x$type,
+                 numeric = data.frame(new_var = x$value),
+                 factor = data.frame(new_var = factor(x$value, levels = x$levels)))
 
     rlang::set_names(df, newname)
 
@@ -23,18 +23,18 @@
 #' Convert an EDA object to a tibble.
 #'
 #' @description converts an EDA object to a one-column data frame. The data type and levels are preserved.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @param newname a name of the data frame variable.
 #' @return a data frame.
 #' @export
 
-  as_tibble.eda <- function(eda_object, newname = 'variable') {
+  as_tibble.eda <- function(x, newname = 'variable', ...) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
-    df <- switch(eda_object$type,
-                 numeric = tibble::tibble(new_var = eda_object$value),
-                 factor = tibble::tibble(new_var = factor(eda_object$value, levels = eda_object$levels)))
+    df <- switch(x$type,
+                 numeric = tibble::tibble(new_var = x$value),
+                 factor = tibble::tibble(new_var = factor(x$value, levels = x$levels)))
 
     rlang::set_names(df, newname)
 
@@ -62,50 +62,37 @@
 #' @return a factor.
 #' @export
 
-  as.factor.default <- function(x) {
+  as.factor.default <- function(x, ...) {
 
-    base::as.factor(x)
-
-  }
-
-#' Convert numeric-type EDA to a factor.
-#'
-#' @description converts a numeric-type EDA object to a factor-type one.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
-#' @return a factor-type EDA.
-#' @export
-
-  as.factor.eda <- function(eda_object) {
-
-    stopifnot(all(class(eda_object) == 'eda'))
-
-    eda(factor(eda_object$value))
-
-  }
-
-#' Convert to a factor.
-#'
-#' @description converts an object to a factor.
-#' @param x an object.
-#' @return a factor.
-#' @export
-
-  as.factor.default <- function(x) {
-
-    base::as.factor(x)
+    base::as.factor(x, ...)
 
   }
 
 #' Convert numeric-type EDA to a factor.
 #'
 #' @description converts a numeric-type EDA object to a factor-type one.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @return a factor-type EDA.
 #' @export
 
-  as_factor.eda <- function(eda_object) {
+  as.factor.eda <- function(x, ...) {
 
-    as.factor(eda_object)
+    stopifnot(is_eda(x))
+
+    eda(factor(x$value))
+
+  }
+
+#' Convert numeric-type EDA to a factor.
+#'
+#' @description converts a numeric-type EDA object to a factor-type one.
+#' @param x an EDA object, created by \code{\link{eda}}.
+#' @return a factor-type EDA.
+#' @export
+
+  as_factor.eda <- function(x, ...) {
+
+    as.factor(x, ...)
 
   }
 
@@ -129,22 +116,22 @@
 #'
 #' @description Sets new levels for a factor-type EDA object.
 #' Releveling of a numeric-type EDA raises an error.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @param newlevels a character vector with new levels.
 #' @return a factor-type EDA.
 #' @export
 
-  relevel.eda <- function(eda_object, newlevels) {
+  relevel.eda <- function(x, newlevels, ...) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
-    if(eda_object$type == 'numeric') {
+    if(x$type == 'numeric') {
 
       stop('Releveling is not available for numeric-type EDA objects.', call. = FALSE)
 
     }
 
-    eda(factor(eda_object$value,
+    eda(factor(x$value,
                levels = newlevels))
 
 
@@ -168,15 +155,15 @@
 #' Convert factor-type EDA to a numeric
 #'
 #' @description converts a factor-type EDA object to a numeric-type one.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @return a numeric-type EDA.
 #' @export
 
-  as_numeric.eda <- function(eda_object) {
+  as_numeric.eda <- function(x, ...) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
-    eda(base::as.numeric(eda_object$value))
+    eda(base::as.numeric(x$value))
 
   }
 
@@ -199,15 +186,15 @@
 #' Convert an EDA object to a plain vector.
 #'
 #' @description Converts an EDA object to a vector. The data type is preserved.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @return a vector with the EDA values.
 #' @export
 
-  as_vector.eda <- function(eda_object) {
+  as_vector.eda <- function(x) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
-    eda_object$value
+    x$value
 
   }
 
@@ -217,7 +204,7 @@
 #'
 #' @description Converts a numeric-type EDA object to a factor-type EDA
 #' by cutting the numeric values with the defined cutoffs. Factor-type EDAs are returned without any changes.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @param type indicates how to generate cutoffs/breaks. If 'custom', the user-specified
 #' breaks are used, otherwise the indicated statistic values are used including the
 #' minimum and maximum values of the EDA object. Defaults to quartile.
@@ -241,7 +228,7 @@
 #' @export cut.eda
 #' @export
 
-  cut.eda <- function(eda_object,
+  cut.eda <- function(x,
                       type = c('quartile', 'mean', 'median', 'custom'),
                       breaks = NULL,
                       labels = NULL,
@@ -250,7 +237,7 @@
                       default_labels = TRUE,
                       na.rm = FALSE, ...) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
     type <- match.arg(type[1], c('quartile', 'mean', 'median', 'custom'))
 
@@ -258,20 +245,20 @@
     stopifnot(is.logical(default_labels))
     stopifnot(is.logical(na.rm))
 
-    if(eda_object$type == 'factor') {
+    if(x$type == 'factor') {
 
-      return(eda_object)
+      return(x)
 
     }
 
-    if(na.rm) eda_object <- na.omit(eda_object)
+    if(na.rm) x <- na.omit(x)
 
     if(type != 'custom') {
 
       breaks <- switch(type,
-                       quartile = c(-Inf, quantile(eda_object$value, c(0.25, 0.5, 0.75), na.rm = TRUE), Inf),
-                       mean = c(-Inf, mean(eda_object$value, na.rm = TRUE), Inf),
-                       median = c(-Inf, median(eda_object$value, na.rm = TRUE), Inf))
+                       quartile = c(-Inf, quantile(x$value, c(0.25, 0.5, 0.75), na.rm = TRUE), Inf),
+                       mean = c(-Inf, mean(x$value, na.rm = TRUE), Inf),
+                       median = c(-Inf, median(x$value, na.rm = TRUE), Inf))
 
       if(default_labels) {
 
@@ -284,7 +271,7 @@
 
     }
 
-    cut_vals <- cut(eda_object$value,
+    cut_vals <- cut(x$value,
                     breaks = breaks,
                     labels = labels,
                     include.lowest = include.lowest,
@@ -298,34 +285,32 @@
 #'
 #' @description Normalizes values of an EDA object.
 #' @details A wrapper around \code{\link[base]{scale}}.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @param center see: \code{\link[base]{scale}}.
 #' @param scale see: \code{\link[base]{scale}}.
 #' @param na.rm logical, should NAs be removed prior to scaling?
 #' @export
 
-  scale.eda <- function(eda_object,
+  scale.eda <- function(x,
                         center = TRUE,
                         scale = TRUE,
                         na.rm = FALSE) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
     stopifnot(is.logical(na.rm))
 
-    if(eda_object$type == 'factor') {
+    if(x$type == 'factor') {
 
-      return(eda_object)
+      return(x)
 
     }
 
-    if(na.rm) eda_object <- na.omit(eda_object)
+    if(na.rm) x <- na.omit(x)
 
-    scaled_val <- scale(eda_object$value,
+    scaled_val <- scale(x$value,
                         center = center,
                         scale = scale)
 
     eda(scaled_val[, 1])
 
-
   }
-

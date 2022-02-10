@@ -13,7 +13,7 @@
 
    stat_extract <- function(eda_object, fun, stat_name, plain = FALSE, ...) {
 
-     stopifnot(all(class(eda_object) == 'eda'))
+     stopifnot(is_eda(eda_object))
 
      if(eda_object$type == 'factor') {
 
@@ -85,9 +85,9 @@
 
      edas <- rlang::list2(...)
 
-     classes <- purrr::map_chr(edas, ~class(.x)[1])
+     classes <- purrr::map_lgl(edas, is_eda)
 
-     if(!all(classes == 'eda')) stop('Factor-type EDA objects are required.', call. = FALSE)
+     if(any(!classes)) stop('Factor-type EDA objects are required.', call. = FALSE)
 
      if(!coerce) {
 
@@ -158,9 +158,9 @@
 
       edas <- rlang::list2(...)
 
-      classes <- purrr::map_chr(edas, ~class(.x)[1])
+      classes <- purrr::map_lgl(edas, is_eda)
 
-      if(!all(classes == 'eda')) stop('Valid EDA objects are required.', call. = FALSE)
+      if(any(!classes)) stop('Valid EDA objects are required.', call. = FALSE)
       if(length(edas) < 2) stop('At least two EDA objects are required.', call. = FALSE)
 
       edas <- purrr::map(edas, as_numeric)

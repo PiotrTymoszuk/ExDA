@@ -4,10 +4,10 @@
 \alias{droplevels.eda}
 \title{Dropping empty levels from a factor-type EDA object.}
 \usage{
-\method{droplevels}{eda}(eda_object)
+\method{droplevels}{eda}(x, ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 an EDA object.

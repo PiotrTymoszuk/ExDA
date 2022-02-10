@@ -4,10 +4,10 @@
 \alias{as.data.frame.eda}
 \title{Convert an EDA object to a data frame.}
 \usage{
-\method{as.data.frame}{eda}(eda_object, newname = "variable")
+\method{as.data.frame}{eda}(x, newname = "variable", ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{newname}{a name of the data frame variable.}
 }

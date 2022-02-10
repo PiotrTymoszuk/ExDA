@@ -4,10 +4,10 @@
 \alias{as_table.eda}
 \title{Convert categorical EDA objects to a table.}
 \usage{
-\method{as_table}{eda}(eda_object, scale = c("none", "fraction", "percent"))
+\method{as_table}{eda}(x, scale = c("none", "fraction", "percent"))
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.
+\item{x}{an EDA object, created by \code{\link{eda}}.
 'fraction' returns fraction of total, 'percent' returns percentages of all observations.}
 
 \item{scale}{content of the output table: 'fraction' returns fraction of total,

@@ -4,10 +4,10 @@
 \alias{length.eda}
 \title{Length of EDA objects.}
 \usage{
-\method{length}{eda}(eda_object)
+\method{length}{eda}(x)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 a numeric value.

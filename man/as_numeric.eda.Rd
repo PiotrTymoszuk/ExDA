@@ -4,10 +4,10 @@
 \alias{as_numeric.eda}
 \title{Convert factor-type EDA to a numeric}
 \usage{
-\method{as_numeric}{eda}(eda_object)
+\method{as_numeric}{eda}(x, ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 a numeric-type EDA.

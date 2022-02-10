@@ -79,9 +79,9 @@
 
     edas <- rlang::list2(...)
 
-    classes <- purrr::map_chr(edas, class)
+    classes <- purrr::map_lgl(edas, is_eda)
 
-    if(any(classes != 'eda')) stop('Please provide valid EDA objects.')
+    if(any(!classes)) stop('Please provide valid EDA objects.', call. = TRUE)
 
     types <- purrr::map_chr(edas, ~.x$type)
 

@@ -4,10 +4,10 @@
 \alias{quantile.eda}
 \title{Quantiles of an EDA object.}
 \usage{
-\method{quantile}{eda}(eda_object, probs = c(0, 0.25, 0.5, 0.75, 1), plain = FALSE)
+\method{quantile}{eda}(x, probs = c(0, 0.25, 0.5, 0.75, 1), plain = FALSE)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{probs}{numeric vector of probabilities with values in [0,1].}
 

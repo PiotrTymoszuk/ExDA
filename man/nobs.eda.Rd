@@ -4,10 +4,10 @@
 \alias{nobs.eda}
 \title{Number of (complete) observations in an EDA object.}
 \usage{
-\method{nobs}{eda}(eda_object)
+\method{nobs}{eda}(object, ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{object}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 a tibble with the number of all and complete observations.

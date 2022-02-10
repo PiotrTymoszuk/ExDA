@@ -4,7 +4,7 @@
 \alias{eda.data.frame}
 \title{Generate an EDA object from a data frame variable.}
 \usage{
-\method{eda}{data.frame}(data, variable)
+\method{eda}{data.frame}(data, variable, ...)
 }
 \arguments{
 \item{data}{and object to be converted to EDA.}

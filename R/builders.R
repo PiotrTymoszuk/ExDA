@@ -10,7 +10,7 @@
 #' @export eda.default
 #' @export
 
-  eda.default <- function(x) {
+  eda.default <- function(x, ...) {
 
     eda_value <- try(as.vector(x), silent = TRUE)
 
@@ -40,7 +40,7 @@
 #' @return an EDA object.
 #' @export
 
-  eda.factor <- function(x) {
+  eda.factor <- function(x, ...) {
 
     stopifnot(is.factor(x))
 
@@ -58,7 +58,7 @@
 #' @return an EDA object.
 #' @export
 
-  eda.numeric <- function(x) {
+  eda.numeric <- function(x, ...) {
 
     stopifnot(is.numeric(x))
 
@@ -76,7 +76,7 @@
 #' @return an EDA object.
 #' @export
 
-  eda.character <- function(x) {
+  eda.character <- function(x, ...) {
 
     stopifnot(is.character(x))
 
@@ -94,7 +94,7 @@
 #' @return an EDA object.
 #' @export
 
-  eda.logical <- function(x) {
+  eda.logical <- function(x, ...) {
 
     stopifnot(is.logical(x))
 
@@ -114,7 +114,7 @@
 #' @export eda.data.frame
 #' @export
 
-  eda.data.frame <- function(data, variable) {
+  eda.data.frame <- function(data, variable, ...) {
 
     stopifnot(is.data.frame(data))
 
@@ -133,10 +133,6 @@
     eda(eda_value)
 
   }
-
-
-
-
 
 # Test class objects ----
 
@@ -187,3 +183,31 @@
   }
 
 
+
+# Class testers -----
+
+#' Test the EDA class.
+#'
+#' @description Tests if the object is an instance of the EDA class.
+#' @param x an object.
+#' @return a logical value.
+#' @export
+
+  is_eda <- function(x) {
+
+    any(class(x) == 'eda')
+
+  }
+
+  #' Test the eTest class.
+  #'
+  #' @description Tests if the object is an instance of the eTest class.
+  #' @param x an object.
+  #' @return a logical value.
+  #' @export
+
+  is_etest <- function(x) {
+
+    any(class(x) == 'etest')
+
+  }

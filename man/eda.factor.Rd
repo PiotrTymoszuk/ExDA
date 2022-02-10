@@ -4,7 +4,7 @@
 \alias{eda.factor}
 \title{Generate EDA objects from factors.}
 \usage{
-\method{eda}{factor}(x)
+\method{eda}{factor}(x, ...)
 }
 \arguments{
 \item{x}{an object to be converted to EDA.}

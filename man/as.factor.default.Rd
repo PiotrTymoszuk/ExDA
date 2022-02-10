@@ -4,20 +4,14 @@
 \alias{as.factor.default}
 \title{Convert to a factor.}
 \usage{
-\method{as.factor}{default}(x)
-
-\method{as.factor}{default}(x)
+\method{as.factor}{default}(x, ...)
 }
 \arguments{
 \item{x}{an object.}
 }
 \value{
 a factor.
-
-a factor.
 }
 \description{
-converts an object to a factor.
-
 converts an object to a factor.
 }

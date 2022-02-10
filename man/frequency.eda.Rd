@@ -4,10 +4,10 @@
 \alias{frequency.eda}
 \title{Count observations categorical EDA objects to a table.}
 \usage{
-\method{frequency}{eda}(eda_object, .drop = FALSE)
+\method{frequency}{eda}(x, .drop = FALSE)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{.drop}{logical, should empty levels be dropped?}
 }

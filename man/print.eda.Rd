@@ -4,10 +4,10 @@
 \alias{print.eda}
 \title{Printing EDA objects.}
 \usage{
-\method{print}{eda}(eda_object)
+\method{print}{eda}(x, ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 nothing, called for its side effects.

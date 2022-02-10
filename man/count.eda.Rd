@@ -4,10 +4,10 @@
 \alias{count.eda}
 \title{Convert categorical EDA objects to a table.}
 \usage{
-\method{count}{eda}(eda_object, .drop = FALSE)
+\method{count}{eda}(x, .drop = FALSE)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{.drop}{logical, should empty levels be dropped?}
 }

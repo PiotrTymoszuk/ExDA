@@ -57,7 +57,7 @@
 
     inp_list <- rlang::list2(...)
 
-    classes <- purrr::map_lgl(inp_list, ~all(class(.x) == 'eda'))
+    classes <- purrr::map_lgl(inp_list, is_eda)
 
     if(any(!classes)) stop('EDA objects are required.', call. = FALSE)
 
@@ -312,7 +312,7 @@
 
     inp_list <- rlang::list2(...)
 
-    classes <- purrr::map_lgl(inp_list, ~all(class(.x) == 'eda'))
+    classes <- purrr::map_lgl(inp_list, is_eda)
 
     if(any(!classes)) stop('EDA objects are required.', call. = FALSE)
 

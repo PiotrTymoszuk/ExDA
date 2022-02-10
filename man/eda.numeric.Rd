@@ -4,7 +4,7 @@
 \alias{eda.numeric}
 \title{Generate EDA objects from numeric vectors.}
 \usage{
-\method{eda}{numeric}(x)
+\method{eda}{numeric}(x, ...)
 }
 \arguments{
 \item{x}{an object to be converted to EDA.}

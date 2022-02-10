@@ -4,10 +4,10 @@
 \alias{as_vector.eda}
 \title{Convert an EDA object to a plain vector.}
 \usage{
-\method{as_vector}{eda}(eda_object)
+\method{as_vector}{eda}(x)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 a vector with the EDA values.

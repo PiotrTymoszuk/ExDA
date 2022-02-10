@@ -4,10 +4,10 @@
 \alias{scale.eda}
 \title{Normalize an EDA object.}
 \usage{
-\method{scale}{eda}(eda_object, center = TRUE, scale = TRUE, na.rm = FALSE)
+\method{scale}{eda}(x, center = TRUE, scale = TRUE, na.rm = FALSE)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{center}{see: \code{\link[base]{scale}}.}
 

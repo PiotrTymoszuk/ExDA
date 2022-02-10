@@ -4,10 +4,10 @@
 \alias{sd.eda}
 \title{Standard deviance of an EDA object.}
 \usage{
-\method{sd}{eda}(eda_object, plain = FALSE)
+\method{sd}{eda}(x, plain = FALSE)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{plain}{logical, should the output be coerced to a single vector?}
 }

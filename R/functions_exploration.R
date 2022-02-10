@@ -78,7 +78,7 @@
                                                           pub_styled = TRUE,
                                                           signif_digits = signif_digits),
                                            variable = variables)[c('variable', 'statistic')],
-                     plots = purrr::pmap(list(eda_object = edas,
+                     plots = purrr::pmap(list(x = edas,
                                               plot_title = variables),
                                          exda::plot.eda, ...),
                      raw = edas)

@@ -4,17 +4,17 @@
 #'
 #' @description converts factor-type EDA objects to a table. For numeric-type ones
 #' NULL is returned and a warning generated.
-#' @param eda_object an EDA object, created by \code{\link{eda}}
+#' @param x an EDA object, created by \code{\link{eda}}
 #' @param scale content of the output table: 'fraction' returns fraction of total,
 #' 'percent' returns percentages of all observations. Defaults to none.
 #' @return a table object.
 #' @export
 
-  as.table.eda <- function(eda_object, scale = c('none', 'fraction', 'percent')) {
+  as.table.eda <- function(x, scale = c('none', 'fraction', 'percent')) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
-    if(eda_object$type == 'numeric') {
+    if(x$type == 'numeric') {
 
       warning('No table available for numeric-type EDA objects.', call. = FALSE)
 
@@ -24,7 +24,7 @@
 
     scale <- match.arg(scale, c('none', 'fraction', 'percent'))
 
-    tbl_obj <- table(eda_object$value)
+    tbl_obj <- table(x$value)
 
     switch(scale,
            none = tbl_obj,
@@ -37,16 +37,16 @@
 #'
 #' @description converts factor-type EDA objects to a table. For numeric-type ones
 #' NULL is returned and a warning generated.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' 'fraction' returns fraction of total, 'percent' returns percentages of all observations.
 #' @param scale content of the output table: 'fraction' returns fraction of total,
 #' 'percent' returns percentages of all observations. Defaults to none.
 #' @return a table object.
 #' @export
 
-  as_table.eda <- function(eda_object, scale = c('none', 'fraction', 'percent')) {
+  as_table.eda <- function(x, scale = c('none', 'fraction', 'percent')) {
 
-    as.table(eda_object, scale)
+    as.table(x, scale)
 
   }
 
@@ -71,16 +71,16 @@
 #' @description counts of observations assigned to each category or occurrence of unique values
 #' for numeric EDAs.
 #' @details NAs are listed as a separate category and empty levels are not skipped by default.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @param .drop logical, should empty levels be dropped?
 #' @return a tibble with the columns 'category', 'n', 'fraction' and 'percent'.
 #' @export
 
-  frequency.eda <- function(eda_object, .drop = FALSE) {
+  frequency.eda <- function(x, .drop = FALSE) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
 
-    counts <- dplyr::count(as_tibble(eda_object, 'category'), category, .drop = .drop)
+    counts <- dplyr::count(as_tibble(x, 'category'), category, .drop = .drop)
 
     dplyr::mutate(counts,
                   fraction = n/sum(n),
@@ -92,14 +92,16 @@
 #'
 #' @description converts factor-type EDA objects to a table. For numeric-type ones
 #' NULL is returned and a warning generated.
-#' @param eda_object an EDA object, created by \code{\link{eda}}.
+#' @param x an EDA object, created by \code{\link{eda}}.
 #' @param .drop logical, should empty levels be dropped?
 #' @return a tibble with the columns 'category', 'n', 'fraction' and 'percent'.
 #' @export
 
-  count.eda <- function(eda_object, .drop = FALSE) {
+  count.eda <- function(x, .drop = FALSE) {
 
-    frequency(eda_object)
+    stopifnot(is_eda(x))
+
+    frequency(x)
 
   }
 

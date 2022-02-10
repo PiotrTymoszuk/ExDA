@@ -5,7 +5,7 @@
 \title{Cut an EDA object.}
 \usage{
 \method{cut}{eda}(
-  eda_object,
+  x,
   type = c("quartile", "mean", "median", "custom"),
   breaks = NULL,
   labels = NULL,
@@ -17,7 +17,7 @@
 )
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{type}{indicates how to generate cutoffs/breaks. If 'custom', the user-specified
 breaks are used, otherwise the indicated statistic values are used including the

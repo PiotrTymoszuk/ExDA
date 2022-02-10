@@ -4,7 +4,7 @@
 \alias{eda.default}
 \title{Generate EDA objects.}
 \usage{
-\method{eda}{default}(x)
+\method{eda}{default}(x, ...)
 }
 \arguments{
 \item{x}{and object to be converted to EDA.}

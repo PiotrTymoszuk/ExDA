@@ -1,7 +1,7 @@
 #' Plot method for EDA objects
 #'
 #' @description Plots distribution of the given EDA object.
-#' @param eda_object eda object, created by \code{\link{eda}}.
+#' @param x eda object, created by \code{\link{eda}}.
 #' @param type plot type. 'default' is bar for factors and violin for numerics. 'bar' is available for factor-type EDAs.
 #' 'violin', 'box', 'hist' and 'qq' are available for numeric-type objects.
 #' @param point_color color of the plot points.
@@ -22,7 +22,7 @@
 #' @export plot.eda
 #' @export
 
-  plot.eda <- function(eda_object,
+  plot.eda <- function(x,
                        type = c('default', 'bar', 'violin', 'box', 'hist', 'qq'),
                        point_color = 'steelblue',
                        point_alpha = 0.5,
@@ -38,7 +38,7 @@
 
     ## entry control
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(x))
     stopifnot(is.numeric(point_alpha))
     stopifnot(is.numeric(point_hjitter))
     stopifnot(is.numeric(point_wjitter))
@@ -56,8 +56,8 @@
 
     if(type == 'default') {
 
-      gg_plot <- switch(eda_object$type,
-                        numeric = exda:::plot_violin(eda_object = eda_object,
+      gg_plot <- switch(x$type,
+                        numeric = exda:::plot_violin(eda_object = x,
                                                      signif_digits = signif_digits,
                                                      point_color = point_color,
                                                      point_alpha = point_alpha,
@@ -65,7 +65,7 @@
                                                      point_wjitter = point_wjitter,
                                                      fill_color = fill_color,
                                                      cust_theme = cust_theme, ...),
-                        factor = exda:::plot_bar(eda_object = eda_object,
+                        factor = exda:::plot_bar(eda_object = x,
                                                  signif_digits = signif_digits,
                                                  fill_color = fill_color,
                                                  cust_theme = cust_theme,
@@ -74,12 +74,12 @@
     } else {
 
       gg_plot <- switch(type,
-                        bar = exda:::plot_bar(eda_object = as_factor(eda_object),
+                        bar = exda:::plot_bar(eda_object = as_factor(x),
                                               signif_digits = signif_digits,
                                               fill_color = fill_color,
                                               cust_theme = cust_theme,
                                               txt_size = txt_size),
-                        violin = exda:::plot_violin(eda_object = as_numeric(eda_object),
+                        violin = exda:::plot_violin(eda_object = as_numeric(x),
                                                     signif_digits = signif_digits,
                                                     point_color = point_color,
                                                     point_alpha = point_alpha,
@@ -87,7 +87,7 @@
                                                     point_wjitter = point_wjitter,
                                                     fill_color = fill_color,
                                                     cust_theme = cust_theme, ...),
-                        box = exda:::plot_box(eda_object = as_numeric(eda_object),
+                        box = exda:::plot_box(eda_object = as_numeric(x),
                                               signif_digits = signif_digits,
                                               point_color = point_color,
                                               point_alpha = point_alpha,
@@ -95,11 +95,11 @@
                                               point_wjitter = point_wjitter,
                                               fill_color = fill_color,
                                               cust_theme = cust_theme, ...),
-                        hist = exda:::plot_histogram(eda_object = as_numeric(eda_object),
+                        hist = exda:::plot_histogram(eda_object = as_numeric(x),
                                                      signif_digits = signif_digits,
                                                      fill_color = fill_color,
                                                      cust_theme = cust_theme, ...),
-                        qq = exda:::plot_qq(eda_object = as_numeric(eda_object),
+                        qq = exda:::plot_qq(eda_object = as_numeric(x),
                                             signif_digits = signif_digits,
                                             point_color = point_color,
                                             point_alpha = point_alpha,

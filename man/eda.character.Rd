@@ -4,7 +4,7 @@
 \alias{eda.character}
 \title{Generate EDA objects from character vectors.}
 \usage{
-\method{eda}{character}(x)
+\method{eda}{character}(x, ...)
 }
 \arguments{
 \item{x}{an object to be converted to eda.}

@@ -11,7 +11,7 @@
 
   normality <- function(eda_object) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(eda_object))
 
     if(eda_object$type == 'factor') {
 
@@ -48,7 +48,7 @@
 
   distribution <- function(eda_object, y, ...) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(eda_object))
     if(all(class(y) != 'eda') | is.numeric(y)) stop('y has to be an EDA object or a numeric vector.', call. = FALSE)
 
     if(eda_object$type == 'factor') {
@@ -111,8 +111,8 @@
 
     ## entry control
 
-    if(!all(class(eda_object) == 'eda')) stop('Please provide a valid EDA class object.', call. = FALSE)
-    if(!all(class(y) == 'eda')) stop('Please provide a valid EDA class object.', call. = FALSE)
+    if(!is_eda(eda_object)) stop('Please provide a valid EDA class object.', call. = FALSE)
+    if(!is_eda(y)) stop('Please provide a valid EDA class object.', call. = FALSE)
     stopifnot(is.logical(ci))
 
     type <- match.arg(type[1], c('pearson', 'spearman', 'kendall', 'kappa'))
@@ -217,6 +217,10 @@
 
     edas <- rlang::list2(...)
 
+    classes <- purrr::map_lgl(edas, is_eda)
+
+    if(any(!classes)) stop('Please provide valid EDA objects.', call. = FALSE)
+
     types <- purrr::map_chr(edas, ~.x$type[1])
 
     if(!all(types == 'numeric')) stop('Numeric-type EDA objects are required.', call. = FALSE)
@@ -259,8 +263,8 @@
 
     ## entry control
 
-    if(!all(class(eda_object) == 'eda')) stop('Please provide a valid EDA class object.', call. = FALSE)
-    if(!all(class(y) == 'eda')) stop('Please provide a valid EDA class object.', call. = FALSE)
+    if(!is_eda(eda_object)) stop('Please provide a valid EDA class object.', call. = FALSE)
+    if(!is_eda(y)) stop('Please provide a valid EDA class object.', call. = FALSE)
 
     type <- match.arg(type[1], c('pearson', 'spearman', 'kendall'))
 

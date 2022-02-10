@@ -4,7 +4,7 @@
 \alias{eda.logical}
 \title{Generate EDA objects from logical vectors.}
 \usage{
-\method{eda}{logical}(x)
+\method{eda}{logical}(x, ...)
 }
 \arguments{
 \item{x}{an object to be converted to EDA.}

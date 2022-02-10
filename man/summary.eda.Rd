@@ -4,10 +4,10 @@
 \alias{summary.eda}
 \title{Summary for EDA objects.}
 \usage{
-\method{summary}{eda}(eda_object, pub_styled = FALSE, signif_digits = 2)
+\method{summary}{eda}(object, pub_styled = FALSE, signif_digits = 2)
 }
 \arguments{
-\item{eda_object}{eda object, created by \code{\link{eda}}.}
+\item{object}{eda object, created by \code{\link{eda}}.}
 
 \item{pub_styled}{logical, should the output be publication-ready formatted? See the details.}
 

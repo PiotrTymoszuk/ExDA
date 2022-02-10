@@ -4,10 +4,10 @@
 \alias{summary.etest}
 \title{Summary for the eTest objects.}
 \usage{
-\method{summary}{etest}(etest_object, pub_styled = FALSE, signif_digits = 2, simplify_p = TRUE)
+\method{summary}{etest}(object, pub_styled = FALSE, signif_digits = 2, simplify_p = TRUE)
 }
 \arguments{
-\item{etest_object}{an eTest object.}
+\item{object}{an eTest object.}
 
 \item{pub_styled}{logical, should the output be publication-ready formatted? See the details.}
 

@@ -4,10 +4,10 @@
 \alias{relevel.eda}
 \title{Relevel an EDA object.}
 \usage{
-\method{relevel}{eda}(eda_object, newlevels)
+\method{relevel}{eda}(x, newlevels, ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 
 \item{newlevels}{a character vector with new levels.}
 }

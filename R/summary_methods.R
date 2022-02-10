@@ -3,7 +3,7 @@
 #' Summary for EDA objects.
 #'
 #' @description Summary of numeric- and factor-type EDA objects.
-#' @param eda_object eda object, created by \code{\link{eda}}.
+#' @param object eda object, created by \code{\link{eda}}.
 #' @param pub_styled logical, should the output be publication-ready formatted? See the details.
 #' @param signif_digits significant digits used for rounding in the publication-style output.
 #' @details The pub_style argument allows for generating a 'nicer' output accepted by multiple journals.
@@ -11,30 +11,30 @@
 #' @export summary.eda
 #' @export
 
-  summary.eda <- function(eda_object,
+  summary.eda <- function(object,
                           pub_styled = FALSE,
                           signif_digits = 2) {
 
-    stopifnot(all(class(eda_object) == 'eda'))
+    stopifnot(is_eda(object))
     stopifnot(is.logical(pub_styled))
     stopifnot(is.numeric(signif_digits))
 
     signif_digits <- as.integer(signif_digits)
 
-    counts <- nobs(eda_object)
+    counts <- nobs(object)
 
-    eda_object <- na.omit(eda_object)
+    object <- na.omit(object)
 
-    if(eda_object$type == 'factor') {
+    if(object$type == 'factor') {
 
       if(!pub_styled) {
 
-        return(list(statistic = count(eda_object),
+        return(list(statistic = count(object),
                     observations = counts))
 
       } else {
 
-        cat_string <- count(eda_object)
+        cat_string <- count(object)
 
         cat_string <- purrr::map_chr(1:nrow(cat_string),
                                      ~paste0(cat_string$category[.x], ': ',
@@ -43,7 +43,7 @@
 
         cat_string <- paste(cat_string, collapse = '\n')
 
-        n_string <- paste('Complete: n =', nobs(eda_object)[['n']][2])
+        n_string <- paste('Complete: n =', nobs(object)[['n']][2])
 
         return(tibble::tibble(statistic = paste(cat_string, n_string, sep = '\n')))
 
@@ -56,7 +56,7 @@
                     function(x) quantile(x, c(0, 1)))
 
       stats <- purrr::map_dfr(stats,
-                              ~.x(eda_object))
+                              ~.x(object))
 
       stats <- dplyr::mutate(stats,
                              statistic = c('mean', 'sd', 'median', 'perc_25', 'perc_75', 'min', 'max'))
@@ -76,7 +76,7 @@
                               '\nRange: ', signif(stats$value[6], signif_digits),
                               ' - ', signif(stats$value[7], signif_digits))
 
-        n_string <- paste('Complete: n =', nobs(eda_object)[['n']][2])
+        n_string <- paste('Complete: n =', nobs(object)[['n']][2])
 
         return(tibble::tibble(statistic = paste(stat_string, n_string, sep = '\n')))
 
@@ -91,7 +91,7 @@
 #' Summary for the eTest objects.
 #'
 #' @description Returns a tibble representation of the statistical testing for differences between EDA objects.
-#' @param etest_object an eTest object.
+#' @param object an eTest object.
 #' @param pub_styled logical, should the output be publication-ready formatted? See the details.
 #' @param signif_digits significant digits used for rounding in the publication-style output.
 #' @param simplify_p logical, should p_values < 0.001 be presented in a p < 0.001 form?
@@ -100,19 +100,19 @@
 #' @export summary.etest
 #' @export
 
-  summary.etest <- function(etest_object, pub_styled = FALSE, signif_digits = 2, simplify_p = TRUE) {
+  summary.etest <- function(object, pub_styled = FALSE, signif_digits = 2, simplify_p = TRUE) {
 
-    stopifnot(any(class(etest_object) == 'etest'))
+    stopifnot(is_etest(object))
     stopifnot(is.logical(pub_styled))
     stopifnot(is.numeric(signif_digits))
 
     signif_digits <- as.integer(signif_digits)
 
-    if(!pub_styled) return(etest_object)
+    if(!pub_styled) return(object)
 
     if(simplify_p) {
 
-      nice_test <- dplyr::mutate(etest_object,
+      nice_test <- dplyr::mutate(object,
                                  significance = ifelse(p_value < 0.001,
                                                        'p < 0.001',
                                                        ifelse(p_value < 0.05,
@@ -121,7 +121,7 @@
 
     } else {
 
-      nice_test <- dplyr::mutate(etest_object,
+      nice_test <- dplyr::mutate(object,
                                  significance = ifelse(p_value < 0.05,
                                                        paste('p =', signif(p_value, signif_digits)),
                                                        paste0('ns (p = ', signif(p_value, signif_digits), ')')))

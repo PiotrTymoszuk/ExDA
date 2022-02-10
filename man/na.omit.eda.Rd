@@ -4,10 +4,10 @@
 \alias{na.omit.eda}
 \title{NA removal from EDA objects.}
 \usage{
-\method{na.omit}{eda}(eda_object)
+\method{na.omit}{eda}(object, ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{object}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 an EDA objects without NAs.

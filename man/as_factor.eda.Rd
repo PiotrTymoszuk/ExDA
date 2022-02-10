@@ -4,10 +4,10 @@
 \alias{as_factor.eda}
 \title{Convert numeric-type EDA to a factor.}
 \usage{
-\method{as_factor}{eda}(eda_object)
+\method{as_factor}{eda}(x, ...)
 }
 \arguments{
-\item{eda_object}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an EDA object, created by \code{\link{eda}}.}
 }
 \value{
 a factor-type EDA.
