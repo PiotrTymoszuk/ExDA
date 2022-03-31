@@ -475,3 +475,107 @@
 
   }
 
+
+# Effect size plotting ------
+
+#' Plot significance versus effect size.
+#'
+#' @description Plots effect size statistic and the adjusted significance for the given eTest object storing
+#' results of a statistic test. Plot tag contains (range) n numbers of complete observations.
+#' @param etest_object and eTest object, created e.g. with \code{\link{compare_variables}}.
+#' @param point_alpha alpha of the plot points.
+#' @param point_hjitter point jitter height.
+#' @param point_wjitter point jitter width.
+#' @param point_size size of the points in the plots.
+#' @param point_color a pair of valid R colors: 1) for non-significant and 2) for significant effects.
+#' @param plot_title text to be displayed in the plot title.
+#' @param plot_subtitle text to be displayed in the plot subtitle.
+#' @param cust_theme custom ggplot2 theme.
+#' @param show_labels which points should be labeled? 'none' hides labels (default), 'all': labels all points,
+#' 'signif': labels only the significant effects with the variable name.
+#' @param txt_size size of the label text.
+#' @param ... additional arguments passed to \code{\link[ggrepel]{geom_text_repel}}.
+#' @return a ggplot point plot, significance is coded by the point fill color.
+#' @export
+
+  plot_effect <- function(etest_object,
+                          point_alpha = 0.5,
+                          point_hjitter = 0,
+                          point_wjitter = 0,
+                          point_size = 2,
+                          point_color = c('gray60', 'coral2'),
+                          plot_title = NULL,
+                          plot_subtitle = NULL,
+                          cust_theme = ggplot2::theme_classic(),
+                          show_labels = c('none', 'all', 'signif'),
+                          txt_size = 2.75, ...) {
+
+    ## entry control
+
+    if(!is_etest(etest_object)) stop('Please provide a valid, non-pub styled eTest object.', call. = FALSE)
+
+    stopifnot(any(class(cust_theme) == 'theme'))
+
+    show_labels <- match.arg(show_labels[1], c('none', 'all', 'signif'))
+
+    ## plotting table and n numbers
+
+    etest_object <- dplyr::mutate(etest_object,
+                                  significant = ifelse(p_adjusted < 0.05, 'significant', 'ns'),
+                                  neg_log_p = -log10(p_adjusted))
+
+    if(show_labels == 'all') {
+
+      etest_object <- dplyr::mutate(etest_object,
+                                    plot_label = variable)
+
+    } else {
+
+      etest_object <- dplyr::mutate(etest_object,
+                                    plot_label = ifelse(significant == 'significant', variable, NA))
+
+    }
+
+    n_numbers <- etest_object$n
+
+    if(min(n_numbers) == max(n_numbers)) {
+
+      plot_tag <- paste('n =', n_numbers[1])
+
+    } else {
+
+      plot_tag <- paste0('n = ', min(n_numbers), ' - ', max(n_numbers))
+
+    }
+
+    ## plotting
+
+    eff_plot <- ggplot2::ggplot(etest_object,
+                                ggplot2::aes(x = .data[['estimate']],
+                                             y = .data[['neg_log_p']],
+                                             fill = .data[['significant']])) +
+      ggplot2::geom_point(shape = 21,
+                          size = point_size,
+                          alpha = point_alpha,
+                          position = position_jitter(width = point_wjitter,
+                                                     height = point_wjitter)) +
+      ggplot2::scale_fill_manual(values = point_color,
+                                 name = '') +
+      cust_theme +
+      ggplot2::labs(title = plot_title,
+                    subtitle = plot_subtitle,
+                    tag = plot_tag,
+                    x = 'Effect size',
+                    y = expression('-log'[10]*' p'))
+
+    if(show_labels != 'none') {
+
+      eff_plot <- eff_plot +
+        ggrepel::geom_text_repel(aes(label = .data[['plot_label']]),
+                                 size = txt_size, ...)
+
+    }
+
+    eff_plot
+
+  }

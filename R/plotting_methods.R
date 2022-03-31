@@ -1,3 +1,5 @@
+# EDA objects ------
+
 #' Plot method for EDA objects
 #'
 #' @description Plots distribution of the given EDA object.
@@ -113,5 +115,42 @@
     gg_plot +
       ggplot2::labs(title = plot_title,
                     subtitle = plot_subtitle)
+
+  }
+
+# eTest objects ------
+
+#' Plot effect size for the eTest object.
+#'
+#' @description Plots effect size statistic and the adjusted significance for
+#' the given eTest object storing results of a statistic test. Plot tag contains
+#' (range) n numbers of complete observations.
+#' @param x eTest object, created e.g. by \code{\link{compare_variables}}.
+#' @inheritParams plot_effect
+#' @export plot.etest
+#' @export
+
+  plot.etest <- function(x,
+                         point_alpha = 0.5,
+                         point_hjitter = 0,
+                         point_wjitter = 0,
+                         point_size = 2,
+                         point_color = c("gray60", "coral2"),
+                         plot_title = NULL,
+                         plot_subtitle = NULL,
+                         cust_theme = ggplot2::theme_classic(),
+                         show_labels = c("none", "all", "signif"),
+                         txt_size = 2.75, ...) {
+
+    exda::plot_effect(etest_object = x,
+                      point_alpha = point_alpha,
+                      point_hjitter = point_hjitter,
+                      point_wjitter = point_wjitter,
+                      point_size = point_size,
+                      point_color = point_color, plot_title = plot_title,
+                      plot_subtitle = plot_subtitle,
+                      cust_theme = cust_theme,
+                      show_labels = show_labels,
+                      txt_size = txt_size, ...)
 
   }

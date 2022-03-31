@@ -6,7 +6,8 @@
 #' boxplot or correlation point plot representation.
 #' @param ... numeric-type EDA objects, at least two, created by \code{\link{eda}}.
 #' @param type type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-#' 'bar' or 'bubble' are available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
+#' 'bar', 'bubble' or 'stack' (stack-bar plot) are available for factor-type EDAs.
+#' 'violin', 'box', 'hist', 'correlation' and 'paired'
 #' are available for numeric-type objects.
 #' @param eda_names a vector with names of the EDA objects.
 #' @param scale the feature to be presented in factor bar or bubble plots.
@@ -27,6 +28,9 @@
 #' @param show_labels logical, should labels with count numbers, percentages or fractions be presented in bar plots?
 #' @param signif_digits significant digits used for the label value rounding.
 #' @param txt_size size of the text label.
+#' @param txt_color color of the text label.
+#' @param geom_label logical, should the text in the stacked bar plot be
+#' presented as a ggplot's geom_label?
 #' @param bins bin number, passed to \code{\link[ggplot2]{histogram}}.
 #' @param facet_hist 'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.
 #' @details the particular EDA objects are color coded.
@@ -34,7 +38,7 @@
 
   multiplot <- function(...,
                         eda_names = NULL,
-                        type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble'),
+                        type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble', 'stack'),
                         scale = c('none', 'fraction', 'percent'),
                         point_alpha = 0.5,
                         point_hjitter = 0.05,
@@ -52,6 +56,8 @@
                         show_labels = TRUE,
                         signif_digits = 2,
                         txt_size = 2.75,
+                        txt_color = 'black',
+                        geom_label = TRUE,
                         bins = NULL,
                         facet_hist = c('none', 'horizontal', 'vertical')) {
 
@@ -69,7 +75,7 @@
     stopifnot(any(class(cust_theme) == 'theme'))
 
     type <- match.arg(type[1],
-                      c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble'))
+                      c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble', 'stack'))
 
     scale <- match.arg(scale[1],
                        c('none', 'fraction', 'percent'))
@@ -103,6 +109,7 @@
 
     plotting_tbl <- switch(type,
                            bar = exda:::chi_tester(!!!edas, test_tbl = TRUE, coerce = TRUE),
+                           stack = exda:::chi_tester(!!!edas, test_tbl = TRUE, coerce = TRUE),
                            violin = exda:::convert_eda(!!!edas, paired = FALSE),
                            box = exda:::convert_eda(!!!edas, paired = FALSE),
                            paired = exda:::convert_eda(!!!edas, paired = TRUE),
@@ -146,7 +153,7 @@
 
     if(!type %in% c('correlation', 'bubble')) {
 
-      if(type == 'bar' | (type == 'default' & types[1] == 'factor')) {
+      if(type %in% c('bar', 'stack') | (type == 'default' & types[1] == 'factor')) {
 
         n_numbers <- dplyr::summarise(dplyr::group_by(plotting_tbl, group),
                                       n = sum(n))
@@ -171,9 +178,9 @@
 
     }
 
-    ##plotting for factors, bar plot
+    ##plotting for factors, bar and stack plot
 
-    if(type == 'bar' | (type == 'default' & types[1] == 'factor')) {
+    if(type %in% c('bar', 'stack') | (type == 'default' & types[1] == 'factor')) {
 
       scale <- switch(scale,
                       none = 'n',
@@ -192,28 +199,86 @@
 
       }
 
-      if(is.null(x_lab)) x_lab <- 'Category'
+      if(type %in% c('bar', 'default')) {
 
-      gg_plot <- ggplot2::ggplot(plotting_tbl,
-                                 ggplot2::aes(x = .data[['category']],
-                                              y = .data[[scale]],
-                                              fill = .data[['group']])) +
-        ggplot2::geom_bar(stat = 'identity',
-                          position = position_dodge(width = 0.9),
-                          color = 'black') +
-        ggplot2::labs(x = x_lab,
-                      y = y_lab)
+        if(is.null(x_lab)) x_lab <- 'Category'
 
-      if(show_labels) {
+        gg_plot <- ggplot2::ggplot(plotting_tbl,
+                                   ggplot2::aes(x = .data[['category']],
+                                                y = .data[[scale]],
+                                                fill = .data[['group']])) +
+          ggplot2::geom_bar(stat = 'identity',
+                            position = ggplot2::position_dodge(width = 0.9),
+                            color = 'black')
 
-        gg_plot <- gg_plot +
-          ggplot2::geom_text(ggplot2::aes(label = plot_lab),
-                             size = txt_size,
-                             hjust = 0.5,
-                             vjust = -0.4,
-                             position = position_dodge(width = 0.9))
+        if(show_labels) {
+
+          gg_plot <- gg_plot +
+            ggplot2::geom_text(ggplot2::aes(label = plot_lab),
+                               size = txt_size,
+                               color = txt_color,
+                               hjust = 0.5,
+                               vjust = -0.4,
+                               position = position_dodge(width = 0.9),
+                               show.legend = FALSE)
+
+        }
+
+      } else {
+
+        if(is.null(x_lab)) x_lab <- 'Strata'
+
+        plotting_tbl <- dplyr::arrange(plotting_tbl, dplyr::desc(.data[['category']]))
+
+        plotting_tbl <- dplyr::group_by(plotting_tbl, .data[['group']])
+
+        plotting_tbl <- dplyr::mutate(plotting_tbl,
+                                      y_pos = cumsum(.data[[scale]]) - 0.5 * .data[[scale]],
+                                      plot_lab = ifelse(plot_lab == 0, NA, plot_lab))
+
+        plotting_tbl <- dplyr::ungroup(plotting_tbl)
+
+        gg_plot <- ggplot2::ggplot(plotting_tbl,
+                                   ggplot2::aes(x = .data[['group']],
+                                                y = .data[[scale]],
+                                                fill = .data[['category']])) +
+          ggplot2::geom_bar(stat = 'identity',
+                            position = ggplot2::position_stack(),
+                            color = 'black')
+
+        if(show_labels) {
+
+          if(geom_label) {
+
+            gg_plot <- gg_plot +
+              ggplot2::geom_label(ggplot2::aes(label = plot_lab,
+                                               y = y_pos),
+                                  size = txt_size,
+                                  color = txt_color,
+                                  hjust = 0.5,
+                                  vjust = 0.5,
+                                  show.legend = FALSE)
+
+          } else {
+
+            gg_plot <- gg_plot +
+              ggplot2::geom_text(ggplot2::aes(label = plot_lab,
+                                              y = y_pos),
+                                 size = txt_size,
+                                 color = txt_color,
+                                 hjust = 0.5,
+                                 vjust = 0.5,
+                                 show.legend = FALSE)
+
+          }
+
+        }
 
       }
+
+      gg_plot <- gg_plot +
+        ggplot2::labs(x = x_lab,
+                      y = y_lab)
 
     } else if(type == 'correlation') {
 

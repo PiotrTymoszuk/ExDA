@@ -258,11 +258,12 @@
 #' @description Compares the given variable between the provided data sets
 #' with a range of statistical sets as described for \code{\link{test}} (statistical testing),
 #' \code{\link{distribution}} (distribution comparison), \code{\link{variance}} (variance comparison),
-#' \code{\link{correlate}} (correlation) or \code{\link{covariance}} (covariance).
+#' \code{\link{correlate}} (correlation), \code{\link{covariance}} (covariance) or \code{\link{eff_size}} (effect size).
 #' @param ... data frames.
 #' @param variables a vector with variable names.
 #' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
-#' @param what the requested analysis: 'test', 'distribution', 'variance', 'correlation' or 'covariance'. Defaults to 'test'.
+#' @param what the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance' or 'eff_size'.
+#' Defaults to 'test'.
 #' @param types a vector with the types of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
 #' \code{\link{covariance}} for details. The vector length must be either one or the length of the 'variables' vector.
 #' @param exact logical, should exact values for Chi-squared. Mann-Whitney and Wilcoxon test be returned?
@@ -367,9 +368,10 @@
 #' @param ... data sets.
 #' @param variable variable name.
 #' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
-#' @param type type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-#' 'bar' and 'bubble' are available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
-#' are available for numeric-type objects.
+#' @param type type of the plot. 'default' plots violin for numeric variables and bars for factors.
+#' 'bar', 'bubble' and 'stack' (stacked bar plot) are available for factors.
+#' 'violin', 'box', 'hist', 'correlation' and 'paired'
+#' are available for numeric variables.
 #' @param data_names a vector with names of the data sets.
 #' @param scale the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
 #' 'fraction' presents fraction fo complete observations.
@@ -387,6 +389,8 @@
 #' @param y_lab text to be presented in the Y axis title.
 #' @param show_trend logical, should a trend line with 95\% confidence intervals be presented in the correlation plots?
 #' @param show_labels logical, should labels with count numbers, percentages or fractions be presented in bar plots?
+#' @param geom_label logical, should the text in the stacked bar plot be
+#' presented as a ggplot's geom_label?
 #' @param signif_digits significant digits used for the label value rounding.
 #' @param txt_size size of the text label.
 #' @param bins bin number, passed to \code{\link[ggplot2]{histogram}}.
@@ -399,7 +403,7 @@
                             variable,
                             split_factor = NULL,
                             data_names = NULL,
-                            type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired'),
+                            type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'stack'),
                             scale = c('none', 'fraction', 'percent'),
                             point_alpha = 0.5,
                             point_hjitter = 0.05,
@@ -415,6 +419,7 @@
                             y_lab = NULL,
                             show_trend = TRUE,
                             show_labels = TRUE,
+                            geom_label = TRUE,
                             signif_digits = 2,
                             txt_size = 2.75,
                             bins = NULL,
@@ -461,7 +466,7 @@
     inp_list <- purrr::map(inp_list, ~eda(.x[[variable]]))
 
     multiplot(!!!inp_list,
-              eda_names = data_names,
+              eda_names = if(is.null(names(inp_list))) data_names else names(inp_list),
               type = type,
               scale = scale,
               point_alpha = point_alpha,
@@ -480,6 +485,7 @@
               show_labels = show_labels,
               signif_digits = signif_digits,
               txt_size = txt_size,
+              geom_label = geom_label,
               bins = bins,
               facet_hist = facet_hist)
 

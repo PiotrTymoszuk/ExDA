@@ -17,6 +17,7 @@ Imports:
     furrr,
     future,
     ggplot2,
+    ggrepel,
     moments,
     plyr,
     purrr,
