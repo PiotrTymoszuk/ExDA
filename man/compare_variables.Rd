@@ -28,7 +28,8 @@ compare_variables(
 
 \item{split_factor}{optional, the name of a factor used for splitting the variables of interest into analysis groups.}
 
-\item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation' or 'covariance'. Defaults to 'test'.}
+\item{what}{the requested analysis: 'test', 'distribution', 'variance', 'correlation', 'covariance' or 'eff_size'.
+Defaults to 'test'.}
 
 \item{types}{a vector with the types of statistical test, see \code{\link{test}}, \code{\link{correlate}} and
 \code{\link{covariance}} for details. The vector length must be either one or the length of the 'variables' vector.}
@@ -58,7 +59,7 @@ furrr package.}
 Compares the given variable between the provided data sets
 with a range of statistical sets as described for \code{\link{test}} (statistical testing),
 \code{\link{distribution}} (distribution comparison), \code{\link{variance}} (variance comparison),
-\code{\link{correlate}} (correlation) or \code{\link{covariance}} (covariance).
+\code{\link{correlate}} (correlation), \code{\link{covariance}} (covariance) or \code{\link{eff_size}} (effect size).
 }
 \details{
 in case, the split_factor is provided, only the first of the input data frames will be analyzed.

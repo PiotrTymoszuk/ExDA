@@ -8,7 +8,7 @@ multiplot(
   ...,
   eda_names = NULL,
   type = c("default", "bar", "violin", "box", "hist", "correlation", "paired",
-    "bubble"),
+    "bubble", "stack"),
   scale = c("none", "fraction", "percent"),
   point_alpha = 0.5,
   point_hjitter = 0.05,
@@ -26,6 +26,8 @@ multiplot(
   show_labels = TRUE,
   signif_digits = 2,
   txt_size = 2.75,
+  txt_color = "black",
+  geom_label = TRUE,
   bins = NULL,
   facet_hist = c("none", "horizontal", "vertical")
 )
@@ -36,7 +38,8 @@ multiplot(
 \item{eda_names}{a vector with names of the EDA objects.}
 
 \item{type}{type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-'bar' or 'bubble' are available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
+'bar', 'bubble' or 'stack' (stack-bar plot) are available for factor-type EDAs.
+'violin', 'box', 'hist', 'correlation' and 'paired'
 are available for numeric-type objects.}
 
 \item{scale}{the feature to be presented in factor bar or bubble plots.
@@ -73,6 +76,11 @@ are available for numeric-type objects.}
 \item{signif_digits}{significant digits used for the label value rounding.}
 
 \item{txt_size}{size of the text label.}
+
+\item{txt_color}{color of the text label.}
+
+\item{geom_label}{logical, should the text in the stacked bar plot be
+presented as a ggplot's geom_label?}
 
 \item{bins}{bin number, passed to \code{\link[ggplot2]{histogram}}.}
 

@@ -9,7 +9,7 @@ plot_variable(
   variable,
   split_factor = NULL,
   data_names = NULL,
-  type = c("default", "bar", "violin", "box", "hist", "correlation", "paired"),
+  type = c("default", "bar", "violin", "box", "hist", "correlation", "paired", "stack"),
   scale = c("none", "fraction", "percent"),
   point_alpha = 0.5,
   point_hjitter = 0.05,
@@ -25,6 +25,7 @@ plot_variable(
   y_lab = NULL,
   show_trend = TRUE,
   show_labels = TRUE,
+  geom_label = TRUE,
   signif_digits = 2,
   txt_size = 2.75,
   bins = NULL,
@@ -40,9 +41,10 @@ plot_variable(
 
 \item{data_names}{a vector with names of the data sets.}
 
-\item{type}{type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-'bar' and 'bubble' are available for factor-type EDAs. 'violin', 'box', 'hist', 'correlation' and 'paired'
-are available for numeric-type objects.}
+\item{type}{type of the plot. 'default' plots violin for numeric variables and bars for factors.
+'bar', 'bubble' and 'stack' (stacked bar plot) are available for factors.
+'violin', 'box', 'hist', 'correlation' and 'paired'
+are available for numeric variables.}
 
 \item{scale}{the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
 'fraction' presents fraction fo complete observations.}
@@ -74,6 +76,9 @@ are available for numeric-type objects.}
 \item{show_trend}{logical, should a trend line with 95\% confidence intervals be presented in the correlation plots?}
 
 \item{show_labels}{logical, should labels with count numbers, percentages or fractions be presented in bar plots?}
+
+\item{geom_label}{logical, should the text in the stacked bar plot be
+presented as a ggplot's geom_label?}
 
 \item{signif_digits}{significant digits used for the label value rounding.}
 
