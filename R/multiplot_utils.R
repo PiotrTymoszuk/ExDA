@@ -85,6 +85,8 @@
 
     edas <- rlang::list2(...)
 
+    edas <- purrr::map(edas, exda:::na.exclude.eda)
+
     classes <- purrr::map_lgl(edas, is_eda)
 
     if(any(!classes)) stop('Please provide valid EDA objects.', call. = TRUE)
