@@ -28,6 +28,7 @@ plot_variable(
   geom_label = TRUE,
   signif_digits = 2,
   txt_size = 2.75,
+  txt_color = "black",
   bins = NULL,
   facet_hist = c("none", "horizontal", "vertical")
 )
@@ -83,6 +84,8 @@ presented as a ggplot's geom_label?}
 \item{signif_digits}{significant digits used for the label value rounding.}
 
 \item{txt_size}{size of the text label.}
+
+\item{txt_color}{color of the text label.}
 
 \item{bins}{bin number, passed to \code{\link[ggplot2]{histogram}}.}
 

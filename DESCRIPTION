@@ -16,6 +16,7 @@ Imports:
     forcats,
     furrr,
     future,
+    ggforce,
     ggplot2,
     ggrepel,
     moments,
@@ -24,6 +25,8 @@ Imports:
     rcompanion,
     rlang,
     rstatix,
+    sciplot,
     stringi,
+    tidyr,
     vcd
 RoxygenNote: 7.1.1
