@@ -121,8 +121,9 @@
 
     if(type == 'kappa') {
 
-      eda_object <- as_factor(eda_object)
-      y <- as_factor(y)
+      if(!is.factor(eda_object$value)) eda_object <- as_factor(eda_object)
+
+      if(!is.factor(y$value)) y <- as_factor(y)
 
       tst_tbl <- table(eda_object$value, y$value)
 

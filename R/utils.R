@@ -117,7 +117,7 @@
 
      if(test_tbl) return(purrr::map2_dfr(tst_mtx,
                                          paste0('G', 1:length(edas)),
-                                         ~mutate(.x, group = factor(.y))))
+                                         ~dplyr::mutate(.x, group = factor(.y))))
 
      tst_mtx <- purrr::map(tst_mtx, ~.x[['n']])
 

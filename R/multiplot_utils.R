@@ -110,16 +110,30 @@
     ## plotting table and n numbers
 
     plotting_tbl <- switch(type,
-                           bar = exda:::chi_tester(!!!edas, test_tbl = TRUE, coerce = TRUE),
-                           stack = exda:::chi_tester(!!!edas, test_tbl = TRUE, coerce = TRUE),
+                           bar = exda:::chi_tester(!!!edas,
+                                                   test_tbl = TRUE,
+                                                   coerce = TRUE),
+                           stack = exda:::chi_tester(!!!edas,
+                                                     test_tbl = TRUE,
+                                                     coerce = TRUE),
                            violin = exda:::convert_eda(!!!edas, paired = FALSE),
                            box = exda:::convert_eda(!!!edas, paired = FALSE),
                            paired = exda:::convert_eda(!!!edas, paired = TRUE),
                            hist = exda:::convert_eda(!!!edas, paired = FALSE),
                            correlation = tibble(x = as_numeric(edas[[1]])$value,
-                                                y = as_numeric(edas[[2]])$value),
-                           bubble = table(exda::as_factor(edas[[1]])$value,
-                                          exda::as_factor(edas[[2]])$value))
+                                                y = as_numeric(edas[[2]])$value))
+
+    if(type == 'bubble') {
+
+      if(!is.factor(edas[[1]]$value)) edas[[1]] <- exda::as.factor(edas[[1]])
+
+      if(!is.factor(edas[[2]]$value)) edas[[2]] <- exda::as.factor(edas[[2]])
+
+      plotting_tbl <- table(edas[[1]]$value,
+                            edas[[2]]$value)
+
+    }
+
 
     if(type == 'default' & types[1] == 'factor') {
 
@@ -147,7 +161,9 @@
                                           levels(plotting_tbl[['group']]))
 
         plotting_tbl <- dplyr::mutate(plotting_tbl,
-                                      group = naming_vector[group])
+                                      group = naming_vector[group],
+                                      group = factor(group,
+                                                     levels = unname(naming_vector)))
 
       }
 
@@ -221,7 +237,7 @@
                                color = txt_color,
                                hjust = 0.5,
                                vjust = -0.4,
-                               position = position_dodge(width = 0.9),
+                               position = ggplot2::position_dodge(width = 0.9),
                                show.legend = FALSE)
 
         }
@@ -288,8 +304,8 @@
       gg_plot <- ggplot2::ggplot(plotting_tbl,
                                  ggplot2::aes(x = .data[['x']],
                                               y = .data[['y']])) +
-        ggplot2::geom_point(position = position_jitter(width = point_wjitter,
-                                                       height = point_hjitter),
+        ggplot2::geom_point(position = ggplot2::position_jitter(width = point_wjitter,
+                                                                height = point_hjitter),
                             color = 'black',
                             fill = point_color,
                             size = point_size,
@@ -308,13 +324,13 @@
     } else if(type %in% c('default', 'violin', 'box')) {
 
       geom <- switch(type,
-                     box = geom_boxplot(alpha = 0.25,
-                                        outlier.color = NA,
-                                        show.legend = FALSE),
-                     default = geom_violin(alpha = 0.25,
-                                           show.legend = FALSE),
-                     violin = geom_violin(alpha = 0.25,
-                                          show.legend = FALSE))
+                     box = ggplot2::geom_boxplot(alpha = 0.25,
+                                                 outlier.color = NA,
+                                                 show.legend = FALSE),
+                     default = ggplot::geom_violin(alpha = 0.25,
+                                                   show.legend = FALSE),
+                     violin = ggplot2::geom_violin(alpha = 0.25,
+                                                   show.legend = FALSE))
 
       gg_plot <- ggplot2::ggplot(plotting_tbl,
                                  ggplot2::aes(x = .data[['group']],
@@ -324,8 +340,8 @@
         ggplot2::geom_point(size = point_size,
                             shape = 21,
                             alpha = point_alpha,
-                            position = position_jitter(width = point_wjitter,
-                                                       height = point_hjitter)) +
+                            position = ggplot2::position_jitter(width = point_wjitter,
+                                                                height = point_hjitter)) +
         ggplot2::labs(x = x_lab,
                       y = y_lab)
 
@@ -362,7 +378,7 @@
         ggplot2::geom_histogram(bins = bins,
                                 alpha = point_alpha,
                                 color = 'black',
-                                position = position_identity()) +
+                                position = ggplot2::position_identity()) +
         ggplot2::labs(x = x_lab,
                       y = if(is.null(y_lab)) 'Count' else y_lab)
 

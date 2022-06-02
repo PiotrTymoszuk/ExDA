@@ -79,7 +79,15 @@
 
     stopifnot(is_eda(x))
 
-    eda(factor(x$value))
+    if(!is.factor(x$value)) {
+
+      return(eda(factor(x$value)))
+
+    } else {
+
+      return(x)
+
+    }
 
   }
 

@@ -393,6 +393,7 @@
 #' presented as a ggplot's geom_label?
 #' @param signif_digits significant digits used for the label value rounding.
 #' @param txt_size size of the text label.
+#' @param txt_color color of the text label.
 #' @param bins bin number, passed to \code{\link[ggplot2]{histogram}}.
 #' @param facet_hist 'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.
 #' @details the particular data sets representations are color coded. In case, the split_factor is provided, only the first
@@ -422,6 +423,7 @@
                             geom_label = TRUE,
                             signif_digits = 2,
                             txt_size = 2.75,
+                            txt_color = 'black',
                             bins = NULL,
                             facet_hist = c('none', 'horizontal', 'vertical')) {
 
@@ -485,6 +487,7 @@
               show_labels = show_labels,
               signif_digits = signif_digits,
               txt_size = txt_size,
+              txt_color = txt_color,
               geom_label = geom_label,
               bins = bins,
               facet_hist = facet_hist)
