@@ -327,7 +327,7 @@
                      box = ggplot2::geom_boxplot(alpha = 0.25,
                                                  outlier.color = NA,
                                                  show.legend = FALSE),
-                     default = ggplot::geom_violin(alpha = 0.25,
+                     default = ggplot2::geom_violin(alpha = 0.25,
                                                    show.legend = FALSE),
                      violin = ggplot2::geom_violin(alpha = 0.25,
                                                    show.legend = FALSE))

@@ -10,7 +10,7 @@
 #' @details employs \code{\link[ggforce]{stat_ellip}}.
 #' @param data a data frame.
 #' @param variables names of the variables to plot.
-#' @param spit_factor name of the splitting variable.
+#' @param split_factor name of the splitting variable.
 #' @param quantiles quantiles to be shown on the longer axis (a dimension)
 #' of ellipses, a two element vector.
 #' @param non_zero logical, should the zero values be removed?
@@ -25,6 +25,7 @@
 #' @param x_lab x axis title.
 #' @param cust_theme custom ggplot theme.
 #' @param ... extra arguments passed to \code{\link[ggforce]{stat_ellip}}.
+#' @return a ggplot object.
 #' @export
 
   draw_quantile_elli <- function(data,
@@ -223,7 +224,7 @@
 #' Points represent single observations.
 #' @param data a data frame.
 #' @param variables names of the variables to plot.
-#' @param spit_factor name of the splitting variable.
+#' @param split_factor name of the splitting variable.
 #' @param distr_geom form of the distribution symbol: a violin or box plot.
 #' @param non_zero logical, should the zero values be removed?
 #' @param point_alpha alpha of data points.
@@ -239,6 +240,7 @@
 #' @param cust_theme custom ggplot theme.
 #' @param ... extra arguments passed to \code{\link[ggplot2]{geom_violin}} or
 #' \code{\link[ggplot2]{geom_box}}.
+#' @return a ggplot object.
 #' @export
 
   draw_violin_panel <- function(data,
@@ -484,7 +486,7 @@
 #' or mean) in form of bars or lines.
 #' @param data a data frame.
 #' @param variables names of the variables to plot.
-#' @param spit_factor name of the splitting variable.
+#' @param split_factor name of the splitting variable.
 #' @param stat distribution statistic, currently mean or median supported.
 #' @param err_stat error/distribution width statistic, SD ('sd'), SEM ('se'),
 #' 95% CI from the normal distribution (2se), IQR (iqr) or 95% percentile
@@ -500,6 +502,7 @@
 #' @param x_lab x axis title.
 #' @param cust_theme custom ggplot theme.
 #' @param ... extra arguments passed to \code{\link[ggplot2]{geom_ribbon}}
+#' @return a ggplot object.
 #' @export
 
   draw_stat_panel <- function(data,
@@ -716,3 +719,289 @@
                     x = x_lab)
 
   }
+
+# Draw a panel with frequencies --------
+
+#' Draw panel with frequencies or counts
+#'
+#' @description Draws a panel of stacked or dodged bar plots with frequencies
+#' or counts for the given categorical variables. Works best, when the variables
+#' share the same levels.
+#' @inheritParams draw_stat_panel
+#' @param variables names of the variables to plot, they need to be factors.
+#' @param split name of the splitting variable (optional). If provided,
+#' the panel will be faceted by the variables and the split_factor presented
+#' in the Y axis.
+#' @param rm_na logical, should missing observations be removed prior
+#' to plotting? If FALSE,
+#' @param scale statistic to be plotted: percent (default), fraction or counts
+#' of observations for each variable level.
+#' @param form form of the bar plot: stacked bars (default) or dodged bars.
+#' @param show_labels logical, should the data bars be labeled with the percent,
+#' fraction or count value?
+#' @param txt_size size of the label text, ignored if show_labels is FALSE.
+#' @param geom_labe logical, should the bar label be presented as a geom_label?
+#' If FALSE, plain text is displayed.
+#' @param signif_digits significant digits to be shown in the bar labels.
+#' @param y_lab Y axis title.
+#' @param ... additional arguments passed to \code{\link[ggplot2]{facet_grid}}.
+#' Ignored, if split_factor is NULL.
+#' @return a ggplot object.
+#' @export
+
+  draw_freq_panel <- function(data,
+                              variables,
+                              split_factor = NULL,
+                              rm_na = TRUE,
+                              scale = c('percent', 'fraction', 'count'),
+                              form = c('stack', 'dodge'),
+                              show_labels = FALSE,
+                              txt_size = 2.75,
+                              geom_label = TRUE,
+                              signif_digits = 2,
+                              alpha = 1,
+                              dodge_w = 0.9,
+                              plot_title = NULL,
+                              plot_subtitle = NULL,
+                              plot_tag = NULL,
+                              x_lab = '% of cohort',
+                              y_lab = split_factor,
+                              cust_theme = ggplot2::theme_classic(), ...) {
+
+    ## entry control
+
+    stopifnot(is.logical(rm_na))
+    stopifnot(is.logical(show_labels))
+    stopifnot(is.numeric(txt_size))
+    stopifnot(is.logical(geom_label))
+    stopifnot(is.numeric(signif_digits))
+    stopifnot(is.numeric(alpha))
+    stopifnot((alpha >= 0 & alpha <= 1))
+    stopifnot(is.numeric(dodge_w))
+    stopifnot(!is.null(variables))
+
+    if(!is.data.frame(data)) {
+
+      stop('Please provide a valid data frame as data argument.', call. = FALSE)
+
+    }
+
+    if(any(!variables %in% names(data))) {
+
+      stop('At least one variable is missing from data.', call. = FALSE)
+
+    }
+
+    classes <- purrr::map_lgl(variables, ~is.factor(data[[.x]]))
+
+    if(any(!classes)) {
+
+      stop('Variables need to be factors.', call. = FALSE)
+
+    }
+
+    if(!is.null(split_factor)) {
+
+      if(!split_factor %in% names(data)) {
+
+        stop('split_factor missing from data', call. = FALSE)
+
+      }
+
+      if(!is.factor(data[[split_factor]])) {
+
+        data <- dplyr::mutate(data,
+                              !!split_factor := factor(.data[[split_factor]]))
+
+      }
+
+    }
+
+    if(!any(class(cust_theme) == 'theme')) {
+
+      stop('Please provide a valid ggplot theme as cust_theme.', call. = FALSE)
+
+    }
+
+    scale <- match.arg(scale[1], c('percent', 'fraction', 'count'))
+
+    x_var <- switch(scale,
+                    percent = 'perc',
+                    fraction = 'frac',
+                    count = 'n')
+
+    form <- match.arg(form[1], c('stack', 'dodge'))
+
+    pos <- switch(form,
+                  stack = ggplot2::position_stack(),
+                  dodge = ggplot2::position_dodge(width = dodge_w))
+
+    ## frequency table
+
+    if(is.null(split_factor)) {
+
+      data <- data[variables]
+
+      count_lst <- purrr::map(variables,
+                              ~dplyr::count(data, .data[[.x]]))
+
+      count_lst <- rlang::set_names(count_lst, variables)
+
+      count_lst <- purrr::map(count_lst, rlang::set_names, c('level', 'n'))
+
+      if(rm_na) {
+
+        count_lst <- purrr::map(count_lst,
+                                dplyr::filter,
+                                !is.na(level))
+
+      }
+
+      count_lst <- purrr::map(count_lst,
+                              dplyr::mutate,
+                              frac = n/sum(n),
+                              perc = frac * 100)
+
+      plot_tbl <-
+        purrr::map2_dfr(count_lst,
+                        names(count_lst),
+                        ~dplyr::mutate(.x,
+                                       variable = factor(.y, levels = variables)))
+
+      plot_tbl <- dplyr::arrange(plot_tbl, variable, desc(level))
+
+      plot_tbl <-
+        plyr::ddply(plot_tbl, 'variable',
+                    dplyr::mutate,
+                    label = signif(.data[[x_var]], signif_digits),
+                    x_pos = cumsum(.data[[x_var]]) - 0.5 * .data[[x_var]])
+
+      plot_tbl <- dplyr::arrange(plot_tbl, variable, level)
+
+    } else {
+
+      data <- data[c(split_factor, variables)]
+
+      count_lst <-
+        plyr::dlply(data, split_factor,
+                    function(chunk) purrr::map(variables,
+                                               ~dplyr::count(chunk,
+                                                             .data[[.x]])))
+
+      count_lst <- purrr::map(count_lst, rlang::set_names, variables)
+
+      count_lst <- purrr::map(count_lst,
+                              ~purrr::map(.x, rlang::set_names, c('level', 'n')))
+
+      if(rm_na) {
+
+        count_lst <- purrr::map(count_lst,
+                                ~purrr::map(.x, dplyr::filter, !is.na(level)))
+
+      }
+
+      count_lst <- purrr::map(count_lst,
+                              ~purrr::map(.x,
+                                          mutate,
+                                          frac = n/sum(n),
+                                          perc = frac * 100))
+
+      plot_tbl <-
+        purrr::map(count_lst,
+                   ~purrr::map2_dfr(.x, names(.x),
+                                    ~dplyr::mutate(.x,
+                                                   variable = factor(.y,
+                                                                     levels = variables))))
+
+      plot_tbl <- purrr::map2_dfr(plot_tbl, names(plot_tbl),
+                                  ~dplyr::mutate(.x, !!split_factor := .y))
+
+      plot_tbl <- dplyr::arrange(plot_tbl,
+                                 .data[[split_factor]], variable, desc(level))
+
+      plot_tbl <- plyr::ddply(plot_tbl,
+                              c(split_factor, 'variable'),
+                              dplyr::mutate,
+                              label = signif(.data[[x_var]], signif_digits),
+                              x_pos = cumsum(.data[[x_var]]) - 0.5 * .data[[x_var]])
+
+      plot_tbl <- dplyr::arrange(plot_tbl,
+                                 .data[[split_factor]], variable, level)
+
+    }
+
+    ## plotting
+
+    if(is.null(split_factor)) {
+
+      panel <- ggplot2::ggplot(plot_tbl,
+                               ggplot2::aes(x = .data[[x_var]],
+                                            y = variable,
+                                            fill = level)) +
+        ggplot2::geom_bar(stat = 'identity',
+                          position = pos,
+                          color = 'black',
+                          alpha = alpha)
+
+    } else {
+
+      panel <- ggplot2::ggplot(plot_tbl,
+                               ggplot2::aes(x = .data[[x_var]],
+                                            y = .data[[split_factor]],
+                                            fill = level)) +
+        ggplot2::geom_bar(stat = 'identity',
+                          position = pos,
+                          color = 'black',
+                          alpha = alpha) +
+        ggplot2::facet_grid(variable ~ ., ...)
+
+    }
+
+
+    if(show_labels) {
+
+      if(form == 'dodge') {
+
+        panel <- panel +
+          ggplot2::geom_text(ggplot2::aes(label = .data[['label']]),
+                             size = txt_size,
+                             hjust = -0.6,
+                             vjust = 0.5,
+                             position = pos,
+                             show.legend = FALSE)
+
+      } else {
+
+        if(geom_label) {
+
+          panel <- panel +
+            ggplot2::geom_label(ggplot2::aes(label = .data[['label']],
+                                             x = x_pos),
+                                size = txt_size,
+                                show.legend = FALSE)
+
+        } else {
+
+          panel <- panel +
+            ggplot2::geom_text(ggplot2::aes(label = .data[['label']],
+                                            x = x_pos),
+                               size = txt_size,
+                               show.legend = FALSE)
+
+        }
+
+      }
+
+    }
+
+    panel +
+      cust_theme +
+      ggplot2::labs(title = plot_title,
+                    subtitle = plot_subtitle,
+                    tag = plot_tag,
+                    x = x_lab,
+                    y = y_lab)
+
+  }
+
+# END ------

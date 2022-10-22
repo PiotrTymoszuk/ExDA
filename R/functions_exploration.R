@@ -60,7 +60,7 @@
                                         simplify_p = simplify_p,
                                         !!!dots))
 
-      return(purrr::map(calls, eval))
+      return(purrr::map(calls, eval, envir = rlang::fn_env(explore)))
 
     }
 
