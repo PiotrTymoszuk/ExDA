@@ -227,6 +227,8 @@
 #' @param split_factor name of the splitting variable.
 #' @param distr_geom form of the distribution symbol: a violin or box plot.
 #' @param non_zero logical, should the zero values be removed?
+#' @param point_size size of data points.
+#' @param point_rim_color color of the data point rim, defaults to 'black'.
 #' @param point_alpha alpha of data points.
 #' @param point_hjitter	point jitter height.
 #' @param point_wjitter	point jitter width.
@@ -248,6 +250,8 @@
                                 split_factor = NULL,
                                 distr_geom = c('violin', 'box'),
                                 non_zero = FALSE,
+                                point_size = 2,
+                                point_rim_color = 'black',
                                 point_alpha = 0.5,
                                 point_hjitter = 0.15,
                                 point_wjitter = 0,
@@ -321,13 +325,12 @@
 
     } else {
 
-      back_geom <- switch(distr_geom,
-                          violin = ggplot2::geom_violin(alpha = 0.25,
-                                                        position = ggplot2::position_dodge(width = dodge_w),
-                                                        show.legend = FALSE, ...),
-                          box = ggplot2::geom_boxplot(alpha = 0.25,
-                                                      position = ggplot2::position_dodge(width = dodge_w),
-                                                      show.legend = FALSE, ...))
+      back_geom <-
+        switch(distr_geom,
+               violin = ggplot2::geom_violin(alpha = 0.25,
+                                             position = ggplot2::position_dodge(width = dodge_w), ...),
+               box = ggplot2::geom_boxplot(alpha = 0.25,
+                                           position = ggplot2::position_dodge(width = dodge_w), ...))
 
     }
 
@@ -411,7 +414,8 @@
         back_geom +
         ggplot2::geom_point(fill = fill,
                             shape = 21,
-                            size = 2,
+                            size = point_size,
+                            color = point_rim_color,
                             alpha = point_alpha,
                             position = ggplot2::position_jitter(width = point_wjitter,
                                                                 height = point_hjitter))
@@ -442,7 +446,8 @@
                                          fill = .data[[split_factor]])) +
         back_geom +
         ggplot2::geom_point(shape = 21,
-                            size = 2,
+                            size = point_size,
+                            color = point_rim_color,
                             alpha = point_alpha,
                             position = ggplot2::position_jitterdodge(jitter.width = point_wjitter,
                                                                      jitter.height = point_hjitter,

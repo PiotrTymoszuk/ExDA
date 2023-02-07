@@ -52,6 +52,8 @@ explore(mtcars, what = 'table', signif_digits = 4)
 
 explore(data = mtcars, split_factor = 'am', what = 'plots', type = 'violin')
 
+explore(data = mtcars, split_factor = 'am', what = 'table')
+
 compare_variables(mtcars[1:10, ], mtcars[11:20, ], mtcars[21:32, ],
                   variables = c('mpg', 'disp', 'wt', 'qsec'),
                   what = 'test',
@@ -145,10 +147,10 @@ multiplot(test1, test2, test5,
           eda_names = c('t1', 't2', 't3'),
           scale = 'none')
 
-multiplot(test1, eda(c(rep('e', 6), rep('a', 6), rep('b', 5), NA)),
-          type = 'bubble',
-          eda_names = c('t1', 't5'),
-          scale = 'percent')
+#multiplot(test1, eda(c(rep('e', 6), rep('a', 6), rep('b', 5), NA)),
+   #       type = 'bubble',
+    #      eda_names = c('t1', 't5'),
+    #      scale = 'percent')
 
 plot_correlation(new_cars,
                  variables = c('vs', 'am'),
@@ -160,6 +162,7 @@ eff_size(test1, test2, type = 'freeman_theta', ci = FALSE, boot_method = 'bca')
 eff_size(test1, test5, type = 'cramer_v', ci = TRUE)
 
 eff_size(test1, test2, type = 'cramer_v', ci = TRUE)
+
 
 eff_size(test3, test4, type = 'paired_cohen_d')
 
@@ -179,11 +182,87 @@ compare_variables(new_cars,
                   adj_method = 'holm',
                   ci = FALSE)
 
-compare_variables(new_cars[1:16, ],
-                  new_cars[17:32, ],
-                  variables = c('vs', 'am', 'qsec'),
-                  what = 'eff_size',
-                  types = c('cohen_kappa', 'cramer_v', 'paired_cohen_d'))
+test_eff <- compare_variables(new_cars[1:16, ],
+                              new_cars[17:32, ],
+                              variables = c('vs', 'am', 'qsec'),
+                              what = 'eff_size',
+                              types = c('cohen_kappa', 'cramer_v', 'paired_cohen_d'))
+
+plot(test_eff, show_labels = 'signif')
+
+multiplot(test1, test2, test5,
+          type = 'stack',
+          eda_names = c('t1', 't2', 't3'),
+          scale = 'percent')
+
+plot_variable(new_cars[1:10, ], new_cars[11:20, ], new_cars[21:30, ],
+              variable = 'gear',
+              type = 'bar')
+
+plot_variable(new_cars[1:10, ], new_cars[11:20, ], new_cars[21:30, ],
+              variable = 'gear',
+              type = 'stack')
+
+plot_variable(new_cars,
+              variable = 'gear',
+              split_factor = 'grouping',
+              type = 'stack',
+              scale = 'fraction')
+
+draw_quantile_elli(mtcars,
+                   quantiles = c(0.025, 0.975),
+                   variables = c('disp', 'wt', 'hp'))
+
+draw_quantile_elli(dplyr::mutate(mtcars, vs = factor(vs, c('1', '0'))),
+                   quantiles = c(0.025, 0.975),
+                   variables = c('disp', 'wt', 'hp'),
+                   split_factor = 'vs')
+
+
+draw_violin_panel(mtcars,
+                  variables = c('disp', 'hp'))
+
+draw_violin_panel(dplyr::mutate(mtcars, vs = factor(vs, c('0', '1'))),
+                  variables = c('disp', 'hp'),
+                  split_factor = 'vs',
+                  distr_geom = 'box')
+
+draw_stat_panel(dplyr::mutate(mtcars,
+                              gear_fct = factor(gear, c(4, 5, 3)),
+                              vs = factor(vs, c('1', '0'))),
+                variables = c('disp', 'hp', 'wt', 'mpg', 'qsec', 'carb'),
+                stat = 'mean',
+                split_factor = 'vs',
+                err_stat = '2se',
+                form = 'line')
+
+plot_variable(dplyr::mutate(mtcars,
+                            gear_fct = factor(gear, c(4, 5, 3)),
+                            vs = factor(vs, c('1', '0'))),
+              split_factor = 'vs',
+              variable = 'gear_fct',
+              type = 'stack',
+              scale = 'percent',
+              txt_color = 'orangered3')
+
+plot_variable(dplyr::mutate(mtcars,
+                            gear_fct = factor(gear, c(4, 5, 3)),
+                            vs = factor(vs, c('1', '0'))),
+              split_factor = 'vs',
+              variable = 'mpg',
+              type = 'violin',
+              scale = 'percent',
+              txt_color = 'orangered3')
+
+draw_freq_panel(dplyr::mutate(mtcars,
+                              gear_fct = factor(gear, c(4, 5, 3)),
+                              vs = factor(vs, c('1', '0')),
+                              am = factor(am, c('1', '0'))),
+                #split_factor = 'cyl',
+                variables = c('vs', 'am'),
+                show_labels = TRUE)
+
+
 
 
 
