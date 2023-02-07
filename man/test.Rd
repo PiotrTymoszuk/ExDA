@@ -6,8 +6,8 @@
 \usage{
 test(
   ...,
-  type = c("t_test", "paired_t_test", "sign_test", "mann_whitney_test",
-    "wilcoxon_test", "anova", "rm_anova", "kruskal_test", "friedman_test", "chisq_test"),
+  type = c("t_test", "paired_t_test", "sign_test", "mann_whitney_test", "wilcoxon_test",
+    "anova", "rm_anova", "kruskal_test", "friedman_test", "chisq_test"),
   exact = TRUE,
   ci = TRUE,
   boot_method = c("percentile", "bca", "normality")

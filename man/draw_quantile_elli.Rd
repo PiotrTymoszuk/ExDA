@@ -27,6 +27,8 @@ draw_quantile_elli(
 
 \item{variables}{names of the variables to plot.}
 
+\item{split_factor}{name of the splitting variable.}
+
 \item{quantiles}{quantiles to be shown on the longer axis (a dimension)
 of ellipses, a two element vector.}
 
@@ -52,8 +54,9 @@ ignored when split factor provided.}
 \item{cust_theme}{custom ggplot theme.}
 
 \item{...}{extra arguments passed to \code{\link[ggforce]{stat_ellip}}.}
-
-\item{spit_factor}{name of the splitting variable.}
+}
+\value{
+a ggplot object.
 }
 \description{
 Draws median (diamond) and user-specified data quantiles

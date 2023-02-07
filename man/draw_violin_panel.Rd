@@ -10,6 +10,8 @@ draw_violin_panel(
   split_factor = NULL,
   distr_geom = c("violin", "box"),
   non_zero = FALSE,
+  point_size = 2,
+  point_rim_color = "black",
   point_alpha = 0.5,
   point_hjitter = 0.15,
   point_wjitter = 0,
@@ -28,9 +30,15 @@ draw_violin_panel(
 
 \item{variables}{names of the variables to plot.}
 
+\item{split_factor}{name of the splitting variable.}
+
 \item{distr_geom}{form of the distribution symbol: a violin or box plot.}
 
 \item{non_zero}{logical, should the zero values be removed?}
+
+\item{point_size}{size of data points.}
+
+\item{point_rim_color}{color of the data point rim, defaults to 'black'.}
 
 \item{point_alpha}{alpha of data points.}
 
@@ -55,8 +63,9 @@ ignored when split_factor is provided.}
 
 \item{...}{extra arguments passed to \code{\link[ggplot2]{geom_violin}} or
 \code{\link[ggplot2]{geom_box}}.}
-
-\item{spit_factor}{name of the splitting variable.}
+}
+\value{
+a ggplot object.
 }
 \description{
 Draws violin  or box plots for the specified variable set.

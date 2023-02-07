@@ -27,6 +27,8 @@ draw_stat_panel(
 
 \item{variables}{names of the variables to plot.}
 
+\item{split_factor}{name of the splitting variable.}
+
 \item{stat}{distribution statistic, currently mean or median supported.}
 
 \item{err_stat}{error/distribution width statistic, SD ('sd'), SEM ('se'),
@@ -53,8 +55,9 @@ ignored when split_factor is provided.}
 \item{cust_theme}{custom ggplot theme.}
 
 \item{...}{extra arguments passed to \code{\link[ggplot2]{geom_ribbon}}}
-
-\item{spit_factor}{name of the splitting variable.}
+}
+\value{
+a ggplot object.
 }
 \description{
 Draws a panel of specified distribution statistic (e.g. median

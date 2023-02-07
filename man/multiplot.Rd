@@ -7,8 +7,8 @@
 multiplot(
   ...,
   eda_names = NULL,
-  type = c("default", "bar", "violin", "box", "hist", "correlation", "paired",
-    "bubble", "stack"),
+  type = c("default", "bar", "violin", "box", "hist", "correlation", "paired", "bubble",
+    "stack"),
   scale = c("none", "fraction", "percent"),
   point_alpha = 0.5,
   point_hjitter = 0.05,

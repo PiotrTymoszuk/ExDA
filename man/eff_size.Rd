@@ -6,8 +6,8 @@
 \usage{
 eff_size(
   ...,
-  type = c("cohen_d", "paired_cohen_d", "wilcoxon_r", "paired_wilcoxon_r",
-    "cohen_kappa", "freeman_theta", "cramer_v", "cohen_kappa", "etasq", "partial_etasq",
+  type = c("cohen_d", "paired_cohen_d", "wilcoxon_r", "paired_wilcoxon_r", "cohen_kappa",
+    "freeman_theta", "cramer_v", "cohen_kappa", "etasq", "partial_etasq",
     "kruskal_etasq", "kendall_w"),
   exact = TRUE,
   ci = TRUE,
