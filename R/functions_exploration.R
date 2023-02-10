@@ -363,40 +363,52 @@
 
 #' Plot a variable in two or more data sets objects.
 #'
-#' @description Plots values of two or more EDA objects as a classical bar, violin,
+#' @description Plots values of two or more EDA objects
+#' as a classical bar, violin,
 #' boxplot or correlation point plot representation.
 #' @param ... data sets.
 #' @param variable variable name.
-#' @param split_factor optional, the name of a factor used for splitting the variables of interest into analysis groups.
-#' @param type type of the plot. 'default' plots violin for numeric variables and bars for factors.
+#' @param split_factor optional, the name of a factor used for
+#' splitting the variables of interest into analysis groups.
+#' @param type type of the plot. 'default' plots violin for
+#' numeric variables and bars for factors.
 #' 'bar', 'bubble' and 'stack' (stacked bar plot) are available for factors.
 #' 'violin', 'box', 'hist', 'correlation' and 'paired'
 #' are available for numeric variables.
 #' @param data_names a vector with names of the data sets.
-#' @param scale the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
+#' @param scale the feature to be presented in factor bar plots.
+#' 'none' plots counts, 'percent' plots percentages,
 #' 'fraction' presents fraction fo complete observations.
 #' @param point_alpha alpha of the plot points.
 #' @param point_hjitter point jitter height.
 #' @param point_wjitter point jitter width.
 #' @param point_color color of the points in the correlation plot.
 #' @param point_size size of the points in the plots.
-#' @param line_color color of the trend line in the correlation plots or the connecting lines in the paired plots.
+#' @param line_color color of the trend line in the correlation plots
+#' or the connecting lines in the paired plots.
 #' @param line_alpha opacity of the connecting lines in the paired plot.
 #' @param cust_theme custom ggplot2 theme.
 #' @param plot_title text to be presented in the plot title.
 #' @param plot_subtitle text to be presented in the plot subtitle.
 #' @param x_lab text to be presented in the X axis title.
 #' @param y_lab text to be presented in the Y axis title.
-#' @param show_trend logical, should a trend line with 95\% confidence intervals be presented in the correlation plots?
-#' @param show_labels logical, should labels with count numbers, percentages or fractions be presented in bar plots?
+#' @param show_trend logical, should a trend line with 95\% confidence
+#' intervals be presented in the correlation plots?
+#' @param show_labels logical, should labels with count numbers,
+#' percentages or fractions be presented in bar plots?
 #' @param geom_label logical, should the text in the stacked bar plot be
 #' presented as a ggplot's geom_label?
 #' @param signif_digits significant digits used for the label value rounding.
 #' @param txt_size size of the text label.
 #' @param txt_color color of the text label.
 #' @param bins bin number, passed to \code{\link[ggplot2]{histogram}}.
-#' @param facet_hist 'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.
-#' @details the particular data sets representations are color coded. In case, the split_factor is provided, only the first
+#' @param facet_hist 'none': histograms are overlaid,
+#' 'horizontal': horizontal or 'vertical': vertical faceting.
+#' @param x_n_labs logical. If TRUE, n numbers per strata are displayed in the
+#' X axis of the plot instead of the plot tag. Defaults to FALSE and concerns
+#' violin, box, paired and stack plots.
+#' @details the particular data sets representations are color coded.
+#' In case, the split_factor is provided, only the first
 #' of the input data frames will be plotted.
 #' @export
 
@@ -404,7 +416,8 @@
                             variable,
                             split_factor = NULL,
                             data_names = NULL,
-                            type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'stack'),
+                            type = c('default', 'bar', 'violin', 'box', 'hist',
+                                     'correlation', 'paired', 'stack'),
                             scale = c('none', 'fraction', 'percent'),
                             point_alpha = 0.5,
                             point_hjitter = 0.05,
@@ -425,7 +438,8 @@
                             txt_size = 2.75,
                             txt_color = 'black',
                             bins = NULL,
-                            facet_hist = c('none', 'horizontal', 'vertical')) {
+                            facet_hist = c('none', 'horizontal', 'vertical'),
+                            x_n_labs = FALSE) {
 
     ## entry control
 
@@ -490,7 +504,8 @@
               txt_color = txt_color,
               geom_label = geom_label,
               bins = bins,
-              facet_hist = facet_hist)
+              facet_hist = facet_hist,
+              x_n_labs = x_n_labs)
 
   }
 

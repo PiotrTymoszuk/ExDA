@@ -2,43 +2,56 @@
 
 #' Plot two or more EDA objects.
 #'
-#' @description Plots values of two or more EDA objects as a classical bar, violin,
-#' boxplot or correlation point plot representation.
-#' @param ... numeric-type EDA objects, at least two, created by \code{\link{eda}}.
-#' @param type type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-#' 'bar', 'bubble' or 'stack' (stack-bar plot) are available for factor-type EDAs.
+#' @description Plots values of two or more EDA objects as a classical bar,
+#' violin, boxplot or correlation point plot representation.
+#' @param ... numeric-type EDA objects, at least two, created
+#' by \code{\link{eda}}.
+#' @param type type of the plot. 'default' plots violin for numeric EDAs
+#' and bars for factors.
+#' 'bar', 'bubble' or 'stack' (stack-bar plot) are available for
+#' factor-type EDAs.
 #' 'violin', 'box', 'hist', 'correlation' and 'paired'
 #' are available for numeric-type objects.
 #' @param eda_names a vector with names of the EDA objects.
 #' @param scale the feature to be presented in factor bar or bubble plots.
-#' 'none' plots counts, 'percent' plots percentages, 'fraction' presents fraction fo complete observations.
+#' 'none' plots counts, 'percent' plots percentages, 'fraction'
+#' presents fraction fo complete observations.
 #' @param point_alpha alpha of the plot points.
 #' @param point_hjitter point jitter height.
 #' @param point_wjitter point jitter width.
 #' @param point_color color of the points in the correlation plot.
 #' @param point_size size of the points in the plots.
-#' @param line_color color of the trend line in the correlation plots or the connecting lines in the paired plots.
+#' @param line_color color of the trend line in the correlation plots or
+#' the connecting lines in the paired plots.
 #' @param line_alpha opacity of the connecting lines in the paired plot.
 #' @param cust_theme custom ggplot2 theme.
 #' @param plot_title text to be presented in the plot title.
 #' @param plot_subtitle text to be presented in the plot subtitle.
 #' @param x_lab text to be presented in the X axis title.
 #' @param y_lab text to be presented in the Y axis title.
-#' @param show_trend logical, should a trend line with 95\% confidence intervals be presented in the correlation plots?
-#' @param show_labels logical, should labels with count numbers, percentages or fractions be presented in bar plots?
+#' @param show_trend logical, should a trend line with 95\% confidence
+#' intervals be presented in the correlation plots?
+#' @param show_labels logical, should labels with count numbers,
+#' percentages or fractions be presented in bar plots?
 #' @param signif_digits significant digits used for the label value rounding.
 #' @param txt_size size of the text label.
 #' @param txt_color color of the text label.
 #' @param geom_label logical, should the text in the stacked bar plot be
 #' presented as a ggplot's geom_label?
 #' @param bins bin number, passed to \code{\link[ggplot2]{histogram}}.
-#' @param facet_hist 'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.
+#' @param facet_hist 'none': histograms are overlaid, 'horizontal': horizontal
+#' or 'vertical': vertical faceting.
+#' @param x_n_labs logical. If TRUE, n numbers per strata are displayed in the
+#' X axis of the plot instead of the plot tag. Defaults to FALSE and concerns
+#' violin, box, paired and stack plots.
 #' @details the particular EDA objects are color coded.
 #' @export
 
   multiplot <- function(...,
                         eda_names = NULL,
-                        type = c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble', 'stack'),
+                        type = c('default', 'bar', 'violin', 'box',
+                                 'hist', 'correlation', 'paired',
+                                 'bubble', 'stack'),
                         scale = c('none', 'fraction', 'percent'),
                         point_alpha = 0.5,
                         point_hjitter = 0.05,
@@ -59,9 +72,12 @@
                         txt_color = 'black',
                         geom_label = TRUE,
                         bins = NULL,
-                        facet_hist = c('none', 'horizontal', 'vertical')) {
+                        facet_hist = c('none',
+                                       'horizontal',
+                                       'vertical'),
+                        x_n_labs = FALSE) {
 
-    ## entry control
+    ## entry control ----------
 
     stopifnot(is.numeric(point_alpha))
     stopifnot(is.numeric(point_hjitter))
@@ -69,13 +85,15 @@
     stopifnot(is.logical(show_trend))
     stopifnot(is.logical(show_labels))
     stopifnot(is.numeric(signif_digits))
+    stopifnot(is.logical(x_n_labs))
 
     signif_digits <- as.integer(signif_digits)
 
     stopifnot(any(class(cust_theme) == 'theme'))
 
     type <- match.arg(type[1],
-                      c('default', 'bar', 'violin', 'box', 'hist', 'correlation', 'paired', 'bubble', 'stack'))
+                      c('default', 'bar', 'violin', 'box', 'hist',
+                        'correlation', 'paired', 'bubble', 'stack'))
 
     scale <- match.arg(scale[1],
                        c('none', 'fraction', 'percent'))
@@ -107,7 +125,7 @@
 
     }
 
-    ## plotting table and n numbers
+    ## plotting table and n numbers ---------
 
     plotting_tbl <- switch(type,
                            bar = exda:::chi_tester(!!!edas,
@@ -133,7 +151,6 @@
                             edas[[2]]$value)
 
     }
-
 
     if(type == 'default' & types[1] == 'factor') {
 
@@ -188,6 +205,14 @@
 
       plot_tag <- paste(plot_tag, collapse = '\n')
 
+      if(x_n_labs) {
+
+        ax_labs <- purrr::map2_chr(n_numbers$group,
+                                   n_numbers$n,
+                                   paste, sep = '\nn = ')
+
+      }
+
     } else {
 
       n_numbers <- sum(complete.cases(plotting_tbl))
@@ -196,7 +221,7 @@
 
     }
 
-    ##plotting for factors, bar and stack plot
+    ## plotting for factors, bar and stack plots -------------
 
     if(type %in% c('bar', 'stack') | (type == 'default' & types[1] == 'factor')) {
 
@@ -292,6 +317,15 @@
 
         }
 
+        if(x_n_labs) {
+
+          gg_plot <- gg_plot +
+            ggplot2::scale_x_discrete(labels = unname(ax_labs))
+
+          plot_tag <- NULL
+
+        }
+
       }
 
       gg_plot <- gg_plot +
@@ -345,7 +379,6 @@
         ggplot2::labs(x = x_lab,
                       y = y_lab)
 
-
       if(type %in% c('default', 'violin')) {
 
         median_tbl <- dplyr::summarise(dplyr::group_by(plotting_tbl, group),
@@ -367,6 +400,15 @@
                               fill = 'orangered3',
                               shape = 23)
 
+
+      }
+
+      if(x_n_labs) {
+
+        gg_plot <- gg_plot +
+          ggplot2::scale_x_discrete(labels = unname(ax_labs))
+
+        plot_tag <- NULL
 
       }
 
@@ -402,6 +444,13 @@
                             shape = 21) +
         ggplot2::labs(x = x_lab,
                       y = y_lab)
+
+      if(x_n_labs) {
+
+        gg_plot <- gg_plot +
+          ggplot2::scale_x_discrete(labels = ax_labs)
+
+      }
 
     } else if(type == 'bubble') {
 
