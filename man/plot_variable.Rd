@@ -30,7 +30,8 @@ plot_variable(
   txt_size = 2.75,
   txt_color = "black",
   bins = NULL,
-  facet_hist = c("none", "horizontal", "vertical")
+  facet_hist = c("none", "horizontal", "vertical"),
+  x_n_labs = FALSE
 )
 }
 \arguments{
@@ -38,16 +39,19 @@ plot_variable(
 
 \item{variable}{variable name.}
 
-\item{split_factor}{optional, the name of a factor used for splitting the variables of interest into analysis groups.}
+\item{split_factor}{optional, the name of a factor used for
+splitting the variables of interest into analysis groups.}
 
 \item{data_names}{a vector with names of the data sets.}
 
-\item{type}{type of the plot. 'default' plots violin for numeric variables and bars for factors.
+\item{type}{type of the plot. 'default' plots violin for
+numeric variables and bars for factors.
 'bar', 'bubble' and 'stack' (stacked bar plot) are available for factors.
 'violin', 'box', 'hist', 'correlation' and 'paired'
 are available for numeric variables.}
 
-\item{scale}{the feature to be presented in factor bar plots. 'none' plots counts, 'percent' plots percentages,
+\item{scale}{the feature to be presented in factor bar plots.
+'none' plots counts, 'percent' plots percentages,
 'fraction' presents fraction fo complete observations.}
 
 \item{point_alpha}{alpha of the plot points.}
@@ -60,7 +64,8 @@ are available for numeric variables.}
 
 \item{point_size}{size of the points in the plots.}
 
-\item{line_color}{color of the trend line in the correlation plots or the connecting lines in the paired plots.}
+\item{line_color}{color of the trend line in the correlation plots
+or the connecting lines in the paired plots.}
 
 \item{line_alpha}{opacity of the connecting lines in the paired plot.}
 
@@ -74,9 +79,11 @@ are available for numeric variables.}
 
 \item{y_lab}{text to be presented in the Y axis title.}
 
-\item{show_trend}{logical, should a trend line with 95\% confidence intervals be presented in the correlation plots?}
+\item{show_trend}{logical, should a trend line with 95\% confidence
+intervals be presented in the correlation plots?}
 
-\item{show_labels}{logical, should labels with count numbers, percentages or fractions be presented in bar plots?}
+\item{show_labels}{logical, should labels with count numbers,
+percentages or fractions be presented in bar plots?}
 
 \item{geom_label}{logical, should the text in the stacked bar plot be
 presented as a ggplot's geom_label?}
@@ -89,13 +96,20 @@ presented as a ggplot's geom_label?}
 
 \item{bins}{bin number, passed to \code{\link[ggplot2]{histogram}}.}
 
-\item{facet_hist}{'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.}
+\item{facet_hist}{'none': histograms are overlaid,
+'horizontal': horizontal or 'vertical': vertical faceting.}
+
+\item{x_n_labs}{logical. If TRUE, n numbers per strata are displayed in the
+X axis of the plot instead of the plot tag. Defaults to FALSE and concerns
+violin, box, paired and stack plots.}
 }
 \description{
-Plots values of two or more EDA objects as a classical bar, violin,
+Plots values of two or more EDA objects
+as a classical bar, violin,
 boxplot or correlation point plot representation.
 }
 \details{
-the particular data sets representations are color coded. In case, the split_factor is provided, only the first
+the particular data sets representations are color coded.
+In case, the split_factor is provided, only the first
 of the input data frames will be plotted.
 }

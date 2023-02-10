@@ -29,21 +29,26 @@ multiplot(
   txt_color = "black",
   geom_label = TRUE,
   bins = NULL,
-  facet_hist = c("none", "horizontal", "vertical")
+  facet_hist = c("none", "horizontal", "vertical"),
+  x_n_labs = FALSE
 )
 }
 \arguments{
-\item{...}{numeric-type EDA objects, at least two, created by \code{\link{eda}}.}
+\item{...}{numeric-type EDA objects, at least two, created
+by \code{\link{eda}}.}
 
 \item{eda_names}{a vector with names of the EDA objects.}
 
-\item{type}{type of the plot. 'default' plots violin for numeric EDAs and bars for factors.
-'bar', 'bubble' or 'stack' (stack-bar plot) are available for factor-type EDAs.
+\item{type}{type of the plot. 'default' plots violin for numeric EDAs
+and bars for factors.
+'bar', 'bubble' or 'stack' (stack-bar plot) are available for
+factor-type EDAs.
 'violin', 'box', 'hist', 'correlation' and 'paired'
 are available for numeric-type objects.}
 
 \item{scale}{the feature to be presented in factor bar or bubble plots.
-'none' plots counts, 'percent' plots percentages, 'fraction' presents fraction fo complete observations.}
+'none' plots counts, 'percent' plots percentages, 'fraction'
+presents fraction fo complete observations.}
 
 \item{point_alpha}{alpha of the plot points.}
 
@@ -55,7 +60,8 @@ are available for numeric-type objects.}
 
 \item{point_size}{size of the points in the plots.}
 
-\item{line_color}{color of the trend line in the correlation plots or the connecting lines in the paired plots.}
+\item{line_color}{color of the trend line in the correlation plots or
+the connecting lines in the paired plots.}
 
 \item{line_alpha}{opacity of the connecting lines in the paired plot.}
 
@@ -69,9 +75,11 @@ are available for numeric-type objects.}
 
 \item{y_lab}{text to be presented in the Y axis title.}
 
-\item{show_trend}{logical, should a trend line with 95\% confidence intervals be presented in the correlation plots?}
+\item{show_trend}{logical, should a trend line with 95\% confidence
+intervals be presented in the correlation plots?}
 
-\item{show_labels}{logical, should labels with count numbers, percentages or fractions be presented in bar plots?}
+\item{show_labels}{logical, should labels with count numbers,
+percentages or fractions be presented in bar plots?}
 
 \item{signif_digits}{significant digits used for the label value rounding.}
 
@@ -84,11 +92,16 @@ presented as a ggplot's geom_label?}
 
 \item{bins}{bin number, passed to \code{\link[ggplot2]{histogram}}.}
 
-\item{facet_hist}{'none': histograms are overlaid, 'horizontal': horizontal or 'vertical': vertical faceting.}
+\item{facet_hist}{'none': histograms are overlaid, 'horizontal': horizontal
+or 'vertical': vertical faceting.}
+
+\item{x_n_labs}{logical. If TRUE, n numbers per strata are displayed in the
+X axis of the plot instead of the plot tag. Defaults to FALSE and concerns
+violin, box, paired and stack plots.}
 }
 \description{
-Plots values of two or more EDA objects as a classical bar, violin,
-boxplot or correlation point plot representation.
+Plots values of two or more EDA objects as a classical bar,
+violin, boxplot or correlation point plot representation.
 }
 \details{
 the particular EDA objects are color coded.
