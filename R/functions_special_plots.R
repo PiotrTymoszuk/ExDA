@@ -158,7 +158,8 @@
 
     plot_tbl <- dplyr::mutate(plot_tbl,
                               ell_center = (upper - lower)/2 + lower,
-                              ar = (upper - lower)/2)
+                              ar = (upper - lower)/2,
+                              ell_width = ell_width)
 
     plot_tbl <- dplyr::arrange(plot_tbl, - median)
 
@@ -170,38 +171,53 @@
 
       pl <- ggplot2::ggplot(plot_tbl,
                             ggplot2::aes(x = median,
-                                         y = reorder(variable, plot_order))) +
+                                         y = plot_order)) +
         ggforce::stat_ellip(ggplot2::aes(x0 = ell_center,
                                          y0 = plot_order,
                                          a = ar,
                                          b = ell_width,
-                                         angle = 0),
+                                         angle = 0,
+                                         group = plot_order),
                             geom = 'polygon',
                             alpha = alpha,
                             fill = fill, ...) +
         ggplot2::geom_point(size = 3,
                             shape = 18,
-                            color = median_color)
+                            color = median_color) +
+        ggplot2::scale_y_continuous(breaks = plot_tbl$plot_order,
+                                    labels = rlang::set_names(plot_tbl$variable,
+                                                              plot_tbl$plot_order))
 
     } else {
 
-      pl <- ggplot2::ggplot(dplyr::mutate(plot_tbl,
-                                          variable = factor(variable,
-                                                            levels = unique(plot_tbl$variable))),
+      plot_tbl <-
+        dplyr::mutate(plot_tbl,
+                      variable = factor(variable,
+                                        levels = unique(plot_tbl$variable)))
+
+      labs <- rlang::set_names(plot_tbl$variable,
+                               as.numeric(plot_tbl$variable))
+
+      labs <- unique(labs)
+
+      pl <- ggplot2::ggplot(plot_tbl,
                             ggplot2::aes(x = median,
-                                         y = variable,
+                                         y = as.numeric(variable),
                                          fill = .data[[split_factor]])) +
         ggforce::stat_ellip(ggplot2::aes(x0 = ell_center,
                                          y0 = as.numeric(variable),
                                          a = ar,
                                          b = ell_width,
-                                         angle = 0),
+                                         angle = 0,
+                                         group = as.numeric(variable)),
                             geom = 'polygon',
                             alpha = alpha,
                             show.legend = FALSE, ...) +
         ggplot2::geom_point(size = 3,
                             shape = 18,
-                            ggplot2::aes(color = .data[[split_factor]]))
+                            ggplot2::aes(color = .data[[split_factor]])) +
+        ggplot2::scale_y_continuous(breaks = unique(as.numeric(plot_tbl$variable)),
+                                    labels = labs)
 
     }
 
@@ -226,6 +242,7 @@
 #' @param variables names of the variables to plot.
 #' @param split_factor name of the splitting variable.
 #' @param distr_geom form of the distribution symbol: a violin or box plot.
+#' @param alpha opacity of the violin or box.
 #' @param non_zero logical, should the zero values be removed?
 #' @param point_size size of data points.
 #' @param point_rim_color color of the data point rim, defaults to 'black'.
@@ -249,6 +266,7 @@
                                 variables,
                                 split_factor = NULL,
                                 distr_geom = c('violin', 'box'),
+                                alpha = 0.25,
                                 non_zero = FALSE,
                                 point_size = 2,
                                 point_rim_color = 'black',
@@ -318,18 +336,18 @@
     if(is.null(split_factor)) {
 
       back_geom <- switch(distr_geom,
-                          violin = ggplot2::geom_violin(alpha = 0.25,
+                          violin = ggplot2::geom_violin(alpha = alpha,
                                                         fill = fill, ...),
-                          box = ggplot2::geom_boxplot(alpha = 0.25,
+                          box = ggplot2::geom_boxplot(alpha = alpha,
                                                       fill = fill, ...))
 
     } else {
 
       back_geom <-
         switch(distr_geom,
-               violin = ggplot2::geom_violin(alpha = 0.25,
+               violin = ggplot2::geom_violin(alpha = alpha,
                                              position = ggplot2::position_dodge(width = dodge_w), ...),
-               box = ggplot2::geom_boxplot(alpha = 0.25,
+               box = ggplot2::geom_boxplot(alpha = alpha,
                                            position = ggplot2::position_dodge(width = dodge_w), ...))
 
     }
@@ -627,10 +645,11 @@
 
       levs <- names(stats_tbl)
 
-      stats_tbl <- purrr::map2_dfr(stats_tbl, names(stats_tbl),
-                                   ~dplyr::mutate(.x,
-                                                  !!split_factor := factor(.y,
-                                                                           levels = levs)))
+      stats_tbl <-
+        purrr::map2_dfr(stats_tbl, names(stats_tbl),
+                        ~dplyr::mutate(.x,
+                                       !!split_factor := factor(.y,
+                                                                levels = levs)))
 
     }
 
@@ -662,12 +681,12 @@
                                             xmin = lower,
                                             xmax = upper,
                                             group = groupping),
-                               color = fill,
+                               color = NA,
                                fill = fill,
                                alpha = alpha,
                                orientation = 'y') +
           ggplot2::geom_line(ggplot2::aes(group = groupping),
-                             color = NA,
+                             color = fill,
                              size = 0.75,
                              orientation = 'y')
 

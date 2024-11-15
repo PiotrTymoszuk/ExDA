@@ -448,7 +448,9 @@
       if(x_n_labs) {
 
         gg_plot <- gg_plot +
-          ggplot2::scale_x_discrete(labels = ax_labs)
+          ggplot2::scale_x_discrete(labels = unname(ax_labs))
+
+        plot_tag <- NULL
 
       }
 

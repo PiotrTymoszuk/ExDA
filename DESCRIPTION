@@ -1,9 +1,9 @@
 Package: exda
 Type: Package
 Title: Toolset for Explorative Data Analysis
-Version: 0.1.0
+Version: 0.1.1
 Description: Provides a series of functions for analysis of properties 
-    and plotting for numeric, categorical and logical variables.
+    and plotting for numeric, categorical, and logical variables.
 Encoding: UTF-8
 LazyData: true
 Authors@R: 
@@ -29,4 +29,4 @@ Imports:
     stringi,
     tidyr,
     vcd
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3

@@ -6,6 +6,8 @@
   library(generics)
   library(exda)
 
+  explore <- exda::explore
+
 # behavior of the EDA objects
 
   test1 <- eda(c(rep('a', 10), rep('b', 5), rep('c', 3)))
@@ -251,14 +253,14 @@
                      variables = c('disp', 'wt', 'hp'),
                      split_factor = 'vs')
 
-
   draw_violin_panel(mtcars,
                     variables = c('disp', 'hp'))
 
   draw_violin_panel(dplyr::mutate(mtcars, vs = factor(vs, c('0', '1'))),
                     variables = c('disp', 'hp'),
                     split_factor = 'vs',
-                    distr_geom = 'box')
+                    distr_geom = 'box',
+                    alpha = 1)
 
   draw_stat_panel(dplyr::mutate(mtcars,
                                 gear_fct = factor(gear, c(4, 5, 3)),
@@ -319,6 +321,12 @@
                 split_factor = 'grouping',
                 type = 'bar',
                 scale = 'fraction',
+                x_n_labs = TRUE)
+
+  plot_variable(new_cars,
+                variable = 'wt',
+                split_factor = 'corr_grouping',
+                type = 'paired',
                 x_n_labs = TRUE)
 
 # END ------
