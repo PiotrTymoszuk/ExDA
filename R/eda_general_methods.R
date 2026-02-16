@@ -125,6 +125,16 @@
 
     statistic <- NULL
 
+    ## handling of a special case: only NA values -------
+
+    if(all(is.na(object))) {
+
+      if(!pub_styled) return(NA)
+
+      return(tibble(statistic = NA))
+
+    }
+
     ## summary for factors --------
 
     if(is.factor(object)) {
