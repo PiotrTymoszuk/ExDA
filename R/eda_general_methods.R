@@ -197,4 +197,165 @@
 
   }
 
+# conversion methods ---------
+
+#' Conversion methods for `eda` objects.
+#'
+#' @description
+#' Conversion methods for `eda` objects.
+#'
+#' @details See: \code{\link[base]{factor}}, \code{\link[base]{as.numeric}},
+#' \code{\link[base]{as.integer}}, and \code{\link[base]{as.data.frame}}.
+#' While converting a numeric object into a factor one, the levels corrspüond to
+#' the sorted unique numeric values of the object.
+#' Not that this behavior is different that the R's standard one.
+#'
+#' @param x an \code{\link{eda}} object.
+#' @param row.names row names, see \code{\link[base]{as.data.frame}}.
+#' @param optional logical, is diversion from R's naming scheme allowed?
+#' See \code{\link[base]{as.data.frame}}
+#' @param col.names of the data frame variable which stores
+#' the `eda` object values.
+#' @param levels levels to be set during factor conversion.
+#' @param ... additional arguments passed to methods
+#'
+#' @export
+
+  as.numeric.eda <- function(x, ...) {
+
+    stopifnot(is_eda(x))
+
+    if(is.numeric(x)) return(x)
+
+    eda(base::as.numeric(unclass(x)))
+
+  }
+
+#' @rdname as.numeric.eda
+#' @export
+
+  as.integer.eda <- function(x, ...) {
+
+    stopifnot(is_eda(x))
+
+    if(is.integer(x)) return(x)
+
+    eda(base::as.integer(unclass(x)))
+
+  }
+
+#' @rdname as.numeric.eda
+#' @export
+
+  factor.eda <- function(x, levels = NULL, ...) {
+
+    stopifnot(is_eda(x))
+
+    if(is.null(levels)) {
+
+      if(is.factor(x)) {
+
+        levs <- attr(x, "levels")
+
+      } else {
+
+        levs <- as.character(sort(x))
+
+      }
+
+    } else {
+
+      levs <- levels
+
+    }
+
+    if(!is.null(levs)) {
+
+      return(eda(base::factor(as.character(x), levels = levs, ...)))
+
+    }
+
+    eda(base::factor(as.character(x), ...))
+
+  }
+
+#' @rdname as.numeric.eda
+#' @export
+
+  as.data.frame.eda <- function(x,
+                                row.names = NULL,
+                                optional = FALSE,
+                                col.names = "variable", ...) {
+
+    stopifnot(is_eda(x))
+
+    stopifnot(is.character(col.names))
+
+    col.names <- col.names[1]
+
+    set_names(as.data.frame(unclass(x),
+                            row.names = row.names,
+                            optional = optional, ...),
+              col.names)
+
+  }
+
+# Splitting ------------
+
+#' Splitting of `eda` objects by levels of a factor.
+#'
+#' @description
+#' Splitting of an `eda` object by levels of a factor (a plain factor or
+#' an `eda` object).
+#'
+#' @return a list of \code{\link{eda}} objects.
+#'
+#' @details
+#' The lengths of `x` and `f` vectors have to be equal.
+#' If there are any `NA` values in the `f` vector, the corresponding values in
+#' `x` are removed prior to splitting.#'
+#'
+#' @param x an \code{\link{eda}} object.
+#' @param f a factor or a factor \code{\link{eda}} object.
+#' @param drop logical, should empty levels be dropped?
+#' @param ... extra arguments passed to methods.
+#'
+#' @export
+
+  split.eda <- function(x, f, drop = TRUE, ...) {
+
+    ## entry control --------
+
+    stopifnot(is_eda(x))
+
+    if(!is.factor(f)) {
+
+      stop("'f' has to be a plain factor or a factor `eda` object.",
+           call. = FALSE)
+
+    }
+
+    stopifnot(is.logical(drop))
+
+    if(drop) f <- droplevels(f)
+
+    if(length(x) != length(f)) {
+
+      stop("Lengths of `x` and `f` must be equal.", call. = FALSE)
+
+    }
+
+    complete_idx <- !is.na(f)
+
+    f <- f[complete_idx]
+    x <- x[complete_idx]
+
+    ## splitting ---------
+
+    obj_lst <- base::split.default(x, f)
+
+    map(obj_lst, eda)
+
+  }
+
 # END -------

@@ -12,7 +12,9 @@
 #' @importFrom tibble tibble
 #'
 #' @importFrom rlang is_function
+#' @importFrom rlang set_names
 #'
+#' @importFrom purrr map
 #' @importFrom purrr map_dfr
 #' @importFrom purrr pmap_chr
 #'

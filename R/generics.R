@@ -1,6 +1,6 @@
 # Re-created generics
 
-# Variance --------
+# Descriptive statisrics  --------
 
 #' Calculate descriptive statistics.
 #'
@@ -96,5 +96,48 @@
 #' @export
 
   hmean.default <- function(x, ...) Hmean(x, ...)
+
+# conversion generics --------
+
+#' Convert between types.
+#'
+#' @description
+#' Generic functions for conversion between data types.
+#'
+#' @details See: \code{\link[base]{factor}}, \code{\link[base]{as.numeric}}, and
+#' \code{\link[base]{as.integer}}.
+#'
+#' @param x an object.
+#' @param ... additional arguments passed to methods.
+#'
+#' @return an object of the requested data type.
+#' @export
+
+  factor <- function(x, ...) UseMethod("factor")
+
+#' @rdname factor
+#' @export
+
+  factor.default <- function(x, ...) base::factor(x, ...)
+
+#' @rdname factor
+#' @export
+
+  as.numeric <- function(x, ...) UseMethod("as.numeric")
+
+#' @rdname factor
+#' @export
+
+  as.numeric.default <- function(x, ...) base::as.numeric(x, ...)
+
+#' @rdname factor
+#' @export
+
+  as.integer <- function(x, ...) UseMethod("as.integer")
+
+#' @rdname factor
+#' @export
+
+  as.integer.default <- function(x, ...) base::as.integer(x, ...)
 
 # END -------
