@@ -6,7 +6,7 @@
 
 # Builders --------
 
-  eda(LETTERS)
+  eda(c(sample(LETTERS, 10, replace = TRUE), NA))
 
   eda(1:100)
 
@@ -46,3 +46,21 @@
   hmean(eda(c(10:100, NA)), plain = FALSE)
 
   gmean(eda(c(10:100, NA)), plain = FALSE)
+
+# summary methods -------
+
+  eda(c(sample(LETTERS, 10, replace = TRUE), NA)) %>%
+    summary(pub_styled = FALSE)
+
+  eda(c(sample(LETTERS, 10, replace = TRUE), NA)) %>%
+    summary(pub_styled = TRUE)
+
+  eda(c(1:100, NA)) %>%
+    summary(pub_styled = FALSE)
+
+  eda(c(1:100, NA)) %>%
+    summary(pub_styled = TRUE)
+
+  mtcars %>%
+    map(eda) %>%
+    map_dfr(summary, pub_styled = TRUE)

@@ -13,6 +13,9 @@
 #'
 #' @importFrom rlang is_function
 #'
+#' @importFrom purrr map_dfr
+#' @importFrom purrr pmap_chr
+#'
 #' @importFrom microViz Gini
 #' @importFrom microViz Gmean
 #' @importFrom microViz Hmean
