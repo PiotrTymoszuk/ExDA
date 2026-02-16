@@ -4,10 +4,10 @@
 \alias{stat_extract}
 \title{A universal statistic extractor.}
 \usage{
-stat_extract(eda_object, fun, stat_name, plain = FALSE, ...)
+stat_extract(x, fun, stat_name, plain = FALSE, ...)
 }
 \arguments{
-\item{eda_object}{an eda object.}
+\item{x}{an eda object.}
 
 \item{fun}{a statistic calculation function, should return a single numeric.}
 

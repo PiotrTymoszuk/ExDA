@@ -2,16 +2,21 @@
 % Please edit documentation in R/general_methods.R
 \name{print.eda}
 \alias{print.eda}
-\title{Printing EDA objects.}
+\alias{print.etest}
+\title{Appearance/printing of \code{eda} and \code{etest} objects}
 \usage{
 \method{print}{eda}(x, ...)
+
+\method{print}{etest}(x, ...)
 }
 \arguments{
-\item{x}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an object.}
+
+\item{...}{arguments for methods.}
 }
 \value{
-nothing, called for its side effects.
+invisibly returns the object.
 }
 \description{
-print an EDA object.
+Printing methods.
 }

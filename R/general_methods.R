@@ -1,125 +1,92 @@
-# Appearance, length, NA and level handling methods -----
+# General methods of `eda` and `etest` objects
 
-#' Printing EDA objects.
+# Printing -----------
+
+#' Appearance/printing of `eda` and `etest` objects
+
+#' @description
+#' Printing methods.
 #'
-#' @description print an EDA object.
-#' @param x an EDA object, created by \code{\link{eda}}.
-#' @return nothing, called for its side effects.
+#' @param x an object.
+#' @param ... arguments for methods.
+#'
+#' @return invisibly returns the object.
 #' @export
 
-  print.eda <- function(x, ...) {
+  print.eda <- function(x, ...) NextMethod()
 
-    stopifnot(is_eda(x))
-
-    cat(paste('EDA object of type:', x$type))
-    cat('\n')
-
-    eda_len <- length(x$value)
-
-    cat(paste('Length:', eda_len))
-    cat('\n')
-
-    if(eda_len > 5) {
-
-      cat(paste(paste(x$value[1:5], sep = ', ')), '...')
-
-    } else {
-
-      cat(paste(x$value, sep = ', '))
-
-    }
-
-  }
-
-#' Length of EDA objects.
-#'
-#' @description returns length of the EDA object's value vector.
-#' @param x an EDA object, created by \code{\link{eda}}.
-#' @return a numeric value.
+#' @rdname print.eda
 #' @export
 
-  length.eda <- function(x) {
+  print.etest <- function(x, ...) NextMethod()
 
-    stopifnot(is_eda(x))
+# NA removal ---------
 
-    length(x$value)
-
-  }
-
-#' NA removal from EDA objects.
+#' `NA` removal from `eda` objects.
 #'
-#' @description removes NAs from the EDA object.
-#' @param object an EDA object, created by \code{\link{eda}}.
-#' @return an EDA objects without NAs.
+#' @description removes `NA` values from the `eda` objects.
+#'
+#' @param object an \code{\link{eda}} object.
+#' @param ... arguments for methods.
+#'
+#' @return an `eda` object without `NA` values.
+#'
 #' @export
 
   na.omit.eda <- function(object, ...) {
 
     stopifnot(is_eda(object))
 
-    new_vals <- object$value[!is.na(object$value)]
+    new_vals <- object[!is.na(object)]
 
     eda(new_vals)
 
   }
 
-#' NA removal from EDA objects.
-#'
-#' @description removes NAs from the EDA object.
-#' @param object an EDA object, created by \code{\link{eda}}.
-#' @return an EDA objects without NAs.
+#' @rdname na.omit.eda
 #' @export
 
-  na.exclude.eda <- function(object) {
+  na.exclude.eda <- function(object, ...) {
 
     stopifnot(is_eda(object))
 
-    new_vals <- object$value[!is.na(object$value)]
+    new_vals <- object[!is.na(object)]
 
     eda(new_vals)
 
   }
 
-#' Dropping empty levels from a factor-type EDA object.
-#'
-#' @description Removes empty levels from the values of factor-type EDA object.
-#' For numeric-type ones NULL is returned and a warning generated.
-#' @param x an EDA object, created by \code{\link{eda}}.
-#' @return an EDA object.
-#' @export
+# Numbers of observations --------
 
-  droplevels.eda <- function(x, ...) {
-
-    stopifnot(is_eda(x))
-
-    if(x$type == 'numeric') {
-
-      warning('No levels available for numeric-type EDA objects.', call. = FALSE)
-
-      return(NULL)
-
-    }
-
-    new_vals <- droplevels(x$value)
-
-    eda(new_vals)
-
-  }
-
-#' Number of (complete) observations in an EDA object.
+#' Number of (complete) observations in an `eda` object.
 #'
 #' @description counts the number of all (complete if na.rm is set to TRUE)
 #' observations in the EDA object.
-#' @param object an EDA object, created by \code{\link{eda}}.
-#' @return a tibble with the number of all and complete observations.
+#'
+#' @param object an \code{\link{eda}} object.
+#' @param plain logical, should the values be returned as a numeric vector.
+#' @param ... additional arguments passed to methods, currently none.
+#'
+#' @return a tibble or numeric vector with the number of all and complete
+#' observations.
+#'
 #' @export
 
-  nobs.eda <- function(object, ...) {
+  nobs.eda <- function(object, plain = FALSE, ...) {
 
     stopifnot(is_eda(object))
 
-    tibble::tibble(observations = c('all', 'complete'),
-                   n = c(length(object),
-                         length(na.omit(object))))
+    observations <- NULL
+    n <- NULL
+
+    lens <- c("all" = length(object),
+              "complete" = length(na.omit(object)))
+
+    if(plain) return(lens)
+
+    tibble(observations = names(lens),
+           n = lens)
 
   }
+
+# END -------

@@ -2,15 +2,20 @@
 % Please edit documentation in R/general_methods.R
 \name{nobs.eda}
 \alias{nobs.eda}
-\title{Number of (complete) observations in an EDA object.}
+\title{Number of (complete) observations in an \code{eda} object.}
 \usage{
-\method{nobs}{eda}(object, ...)
+\method{nobs}{eda}(object, plain = FALSE, ...)
 }
 \arguments{
-\item{object}{an EDA object, created by \code{\link{eda}}.}
+\item{object}{an \code{\link{eda}} object.}
+
+\item{plain}{logical, should the values be returned as a numeric vector.}
+
+\item{...}{additional arguments passed to methods, currently none.}
 }
 \value{
-a tibble with the number of all and complete observations.
+a tibble or numeric vector with the number of all and complete
+observations.
 }
 \description{
 counts the number of all (complete if na.rm is set to TRUE)

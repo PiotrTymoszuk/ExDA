@@ -1,168 +1,100 @@
-#' Generation of EDA objects.
+# Re-created generics
+
+# Variance --------
+
+#' Calculate descriptive statistics.
 #'
-#' @description Creates a eda object from multiple possible outputs such as vectors or data frames.
-#' @param x an object to be converted to EDA.
-#' @param ... extra arguments passed to methods.
-#' @return an object of class 'eda'.
-#' @export
-
-  eda <- function(x, ...) {
-
-    UseMethod('eda')
-
-  }
-
-#' Tables objects.
+#' @description
+#' Calculates variance, standard deviation, kurtosis, skewness,
+#' Gini coefficient, geometric means, and harmonic mean of an object.
 #'
-#' @description Converts an object to a table. A wrapper around \code{\link[base]{as.table}}.
-#' @param x an object to be converted to a table.
-#' @param ... extra arguments passed to methods.
-#' @return an object of class 'table'.
-#' @export
-
-  as_table <- function(x, ...) {
-
-    UseMethod('as_table')
-
-  }
-
-#' Counting of an object occurrence.
+#' @details
+#' Please refer to:
 #'
-#' @description Counts observations in each category.
+#' * \code{\link[stats]{var}} and \code{\link[stats]{sd}}
+#' for details of variance and standard deviation
+#'
+#' * \code{\link[moments]{kurtosis}} and \code{\link[moments]{skewness}}
+#' for details of kurtosis and skewness
+#'
+#' * \code{\link[microViz]{Gini}}, \code{\link[microViz]{Hmean}},
+#' and \code{\link[microViz]{Gmean}} doe details oF Gini coefficients,
+#' geometric, and harmonic means.
+#'
+#'
 #' @param x an object.
 #' @param ... extra arguments passed to methods.
-#' @return a tibble with the category counts.
-#' @export
-
-  count <- function (x, ..., wt = NULL, sort = FALSE, name = NULL) {
-
-    UseMethod('count')
-
-  }
-
-#' Convert an object to a tibble.
 #'
-#' @description Converts an object to a tibble.
-#' @param x an object.
-#' @param ... extra arguments passed to methods.
-#' @return a tibble
-#' @export
-
-  as_tibble <- function(...) {
-
-    UseMethod('as_tibble')
-
-  }
-
-#' Coercion to a factor.
+#' @return a numeric value.
 #'
-#' @description Converts an object to a factor.
-#' @param x an object to be converted to a factor.
-#' @param ... extra arguments passed to methods.
-#' @return an object of class 'factor'.
+#' @md
 #' @export
 
-  as.factor <- function(x, ...) {
+  var <- function(x, ...) UseMethod("var")
 
-    UseMethod('as.factor')
-
-  }
-
-#' Coercion to a factor.
-#'
-#' @description Converts an object to a factor.
-#' @param x an object to be converted to a factor.
-#' @param ... extra arguments passed to methods.
-#' @return an object of class 'factor'.
+#' @rdname var
 #' @export
 
-  as_factor <- function(x, ...) {
+  var.default <- function(x, ...) stats::var(x, ...)
 
-    UseMethod('as_factor')
-
-  }
-
-#' Coercion to a numeric.
-#'
-#' @description Converts an object to a numeric.
-#' @param x an object to be converted to a numeric.
-#' @param ... extra arguments passed to methods.
-#' @return an object of class 'numeric'.
+#' @rdname var
 #' @export
 
-  as_numeric <- function(x, ...) {
+  sd <- function(x, ...) UseMethod("sd")
 
-    UseMethod('as_numeric')
-
-  }
-
-#' Coercion to a vector.
-#'
-#' @description Converts an object to a vector.
-#' @param x an object to be converted to a vector.
-#' @param ... extra arguments passed to methods.
-#' @return a vector.
+#' @rdname var
 #' @export
 
-  as_vector <- function(x, ...) {
+  sd.default <- function(x, ...) stats::sd(x, ...)
 
-    UseMethod('as_vector')
-
-  }
-
-#' Calculate variance.
-#'
-#' @description Calculates variance of an object.
-#' @param x an object.
-#' @param ... extra arguments passed to methods.
-#' @return a numeric.
+#' @rdname var
 #' @export
 
-  var <- function(x, ...){
+  kurtosis <- function(x, ...) UseMethod("kurtosis")
 
-    UseMethod('var')
-
-  }
-
-#' Calculate standard deviation.
-#'
-#' @description Calculates standard deviation of an object.
-#' @param x an object.
-#' @param ... extra arguments passed to methods.
-#' @return a numeric.
+#' @rdname var
 #' @export
 
-  sd <- function(x, ...){
+  kurtosis.default <- function(x, ...) moments::kurtosis(x, ...)
 
-    UseMethod('sd')
-
-  }
-
-#' Calculate kurtosis.
-#'
-#' @description Calculates kurtosis of an object.
-#' @param x an object.
-#' @param ... extra arguments passed to methods.
-#' @return a numeric.
+#' @rdname var
 #' @export
 
-  kurtosis <- function(x, ...){
+  skewness <- function(x, ...) UseMethod("skewness")
 
-    UseMethod('kurtosis')
-
-  }
-
-#' Calculate skewness.
-#'
-#' @description Calculates skewness of an object.
-#' @param x an object.
-#' @param ... extra arguments passed to methods.
-#' @return a numeric.
+#' @rdname var
 #' @export
 
-  skewness <- function(x, ...){
+  skewness.default <- function(x, ...) moments::skewness(x, ...)
 
-    UseMethod('skewness')
+#' @rdname var
+#' @export
 
-  }
+  gini <- function(x, ...) UseMethod("gini")
 
+#' @rdname var
+#' @export
+
+  gini.default <- function(x, ...) Gini(x, ...)
+
+#' @rdname var
+#' @export
+
+  gmean <- function(x, ...) UseMethod("gmean")
+
+#' @rdname var
+#' @export
+
+  gmean.default <- function(x, ...) Gmean(x, ...)
+
+#' @rdname var
+#' @export
+
+  hmean <- function(x, ...) UseMethod("hmean")
+
+#' @rdname var
+#' @export
+
+  hmean.default <- function(x, ...) Hmean(x, ...)
+
+# END -------

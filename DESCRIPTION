@@ -1,32 +1,20 @@
 Package: exda
 Type: Package
 Title: Toolset for Explorative Data Analysis
-Version: 0.1.1
+Version: 1.0.0
 Description: Provides a series of functions for analysis of properties 
     and plotting for numeric, categorical, and logical variables.
 Encoding: UTF-8
-LazyData: true
+LazyData: true 
+License: GPL-3 + file LICENSE
 Authors@R: 
     person("Piotr", "Tymoszuk", , "piotr.s.tymoszuk@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-0398-6034"))
 Imports: 
-    car,
-    DescTools,
     dplyr,
-    forcats,
-    furrr,
-    future,
-    ggforce,
-    ggplot2,
-    ggrepel,
+    microViz,
     moments,
-    plyr,
-    purrr,
-    rcompanion,
     rlang,
-    rstatix,
-    sciplot,
-    stringi,
-    tidyr,
-    vcd
-RoxygenNote: 7.2.3
+    tibble
+RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)

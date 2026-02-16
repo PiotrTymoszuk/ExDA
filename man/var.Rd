@@ -2,9 +2,48 @@
 % Please edit documentation in R/generics.R
 \name{var}
 \alias{var}
-\title{Calculate variance.}
+\alias{var.default}
+\alias{sd}
+\alias{sd.default}
+\alias{kurtosis}
+\alias{kurtosis.default}
+\alias{skewness}
+\alias{skewness.default}
+\alias{gini}
+\alias{gini.default}
+\alias{gmean}
+\alias{gmean.default}
+\alias{hmean}
+\alias{hmean.default}
+\title{Calculate descriptive statistics.}
 \usage{
 var(x, ...)
+
+\method{var}{default}(x, ...)
+
+sd(x, ...)
+
+\method{sd}{default}(x, ...)
+
+kurtosis(x, ...)
+
+\method{kurtosis}{default}(x, ...)
+
+skewness(x, ...)
+
+\method{skewness}{default}(x, ...)
+
+gini(x, ...)
+
+\method{gini}{default}(x, ...)
+
+gmean(x, ...)
+
+\method{gmean}{default}(x, ...)
+
+hmean(x, ...)
+
+\method{hmean}{default}(x, ...)
 }
 \arguments{
 \item{x}{an object.}
@@ -12,8 +51,21 @@ var(x, ...)
 \item{...}{extra arguments passed to methods.}
 }
 \value{
-a numeric.
+a numeric value.
 }
 \description{
-Calculates variance of an object.
+Calculates variance, standard deviation, kurtosis, skewness,
+Gini coefficient, geometric means, and harmonic mean of an object.
+}
+\details{
+Please refer to:
+\itemize{
+\item \code{\link[stats]{var}} and \code{\link[stats]{sd}}
+for details of variance and standard deviation
+\item \code{\link[moments]{kurtosis}} and \code{\link[moments]{skewness}}
+for details of kurtosis and skewness
+\item \code{\link[microViz]{Gini}}, \code{\link[microViz]{Hmean}},
+and \code{\link[microViz]{Gmean}} doe details oF Gini coefficients,
+geometric, and harmonic means.
+}
 }

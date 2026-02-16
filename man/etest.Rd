@@ -2,7 +2,8 @@
 % Please edit documentation in R/builders.R
 \name{etest}
 \alias{etest}
-\title{Generate eTest objects.}
+\alias{is_etest}
+\title{Generate \code{eTest} objects.}
 \usage{
 etest(
   test,
@@ -17,9 +18,11 @@ etest(
   p_value = NA,
   n = NA
 )
+
+is_etest(x)
 }
 \arguments{
-\item{test}{statistical test name.}
+\item{test}{name of the statistical test.}
 
 \item{stat_name}{name of the test statistic.}
 
@@ -40,11 +43,14 @@ etest(
 \item{p_value}{p value.}
 
 \item{n}{number of complete observations used for testing.}
+
+\item{x}{an object.}
 }
 \value{
-an EDA object.
+an \code{etest} data frame. It shares most of its methods
+with a "canonical" data frame.
 }
 \description{
-Generates eTest objects storing statistic test results in
-a standardized tibble.
+Generates \code{eTest} objects storing results of statistical hypothesis tests
+in a standardized data frame.
 }

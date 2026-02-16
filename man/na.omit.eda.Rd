@@ -2,16 +2,21 @@
 % Please edit documentation in R/general_methods.R
 \name{na.omit.eda}
 \alias{na.omit.eda}
-\title{NA removal from EDA objects.}
+\alias{na.exclude.eda}
+\title{\code{NA} removal from \code{eda} objects.}
 \usage{
 \method{na.omit}{eda}(object, ...)
+
+\method{na.exclude}{eda}(object, ...)
 }
 \arguments{
-\item{object}{an EDA object, created by \code{\link{eda}}.}
+\item{object}{an \code{\link{eda}} object.}
+
+\item{...}{arguments for methods.}
 }
 \value{
-an EDA objects without NAs.
+an \code{eda} object without \code{NA} values.
 }
 \description{
-removes NAs from the EDA object.
+removes \code{NA} values from the \code{eda} objects.
 }

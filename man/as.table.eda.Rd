@@ -2,20 +2,32 @@
 % Please edit documentation in R/factor_methods.R
 \name{as.table.eda}
 \alias{as.table.eda}
-\title{Convert categorical EDA objects to a table.}
+\alias{frequency.eda}
+\title{Counts of observations.}
 \usage{
-\method{as.table}{eda}(x, scale = c("none", "fraction", "percent"))
+\method{as.table}{eda}(x, scale = c("none", "fraction", "percent"), ...)
+
+\method{frequency}{eda}(x, .drop = FALSE, ...)
 }
 \arguments{
 \item{x}{an EDA object, created by \code{\link{eda}}}
 
 \item{scale}{content of the output table: 'fraction' returns fraction of total,
 'percent' returns percentages of all observations. Defaults to none.}
+
+\item{...}{additional arguments passed to methods.}
+
+\item{.drop}{logical, should empty levels be removed?}
 }
 \value{
-a table object.
+a table object (\code{as_table()}) or a tibble (\code{frequency()})
 }
 \description{
-converts factor-type EDA objects to a table. For numeric-type ones
-NULL is returned and a warning generated.
+\code{as.table()} converts factor-type \code{eda} objects to a table objects with
+counts, fractions, or percentages of observations.
+\code{frequency()} returns a data frame/tibble with numbers of observations in
+categories, total numbers of observations, number of complete observations,
+and percentages of all and complete observations.
+
+For numeric objecs NULL is returned and a warning generated.
 }

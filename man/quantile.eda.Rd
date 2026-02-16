@@ -2,21 +2,67 @@
 % Please edit documentation in R/numeric_methods.R
 \name{quantile.eda}
 \alias{quantile.eda}
-\title{Quantiles of an EDA object.}
+\alias{mean.eda}
+\alias{median.eda}
+\alias{var.eda}
+\alias{sd.eda}
+\alias{kurtosis.eda}
+\alias{skewness.eda}
+\alias{gini.eda}
+\alias{gmean.eda}
+\alias{hmean.eda}
+\title{Descriptive statistics of \code{eda} objects.}
 \usage{
-\method{quantile}{eda}(x, probs = c(0, 0.25, 0.5, 0.75, 1), plain = FALSE)
+\method{quantile}{eda}(x, probs = c(0, 0.25, 0.5, 0.75, 1), plain = FALSE, ...)
+
+\method{mean}{eda}(x, plain = FALSE, ...)
+
+\method{median}{eda}(x, na.rm = TRUE, plain = FALSE, ...)
+
+\method{var}{eda}(x, plain = FALSE, ...)
+
+\method{sd}{eda}(x, plain = FALSE, ...)
+
+\method{kurtosis}{eda}(x, plain = FALSE, ...)
+
+\method{skewness}{eda}(x, plain = FALSE, ...)
+
+\method{gini}{eda}(x, plain = FALSE, ...)
+
+\method{gmean}{eda}(x, plain = FALSE, ...)
+
+\method{hmean}{eda}(x, plain = FALSE, ...)
 }
 \arguments{
-\item{x}{an EDA object, created by \code{\link{eda}}.}
+\item{x}{an \code{\link{eda}} object.}
 
-\item{probs}{numeric vector of probabilities with values in [0,1].}
+\item{probs}{numeric vector of probabilities with values in the 0 to 1 range.}
 
 \item{plain}{logical, should the output be coerced to a single vector?}
+
+\item{...}{additional arguments passed to methods.}
+
+\item{na.rm}{logical, should \code{NA} values be removed prior to computation?
+Required for compatibility with the \code{median()} generic function and ignored.}
 }
 \value{
-a tibble or vector with the requested quantile values.
+a tibble or vector (if \code{plain = TRUE}) with the requested statistics
 }
 \description{
-Gets quantiles of a numeric-type EDA object. For factor-type ones
-NULL is returned and a warning generated. NAs are removed before computation.
+Gets quantiles, mean, median, variance, standard deviation, ,  of a numeric ``eda object.
+For factors \code{NULL} is returned and a warning generated.
+`NA` values are removed before computation.
+}
+\details{
+Please refer to:
+\itemize{
+\item \code{\link[stats]{quantile}}, \code{\link[stats]{var}},
+and \code{\link[stats]{sd}}
+for details of variance and standard deviation
+\item \code{\link[moments]{kurtosis}} and \code{\link[moments]{skewness}}
+for details of kurtosis and skewness
+\item \code{\link[microViz]{Gini}}, \code{\link[microViz]{Hmean}},
+and \code{\link[microViz]{Gmean}} doe details of Gini coefficients,
+geometric, and harmonic means.
+}
 }
