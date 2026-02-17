@@ -107,6 +107,7 @@
 #' @param ... additional arguments for methods.
 #'
 #' @export
+#' @export summary.eda
 
   summary.eda <- function(object,
                           pub_styled = FALSE,
@@ -186,8 +187,9 @@
       stats[["statistic"]] <- stat_names
 
       stats[["n_complete"]] <- complete_observations
+      stats[["n_total"]] <- total_observations
 
-      return(stats[, c("statistic", "value", "n_complete")])
+      return(stats[, c("statistic", "value", "n_complete", "n_total")])
 
     }
 

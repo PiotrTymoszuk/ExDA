@@ -119,4 +119,61 @@
     map(droplevels) %>%
     map(summary, pub_styled = TRUE)
 
+# descriptive statistics ----------
+
+  set.seed(213245)
+
+  ## testing data
+
+  my_cars <- mtcars %>%
+    mutate(vs = factor(ifelse(vs == 1, "yes", "no")),
+           car_group = sample(c("A", "B", "C"),
+                              size = nrow(.),
+                              replace = TRUE),
+           na_dummy = NA)
+
+  my_cars[5, "disp"] <- NA
+
+  ## the entire data frame, no splitting factor
+
+  my_cars %>%
+    explore(what = "list")
+
+  my_cars %>%
+    explore(what = "kurtosis")
+
+  my_cars %>%
+    explore(what = "skewness")
+
+  my_cars %>%
+    explore(what = "table",
+            rm_range = FALSE,
+            rm_complete = TRUE,
+            style = "median/IQR")
+
+  ## splitting factor present
+
+  my_cars %>%
+    explore(split_factor = "car_group",
+            what = "list")
+
+  my_cars %>%
+    explore(split_factor = "car_group",
+            what = "kurtosis",
+            one_table = TRUE)
+
+  my_cars %>%
+    explore(split_factor = "car_group",
+            what = "skewness",
+            one_table = TRUE)
+
+  my_cars %>%
+    explore(split_factor = "car_group",
+            what = "table",
+            one_table = TRUE,
+            rm_range = TRUE,
+            rm_complete = FALSE,
+            style = "median/IQR")
+
+
 # END --------

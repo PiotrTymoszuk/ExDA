@@ -14,7 +14,7 @@
 #' * \code{\link[stats]{var}} and \code{\link[stats]{sd}}
 #' for details of variance and standard deviation
 #'
-#' * \code{\link[moments]{kurtosis}} and \code{\link[moments]{skewness}}
+#' * \code{\link[microViz]{kurtosis}} and \code{\link[microViz]{skewness}}
 #' for details of kurtosis and skewness
 #'
 #' * \code{\link[microViz]{Gini}}, \code{\link[microViz]{Hmean}},
@@ -55,7 +55,7 @@
 #' @rdname var
 #' @export
 
-  kurtosis.default <- function(x, ...) moments::kurtosis(x, ...)
+  kurtosis.default <- function(x, ...) microViz::kurtosis(x, ...)
 
 #' @rdname var
 #' @export
@@ -65,7 +65,7 @@
 #' @rdname var
 #' @export
 
-  skewness.default <- function(x, ...) moments::skewness(x, ...)
+  skewness.default <- function(x, ...) microViz::skewness(x, ...)
 
 #' @rdname var
 #' @export

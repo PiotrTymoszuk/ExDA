@@ -41,7 +41,11 @@
 
     }
 
+    total_observations <- length(x)
+
     x <- x[!is.na(x)]
+
+    complete_observations <- length(x)
 
     val <- fun(x, ...)
 
@@ -49,9 +53,13 @@
 
     statistic <- NULL
     value <- NULL
+    n_total <- NULL
+    n_complete <- NULL
 
     tibble(statistic = stat_name,
-           value = val)
+           value = val,
+           n_total = total_observations,
+           n_complete = complete_observations)
 
   }
 
