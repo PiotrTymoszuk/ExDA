@@ -9,6 +9,7 @@ explore(
   variables = NULL,
   split_factor = NULL,
   what = c("table", "list", "skewness", "kurtosis"),
+  .drop = TRUE,
   signif_digits = 2,
   one_table = TRUE,
   total_text = "observations, total, N",
@@ -31,6 +32,8 @@ variables of interest into analysis groups.}
 'table' (default) returns a publication-ready data frame with
 the distribution stats,
 'skewness' and 'kurtosis' return data frames with the requested statistics.}
+
+\item{.drop}{logical, should empty categories of factors in the data frame be removed?}
 
 \item{signif_digits}{significant digits used for rounding in the
 publication-style output.}

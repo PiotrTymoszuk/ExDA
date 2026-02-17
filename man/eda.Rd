@@ -12,7 +12,7 @@
 \usage{
 eda(x, ...)
 
-\method{eda}{factor}(x, ...)
+\method{eda}{factor}(x, .drop = TRUE, ...)
 
 \method{eda}{numeric}(x, ...)
 
@@ -29,6 +29,9 @@ is_eda(x)
 variable to be converted to an \code{eda} object.}
 
 \item{...}{additional arguments for methods,}
+
+\item{.drop}{logical, should empty levels of a factor be dropped?
+Defaults to \code{TRUE}.}
 
 \item{variable}{a name of data frame's variable.}
 }

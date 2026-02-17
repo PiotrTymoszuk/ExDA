@@ -13,6 +13,8 @@
 #' @param x and object to be converted to `eda` or a data frame with the
 #' variable to be converted to an `eda` object.
 #' @param variable a name of data frame's variable.
+#' @param .drop logical, should empty levels of a factor be dropped?
+#' Defaults to `TRUE`.
 #' @param ... additional arguments for methods,
 #'
 #' @return an `eda` object: an enriched numeric or factor vector, which inherits
@@ -25,13 +27,15 @@
 #' @rdname eda
 #' @export
 
-  eda.factor <- function(x, ...) {
+  eda.factor <- function(x, .drop = TRUE, ...) {
 
     stopifnot(is.factor(x))
 
     if(is_eda(x)) return(x)
 
     if(all(is.na(x))) return(eda(as.numeric(x)))
+
+    if(.drop) x <- droplevels(x)
 
     structure(x, class = c("eda", class(x)))
 

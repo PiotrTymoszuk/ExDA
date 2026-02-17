@@ -126,7 +126,8 @@
   ## testing data
 
   my_cars <- mtcars %>%
-    mutate(vs = factor(ifelse(vs == 1, "yes", "no")),
+    mutate(vs = factor(ifelse(vs == 1, "yes", "no"),
+                       c("yes", "no", "unknown")),
            car_group = sample(c("A", "B", "C"),
                               size = nrow(.),
                               replace = TRUE),
@@ -137,7 +138,7 @@
   ## the entire data frame, no splitting factor
 
   my_cars %>%
-    explore(what = "list")
+    explore(what = "list", .drop = FALSE)
 
   my_cars %>%
     explore(what = "kurtosis")
@@ -173,7 +174,8 @@
             one_table = TRUE,
             rm_range = TRUE,
             rm_complete = FALSE,
-            style = "median/IQR")
+            style = "median/IQR",
+            .drop = TRUE)
 
 
 # END --------

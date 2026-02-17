@@ -33,6 +33,7 @@
 #' 'table' (default) returns a publication-ready data frame with
 #' the distribution stats,
 #' 'skewness' and 'kurtosis' return data frames with the requested statistics.
+#' @param .drop logical, should empty categories of factors in the data frame be removed?
 #' @param signif_digits significant digits used for rounding in the
 #' publication-style output.
 #' @param one_table logical, should the output be coerced to a single data frame?
@@ -60,6 +61,7 @@
                       variables = NULL,
                       split_factor = NULL,
                       what = c("table", "list", "skewness", "kurtosis"),
+                      .drop = TRUE,
                       signif_digits = 2,
                       one_table = TRUE,
                       total_text = "observations, total, N",
@@ -90,6 +92,8 @@
 
       }
 
+      data[[split_factor]] <- droplevels(data[[split_factor]])
+
     }
 
     if(is.null(variables)) {
@@ -115,6 +119,9 @@
     what <-
       match.arg(what[1],
                 c("table", "list", "skewness", "kurtosis"))
+
+    stopifnot(is.logical(.drop))
+    .drop <- .drop[1]
 
     stopifnot(is.logical(one_table))
     one_table <- one_table[1]
@@ -156,6 +163,7 @@
                    variables = variables,
                    split_factor = NULL,
                    what = what,
+                   .drop = .drop,
                    signif_digits = signif_digits,
                    one_table = one_table,
                    total_text = total_text,
@@ -187,11 +195,13 @@
 
     }
 
-    ## splitting factor absent, list output ----------
+    ## analysis data --------
 
     variable <- NULL
 
-    obj_lst <- map(data[, variables], eda)
+    obj_lst <- map(data[, variables], eda, .drop = .drop)
+
+    ## splitting factor absent, list output ----------
 
     if(what == "list") return(map(obj_lst, summary, pub_styled = FALSE))
 
