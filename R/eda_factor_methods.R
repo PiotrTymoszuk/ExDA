@@ -50,6 +50,7 @@
 
   }
 #' @rdname as.table.eda
+#' @export frequency.eda
 #' @export
 
   frequency.eda <- function(x, .drop = FALSE, ...) {

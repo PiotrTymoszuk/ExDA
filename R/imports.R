@@ -10,9 +10,13 @@
 #' @importFrom dplyr count
 #' @importFrom dplyr mutate
 #' @importFrom dplyr relocate
+#' @importFrom dplyr arrange
 #' @importFrom dplyr full_join
+#' @importFrom dplyr desc
 #'
 #' @importFrom tibble tibble
+#' @importFrom tibble rownames_to_column
+#' @importFrom tibble column_to_rownames
 #'
 #' @importFrom rlang is_function
 #' @importFrom rlang set_names
@@ -32,5 +36,28 @@
 #' @importFrom microViz Hmean
 #'
 #' @importFrom stringi stri_replace
+#'
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#'
+#' @importFrom ggplot2 geom_bar
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_text
+#' @importFrom ggplot2 geom_label
+#' @importFrom ggplot2 geom_boxplot
+#' @importFrom ggplot2 geom_violin
+#' @importFrom ggplot2 geom_errorbar
+#' @importFrom ggplot2 geom_histogram
+#' @importFrom ggplot2 geom_qq
+#' @importFrom ggplot2 geom_qq_line
+#' @importFrom ggplot2 geom_vline
+#'
+#' @importFrom ggplot2 position_stack
+#' @importFrom ggplot2 position_jitter
+#'
+#' @importFrom ggplot2 is_theme
+#' @importFrom ggplot2 theme_classic
+#'
+#' @importFrom ggplot2 labs
 
   NULL

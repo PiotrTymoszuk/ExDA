@@ -177,5 +177,38 @@
             style = "median/IQR",
             .drop = TRUE)
 
+# plotting methods for `eda` objects --------
+
+  my_cars$vs %>%
+    eda(.drop = FALSE) %>%
+    plot
+
+  my_cars$vs %>%
+    eda(.drop = FALSE) %>%
+    plot(type = "stack")
+
+  my_cars$mpg %>%
+    eda %>%
+    plot
+
+  my_cars$mpg %>%
+    eda %>%
+    plot(type = "box")
+
+  c(my_cars$mpg, NA) %>%
+    eda %>%
+    plot(type = "histogram",
+         bins = 10)
+
+  c(my_cars$mpg, NA) %>%
+    eda %>%
+    plot(type = "qq",
+         point_size = 4)
+
+  plot_lst <- my_cars %>%
+    map(eda) %>%
+    list(x = .,
+         plot_title = names(.)) %>%
+    pmap(plot)
 
 # END --------

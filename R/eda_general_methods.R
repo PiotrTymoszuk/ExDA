@@ -79,7 +79,7 @@
     observations <- NULL
     n <- NULL
 
-    lens <- c("all" = length(object),
+    lens <- c("total" = length(object),
               "complete" = length(na.omit(object)))
 
     if(plain) return(lens)
@@ -367,6 +367,99 @@
     obj_lst <- base::split.default(x, f)
 
     map(obj_lst, eda)
+
+  }
+
+# plotting ---------
+
+#' Plot distribution.
+#'
+#' @description
+#' Distribution plots for `eda` objects storing factors (bar and stack plots
+#' with frequencies of observations in the categories) and numeric values
+#' (violin and box plots, histograms, and quantile - quantile/QQ plots).
+#'
+#' @return a `ggplot` object.
+#'
+#' @param x \code{\link{eda}} object.
+#' @param type plot type: "bar", "stack", "violin", "box", "histogram", or "qq".
+#' If not provided, a bar plot is returned for factors and a violin plot is returned
+#' for numeric objects.
+#' @param ... additional arguments passed to internal plotting functions
+#' (bar and stack plots: \code{\link{plot_factor}}, violin and box plots:
+#' \code{\link{plot_numeric}}, histograms: \code{\link{plot_qq}}, QQ plots:
+#' \code{\link{plot_qq}}). They specify, among others, colors and opacity of
+#' points and shapes, point sizes, text labels, and `ggplot` themes.
+#'
+#' @export plot.eda
+#' @export
+
+  plot.eda <- function(x,
+                       type = NULL, ...) {
+
+    ## input control ---------
+
+    stopifnot(is_eda(x))
+
+    if(all(is.na(x))) {
+
+      warning("No data to plot: NA-only object.", call. = FALSE)
+
+      return(NULL)
+
+    }
+
+    factor_types <- c("bar", "stack")
+    numeric_types <- c("violin", "box", "histogram", "qq")
+
+    if(!is.null(type)) {
+
+      if(!type %in% c(factor_types, numeric_types)) {
+
+        stop(paste("Type must be one of:",
+                   paste(c(factor_types, numeric_types),
+                         collapse = ", ")),
+             call. = FALSE)
+
+      }
+
+      if(is.factor(x) & type %in% numeric_types) {
+
+        stop(paste("Available types of plots for factors are:",
+                   paste(factor_types, collapse = ", ")))
+
+      }
+
+      if(is.numeric(x) & type %in% factor_types) {
+
+        stop(paste("Available types of plots for numeric objects are:",
+                   paste(numeric_types, collapse = ", ")))
+
+      }
+
+    } else {
+
+      if(is.factor(x)) {
+
+        type <- "bar"
+
+      } else {
+
+        type <- "violin"
+
+      }
+
+    }
+
+    ## plotting -------
+
+    switch(type,
+           bar = plot_factor(x, type = "bar", ...),
+           stack = plot_factor(x, type = "stack", ...),
+           violin = plot_numeric(x, type = "violin", ...),
+           box = plot_numeric(x, type = "box", ...),
+           histogram = plot_histogram(x, ...),
+           qq = plot_qq(x, ...))
 
   }
 

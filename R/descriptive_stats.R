@@ -228,7 +228,10 @@
 
     if(what == "table") {
 
-      stat_lst <- map(obj_lst, summary, pub_styled = TRUE)
+      stat_lst <- map(obj_lst,
+                      summary,
+                      pub_styled = TRUE,
+                      signif_digits = signif_digits)
 
       stat_lst <- compact(stat_lst)
 
