@@ -14,7 +14,7 @@
 #' and \code{\link[stats]{sd}}
 #' for details of variance and standard deviation
 #'
-#' * \code{\link[moments]{kurtosis}} and \code{\link[moments]{skewness}}
+#' * \code{\link[microViz]{kurtosis}} and \code{\link[microViz]{skewness}}
 #' for details of kurtosis and skewness
 #'
 #' * \code{\link[microViz]{Gini}}, \code{\link[microViz]{Hmean}},
@@ -116,7 +116,7 @@
   kurtosis.eda <- function(x, plain = FALSE, ...) {
 
     stat_extract(x,
-                 fun = moments::kurtosis,
+                 fun = microViz::kurtosis,
                  stat_name = "kurtosis",
                  plain = plain)
 
@@ -128,7 +128,7 @@
   skewness.eda <- function(x, plain = FALSE, ...) {
 
     stat_extract(x,
-                 fun = moments::skewness,
+                 fun = microViz::skewness,
                  stat_name = "skewness",
                  plain = plain)
 

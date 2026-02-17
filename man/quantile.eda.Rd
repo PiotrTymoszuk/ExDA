@@ -59,7 +59,7 @@ Please refer to:
 \item \code{\link[stats]{quantile}}, \code{\link[stats]{var}},
 and \code{\link[stats]{sd}}
 for details of variance and standard deviation
-\item \code{\link[moments]{kurtosis}} and \code{\link[moments]{skewness}}
+\item \code{\link[microViz]{kurtosis}} and \code{\link[microViz]{skewness}}
 for details of kurtosis and skewness
 \item \code{\link[microViz]{Gini}}, \code{\link[microViz]{Hmean}},
 and \code{\link[microViz]{Gmean}} doe details of Gini coefficients,

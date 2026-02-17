@@ -13,7 +13,6 @@ Authors@R:
 Imports: 
     dplyr,
     microViz,
-    moments,
     purrr,
     rlang,
     tibble
