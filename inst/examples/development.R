@@ -262,7 +262,6 @@
   exda:::plot_df_qq(data = my_cars,
                     split_factor = "car_group",
                     variable = "mpg",
-                    type = "density",
                     labeller = function(x) paste0("#", x),
                     x_n_labs = TRUE,
                     facet = "horizontal",

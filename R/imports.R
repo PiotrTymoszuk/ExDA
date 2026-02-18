@@ -7,6 +7,7 @@
 #' @importFrom stats na.exclude
 #' @importFrom stats nobs
 #' @importFrom stats as.formula
+#' @importFrom stats complete.cases
 #'
 #' @importFrom dplyr count
 #' @importFrom dplyr mutate
@@ -27,6 +28,7 @@
 #' @importFrom rlang `:=`
 #'
 #' @importFrom purrr map
+#' @importFrom purrr map_dbl
 #' @importFrom purrr map_dfr
 #' @importFrom purrr map2
 #' @importFrom purrr map2_dfr
@@ -47,6 +49,7 @@
 #'
 #' @importFrom ggplot2 geom_bar
 #' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_line
 #' @importFrom ggplot2 geom_text
 #' @importFrom ggplot2 geom_label
 #' @importFrom ggplot2 geom_boxplot
@@ -59,6 +62,7 @@
 #' @importFrom ggplot2 geom_vline
 #'
 #' @importFrom ggplot2 scale_fill_brewer
+#' @importFrom ggplot2 scale_color_brewer
 #' @importFrom ggplot2 scale_fill_gradient
 #' @importFrom ggplot2 scale_size_area
 #' @importFrom ggplot2 scale_x_discrete
@@ -70,7 +74,8 @@
 #' @importFrom ggplot2 is_theme
 #' @importFrom ggplot2 theme_classic
 #' @importFrom ggplot2 as_labeller
-#'
+#'´@importFrom ggplot2 guides
+#' @importFrom ggplot2 guide_legend
 #' @importFrom ggplot2 labs
 #'
 #' @importFrom generics explore

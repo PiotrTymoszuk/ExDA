@@ -5,7 +5,7 @@
 \title{Exploratory data analysis of a data frame.}
 \usage{
 \method{explore}{data.frame}(
-  data,
+  x,
   variables = NULL,
   split_factor = NULL,
   what = c("table", "list", "skewness", "kurtosis"),
@@ -20,7 +20,7 @@
 )
 }
 \arguments{
-\item{data}{a data frame.}
+\item{x}{a data frame.}
 
 \item{variables}{a vector of variable names. If \code{NULL} all variables in the
 data frame except of the splitting factor will be analyzed.}

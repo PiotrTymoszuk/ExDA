@@ -24,7 +24,7 @@
 #'
 #' * `"median/IQR"`: medians with interquartile ranges
 #'
-#' @param data a data frame.
+#' @param x a data frame.
 #' @param split_factor optional, the name of a factor used for splitting the
 #' variables of interest into analysis groups.
 #' @param variables a vector of variable names. If `NULL` all variables in the
@@ -58,7 +58,7 @@
 #' @export explore.data.frame
 #' @export
 
-  explore.data.frame <- function(data,
+  explore.data.frame <- function(x,
                                  variables = NULL,
                                  split_factor = NULL,
                                  what = c("table", "list", "skewness", "kurtosis"),
@@ -73,7 +73,7 @@
 
     ## entry control ----------
 
-    if(!is.data.frame(data)) stop("`data` has to be a data frame.", call. = FALSE)
+    if(!is.data.frame(x)) stop("`x` has to be a data frame.", call. = FALSE)
 
     if(!is.null(split_factor)) {
 
@@ -81,19 +81,19 @@
 
       split_factor <- split_factor[1]
 
-      if(!split_factor %in% names(data)) {
+      if(!split_factor %in% names(x)) {
 
-        stop("`split_factor` is missing from `data`.", call. = FALSE)
-
-      }
-
-      if(!is.factor(data[[split_factor]])) {
-
-        data[[split_factor]] <- factor(data[[split_factor]])
+        stop("`split_factor` is missing from `x`.", call. = FALSE)
 
       }
 
-      data[[split_factor]] <- droplevels(data[[split_factor]])
+      if(!is.factor(x[[split_factor]])) {
+
+        x[[split_factor]] <- factor(x[[split_factor]])
+
+      }
+
+      x[[split_factor]] <- droplevels(x[[split_factor]])
 
     }
 
@@ -101,19 +101,19 @@
 
       if(is.null(split_factor)) {
 
-        variables <- names(data)
+        variables <- names(x)
 
       } else {
 
-        variables <- names(data)[names(data) != split_factor]
+        variables <- names(x)[names(x) != split_factor]
 
       }
 
     }
 
-    if(!all(variables %in% names(data))) {
+    if(!all(variables %in% names(x))) {
 
-      stop("Some variables are missing from `data`.", call. = FALSE)
+      stop("Some variables are missing from `x`.", call. = FALSE)
 
     }
 
@@ -147,7 +147,7 @@
 
       ## empty at the moment
 
-      data_lst <- split(data[, variables], data[[split_factor]])
+      data_lst <- split(x[, variables], x[[split_factor]])
 
       if(what == "list") {
 
@@ -200,7 +200,7 @@
 
     variable <- NULL
 
-    obj_lst <- map(data[, variables], eda, .drop = .drop)
+    obj_lst <- map(x[, variables], eda, .drop = .drop)
 
     ## splitting factor absent, list output ----------
 
@@ -242,7 +242,7 @@
       statistic <- NULL
 
       n_obs_info <- tibble(variable = total_text,
-                           statistic = nrow(data))
+                           statistic = nrow(x))
 
       if(rm_range) {
 
