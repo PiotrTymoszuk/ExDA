@@ -13,10 +13,11 @@ plot_factor(
   type = c("stack", "bar", "bubble"),
   scale = c("none", "percent"),
   signif_digits = 2,
+  palette = tableau10_colors(),
   shape_fill = "steelblue",
   shape_color = "black",
   shape_alpha = 1,
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   show_txt = TRUE,
   txt_size = 2.75,
   txt_vjust = NULL,
@@ -42,7 +43,7 @@ plot_numeric(
   point_wjitter = 0.1,
   line_color = "orangered3",
   line_width = 0.75,
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
   x_txt = "",
@@ -60,7 +61,7 @@ plot_histogram(
   show_stats = TRUE,
   line_color = "orangered3",
   line_width = 0.75,
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
   x_lab = "value",
@@ -81,7 +82,7 @@ plot_qq(
   plot_subtitle = NULL,
   x_lab = "quantiles, theoretical normal distribution",
   y_lab = "quantiles, observed distribution",
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   ...
 )
 }
@@ -98,13 +99,16 @@ none (counts) or percents,}
 \item{signif_digits}{significant digits used to round numeric values displayed
 in the plot (e.g. percentages).}
 
+\item{palette}{a vector with color names or hex codes for fill scales.}
+
 \item{shape_fill}{fill color of bars, boxes, violins, and histograms.}
 
 \item{shape_color}{color of rims of bars, boxes, violins, and histograms.}
 
 \item{shape_alpha}{alpha (opacity) of bars, boxes, violins, and histograms.}
 
-\item{cust_theme}{custom \code{ggplot}'s \code{theme} object.}
+\item{cust_theme}{custom \code{ggplot}'s \code{theme} object or \code{NULL}. If \code{NULL} no
+custom theme is applied, which makes the plot objects much smaller.}
 
 \item{show_txt}{logical, should text labels with frequencies be
 displayed in the plot?}

@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{\code{\link{eda}} object.}
 
-\item{type}{plot type: "stack", "bar", "violin", "box", "histogram", "density,
+\item{type}{plot type: "stack", "bar", "violin", "box", "histogram", "density",
 or "qq".
 If not provided, a stack plot is returned for factors and a violin plot is
 returned for numeric objects.}

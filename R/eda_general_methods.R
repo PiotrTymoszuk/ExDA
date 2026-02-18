@@ -383,7 +383,7 @@
 #' @return a `ggplot` object.
 #'
 #' @param x \code{\link{eda}} object.
-#' @param type plot type: "stack", "bar", "violin", "box", "histogram", "density,
+#' @param type plot type: "stack", "bar", "violin", "box", "histogram", "density",
 #' or "qq".
 #' If not provided, a stack plot is returned for factors and a violin plot is
 #' returned for numeric objects.

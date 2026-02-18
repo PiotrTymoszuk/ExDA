@@ -61,8 +61,8 @@
 #' @importFrom ggplot2 geom_qq_line
 #' @importFrom ggplot2 geom_vline
 #'
-#' @importFrom ggplot2 scale_fill_brewer
-#' @importFrom ggplot2 scale_color_brewer
+#' @importFrom ggplot2 scale_fill_manual
+#' @importFrom ggplot2 scale_color_manual
 #' @importFrom ggplot2 scale_fill_gradient
 #' @importFrom ggplot2 scale_size_area
 #' @importFrom ggplot2 scale_x_discrete
@@ -71,10 +71,16 @@
 #' @importFrom ggplot2 position_jitter
 #' @importFrom ggplot2 position_dodge
 #'
+#' @importFrom ggplot2 element_text
+#' @importFrom ggplot2 element_line
+#' @importFrom ggplot2 element_rect
+#' @importFrom ggplot2 margin
+#'
 #' @importFrom ggplot2 is_theme
+#' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_classic
 #' @importFrom ggplot2 as_labeller
-#'´@importFrom ggplot2 guides
+#' @importFrom ggplot2 guides
 #' @importFrom ggplot2 guide_legend
 #' @importFrom ggplot2 labs
 #'

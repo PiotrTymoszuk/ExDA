@@ -15,10 +15,11 @@ plot_df_factor(
   type = c("stack", "bar", "bubble"),
   scale = c("none", "percent"),
   signif_digits = 2,
+  palette = tableau10_colors(),
   shape_color = "black",
   shape_alpha = 1,
   dodge_width = 0.9,
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   show_txt = TRUE,
   txt_size = 2.75,
   txt_vjust = NULL,
@@ -38,6 +39,7 @@ plot_df_numeric(
   variable,
   split_factor,
   type = c("violin", "box", "paired"),
+  palette = tableau10_colors(),
   show_stats = TRUE,
   shape_color = "black",
   shape_alpha = 0.3,
@@ -48,7 +50,7 @@ plot_df_numeric(
   point_wjitter = 0.1,
   line_color = NULL,
   line_width = 0.75,
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
   x_lab = NULL,
@@ -64,12 +66,13 @@ plot_df_histogram(
   variable,
   split_factor,
   type = c("histogram", "density"),
+  palette = tableau10_colors(),
   show_stats = TRUE,
   shape_color = "black",
   shape_alpha = 0.3,
   line_color = "orangered3",
   line_width = 0.75,
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
   x_lab = NULL,
@@ -87,12 +90,13 @@ plot_df_qq(
   data,
   variable,
   split_factor,
+  palette = tableau10_colors(),
   point_size = 2,
   point_alpha = 0.75,
   point_hjitter = 0,
   point_wjitter = 0,
   line_width = 0.75,
-  cust_theme = theme_classic(),
+  cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
   x_lab = "quantiles, theoretical normal distribution",
@@ -125,13 +129,16 @@ none (counts) or percents,}
 \item{signif_digits}{significant digits used to round numeric values displayed
 in the plot (e.g. percentages).}
 
+\item{palette}{a vector with color names or hex codes for fill scales.}
+
 \item{shape_color}{color of rims of bars, boxes, violins, and histograms.}
 
 \item{shape_alpha}{alpha (opacity) of bars, boxes, violins, and histograms.}
 
 \item{dodge_width}{spacing between bars in bar plots.}
 
-\item{cust_theme}{custom \code{ggplot}'s \code{theme} object.}
+\item{cust_theme}{custom \code{ggplot}'s \code{theme} object or \code{NULL}. If \code{NULL} no
+custom theme is applied, which makes the plot objects much smaller.}
 
 \item{show_txt}{logical, should text labels with frequencies be
 displayed in the plot?}

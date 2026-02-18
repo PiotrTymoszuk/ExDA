@@ -224,48 +224,74 @@
     map(eda) %>%
     list(x = .,
          plot_title = names(.)) %>%
-    pmap(plot)
+    pmap(plot,
+         cust_theme = NULL)
 
 # plots for data frame variables -------
 
-  exda:::plot_df_factor(data = my_cars,
-                        split_factor = "car_group",
-                        variable = "vs",
-                        type = "stack",
-                        scale = "percent",
-                        labeller = function(x) paste0("#", x),
-                        x_n_labs = FALSE,
-                        .drop = TRUE)
+  plot_variable(data = my_cars,
+                split_factor = "car_group",
+                variable = "vs",
+                type = "stack",
+                scale = "percent",
+                labeller = function(x) paste0("#", x),
+                x_n_labs = FALSE,
+                .drop = FALSE)
 
+  plot_variable(data = my_cars,
+                split_factor = "car_group",
+                variable = "mpg",
+                type = "box",
+                labeller = function(x) paste0("#", x),
+                x_n_labs = FALSE,
+                fill_lab = "car group",
+                x_lab = "car group")
 
-  exda:::plot_df_numeric(data = my_cars,
-                         split_factor = "car_group",
-                         variable = "mpg",
-                         type = "box",
-                         labeller = function(x) paste0("#", x),
-                         x_n_labs = FALSE)
+  plot_variable(data = my_cars,
+                split_factor = "car_pair",
+                variable = "mpg",
+                type = "paired",
+                fill_lab = "car pair")
 
-  exda:::plot_df_numeric(data = my_cars,
-                         split_factor = "car_pair",
-                         variable = "mpg",
-                         type = "paired")
+  plot_variable(data = my_cars,
+                split_factor = "car_group",
+                variable = "mpg",
+                type = "histogram",
+                labeller = function(x) paste0("#", x),
+                x_n_labs = TRUE,
+                facet = "horizontal",
+                facet_space = "fixed",
+                fill_lab = "car group",
+                bins = 5)
 
-  exda:::plot_df_histogram(data = my_cars,
-                           split_factor = "car_group",
-                           variable = "mpg",
-                           type = "density",
-                           labeller = function(x) paste0("#", x),
-                           x_n_labs = TRUE,
-                           facet = "horizontal",
-                           facet_space = "fixed")
+  plot_variable(data = my_cars,
+                split_factor = "car_group",
+                variable = "mpg",
+                type = "density",
+                labeller = function(x) paste0("#", x),
+                x_n_labs = TRUE,
+                facet = "horizontal",
+                facet_space = "fixed",
+                fill_lab = "car group")
 
-  exda:::plot_df_qq(data = my_cars,
-                    split_factor = "car_group",
-                    variable = "mpg",
-                    labeller = function(x) paste0("#", x),
-                    x_n_labs = TRUE,
-                    facet = "horizontal",
-                    facet_space = "fixed")
+  plot_variable(data = my_cars,
+                split_factor = "car_group",
+                variable = "mpg",
+                type = "qq",
+                labeller = function(x) paste0("#", x),
+                x_n_labs = TRUE,
+                facet = "none",
+                facet_space = "fixed")
 
+  plot_variable(data = my_cars,
+                split_factor = "car_group",
+                variable = "mpg",
+                plot_title = "MPG in car groups",
+                plot_subtitle = "test sub-title")
+
+  plot_variable(data = my_cars,
+                split_factor = "car_group",
+                variable = "vs",
+                scale = "percent")
 
 # END --------

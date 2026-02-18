@@ -53,10 +53,11 @@
                              type = c("stack", "bar", "bubble"),
                              scale = c("none", "percent"),
                              signif_digits = 2,
+                             palette = tableau10_colors(),
                              shape_color = "black",
                              shape_alpha = 1,
                              dodge_width = 0.9,
-                             cust_theme = theme_classic(),
+                             cust_theme = eda_classic_theme(),
                              show_txt = TRUE,
                              txt_size = 2.75,
                              txt_vjust = NULL,
@@ -83,9 +84,13 @@
 
     stopifnot(is.numeric(txt_size))
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
+
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+
+      }
 
     }
 
@@ -211,7 +216,8 @@
                  position = position_dodge(width = dodge_width),
                  color = shape_color,
                  alpha = shape_alpha) +
-        scale_fill_brewer(labels = scale_labels) +
+        scale_fill_manual(values = palette,
+                          labels = scale_labels) +
         labs(fill = fill_lab,
              x = x_lab,
              y = y_lab)
@@ -243,6 +249,7 @@
                  color = shape_color,
                  alpha = shape_alpha) +
         scale_x_discrete(labels = scale_labels) +
+        scale_fill_manual(values = palette) +
         labs(y = y_lab,
              x = x_lab,
              fill = fill_lab)
@@ -303,8 +310,9 @@
 
     }
 
+    if(!is.null(cust_theme)) fct_plot <- fct_plot + cust_theme
+
     fct_plot +
-      cust_theme +
       labs(title = plot_title,
            subtitle = plot_subtitle)
 
@@ -316,6 +324,7 @@
                               variable,
                               split_factor,
                               type = c("violin", "box", "paired"),
+                              palette = tableau10_colors(),
                               show_stats = TRUE,
                               shape_color = "black",
                               shape_alpha = 0.3,
@@ -326,7 +335,7 @@
                               point_wjitter = 0.1,
                               line_color = NULL,
                               line_width = 0.75,
-                              cust_theme = theme_classic(),
+                              cust_theme = eda_classic_theme(),
                               plot_title = NULL,
                               plot_subtitle = NULL,
                               x_lab = NULL,
@@ -360,15 +369,13 @@
     stopifnot(is.numeric(line_width))
     line_width <- line_width[1]
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
 
-    }
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
 
-    if(!is_theme(cust_theme)) {
-
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      }
 
     }
 
@@ -552,13 +559,16 @@
 
     }
 
+    if(!is.null(cust_theme)) num_plot <- num_plot + cust_theme
+
     num_plot +
       scale_x_discrete(labels = scale_labels) +
-      cust_theme +
+      scale_fill_manual(values = palette) +
       labs(title = plot_title,
            subtitle = plot_subtitle,
            y = y_lab,
-           x = x_lab)
+           x = x_lab,
+           fill = fill_lab)
 
   }
 
@@ -568,12 +578,13 @@
                                 variable,
                                 split_factor,
                                 type = c("histogram", "density"),
+                                palette = tableau10_colors(),
                                 show_stats = TRUE,
                                 shape_color = "black",
                                 shape_alpha = 0.3,
                                 line_color = "orangered3",
                                 line_width = 0.75,
-                                cust_theme = theme_classic(),
+                                cust_theme = eda_classic_theme(),
                                 plot_title = NULL,
                                 plot_subtitle = NULL,
                                 x_lab = NULL,
@@ -600,15 +611,13 @@
     stopifnot(is.numeric(line_width))
     line_width <- line_width[1]
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
 
-    }
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
 
-    if(!is_theme(cust_theme)) {
-
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      }
 
     }
 
@@ -724,7 +733,8 @@
     if(facet == "none") {
 
       hist_plot <- hist_plot +
-        scale_fill_brewer(labels = scale_labels)
+        scale_fill_manual(values = palette,
+                          labels = scale_labels)
 
     } else {
 
@@ -739,6 +749,7 @@
       }
 
       hist_plot <- hist_plot +
+        scale_fill_manual(values = palette) +
         facet_grid(as.formula(split_formula),
                    scales = facet_scales,
                    space = facet_space,
@@ -766,8 +777,9 @@
 
     }
 
+    if(!is.null(cust_theme)) hist_plot <- hist_plot + cust_theme
+
     hist_plot +
-      cust_theme +
       labs(title = plot_title,
            subtitle = plot_subtitle,
            x = x_lab,
@@ -782,12 +794,13 @@
   plot_df_qq <- function(data,
                          variable,
                          split_factor,
+                         palette = tableau10_colors(),
                          point_size = 2,
                          point_alpha = 0.75,
                          point_hjitter = 0,
                          point_wjitter = 0,
                          line_width = 0.75,
-                         cust_theme = theme_classic(),
+                         cust_theme = eda_classic_theme(),
                          plot_title = NULL,
                          plot_subtitle = NULL,
                          x_lab = "quantiles, theoretical normal distribution",
@@ -901,17 +914,19 @@
               position = position_jitter(width = point_wjitter,
                                          height = point_hjitter)) +
       geom_qq_line(linewidth = line_width) +
-      cust_theme +
       labs(title = plot_title,
            subtitle = plot_subtitle,
            x = x_lab,
-           y = y_lab)
+           y = y_lab,
+           fill = fill_lab)
 
     if(facet == "none") {
 
       qq_plot <- qq_plot +
-        scale_fill_brewer(labels = scale_labels) +
-        scale_color_brewer(labels = scale_labels)
+        scale_fill_manual(values = palette,
+                          labels = scale_labels) +
+        scale_color_manual(values = palette,
+                           labels = scale_labels)
 
     } else {
 
@@ -926,12 +941,16 @@
       }
 
       qq_plot <- qq_plot +
+        scale_fill_manual(values = palette) +
+        scale_color_manual(values = palette) +
         facet_grid(as.formula(split_formula),
                    scales = facet_scales,
                    space = facet_space,
                    labeller = as_labeller(scale_labels))
 
     }
+
+    if(!is.null(cust_theme)) qq_plot <- qq_plot + cust_theme
 
     qq_plot
 

@@ -17,6 +17,7 @@
 #' none (counts) or percents,
 #' @param signif_digits significant digits used to round numeric values displayed
 #' in the plot (e.g. percentages).
+#' @param palette a vector with color names or hex codes for fill scales.
 #' @param shape_fill fill color of bars, boxes, violins, and histograms.
 #' @param shape_color color of rims of bars, boxes, violins, and histograms.
 #' @param shape_alpha alpha (opacity) of bars, boxes, violins, and histograms.
@@ -47,7 +48,8 @@
 #' and violin plots.
 #' @param x_lab title of the X axis.
 #' @param y_lab title of the Y axis.
-#' @param cust_theme custom `ggplot`'s `theme` object.
+#' @param cust_theme custom `ggplot`'s `theme` object or `NULL`. If `NULL` no
+#' custom theme is applied, which makes the plot objects much smaller.
 #' @param ... additional arguments passed to \code{\link[ggplot2]{geom_boxplot}},
 #' \code{\link[ggplot2]{geom_violin}}, \code{\link[ggplot2]{geom_histogram}},
 #' and \code{\link[ggplot2]{geom_density}}.
@@ -57,10 +59,11 @@
                           type = c("stack", "bar", "bubble"),
                           scale = c("none", "percent"),
                           signif_digits = 2,
+                          palette = tableau10_colors(),
                           shape_fill = "steelblue",
                           shape_color = "black",
                           shape_alpha = 1,
-                          cust_theme = theme_classic(),
+                          cust_theme = eda_classic_theme(),
                           show_txt = TRUE,
                           txt_size = 2.75,
                           txt_vjust = NULL,
@@ -88,9 +91,13 @@
     stopifnot(is.numeric(shape_alpha))
     stopifnot(is.numeric(txt_size))
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
+
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+
+      }
 
     }
 
@@ -174,7 +181,8 @@
                              fill = .data[["category"]])) +
         geom_bar(stat = "identity",
                  color = shape_color,
-                 alpha = shape_alpha)
+                 alpha = shape_alpha) +
+        scale_fill_manual(values = palette)
 
       if(show_txt) {
 
@@ -221,8 +229,9 @@
 
     }
 
+    if(!is.null(cust_theme)) fct_plot <- fct_plot + cust_theme
+
     fct_plot +
-      cust_theme +
       labs(title = plot_title,
            subtitle = plot_subtitle,
            y = y_lab)
@@ -244,7 +253,7 @@
                            point_wjitter = 0.1,
                            line_color = "orangered3",
                            line_width = 0.75,
-                           cust_theme = theme_classic(),
+                           cust_theme = eda_classic_theme(),
                            plot_title = NULL,
                            plot_subtitle = NULL,
                            x_txt = "",
@@ -277,9 +286,13 @@
     stopifnot(is.numeric(point_wjitter))
     point_wjitter <- point_wjitter[1]
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
+
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+
+      }
 
     }
 
@@ -349,6 +362,8 @@
 
     }
 
+    if(!is.null(cust_theme)) num_plot <- num_plot + cust_theme
+
     num_plot +
       geom_point(position = position_jitter(width = point_wjitter,
                                             height = point_hjitter),
@@ -356,7 +371,6 @@
                  size = point_size,
                  fill = point_color,
                  alpha = point_alpha) +
-      cust_theme +
       labs(title = plot_title,
            subtitle = plot_subtitle,
            y = y_lab,
@@ -374,7 +388,7 @@
                              show_stats = TRUE,
                              line_color = "orangered3",
                              line_width = 0.75,
-                             cust_theme = theme_classic(),
+                             cust_theme = eda_classic_theme(),
                              plot_title = NULL,
                              plot_subtitle = NULL,
                              x_lab = "value",
@@ -390,9 +404,13 @@
     stopifnot(is.numeric(shape_alpha))
     shape_alpha <- shape_alpha[1]
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
+
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+
+      }
 
     }
 
@@ -459,8 +477,9 @@
 
     }
 
+    if(!is.null(cust_theme)) hist_plot <- hist_plot + cust_theme
+
     hist_plot +
-      cust_theme +
       labs(title = plot_title,
            subtitle = plot_subtitle,
            x = x_lab,
@@ -482,7 +501,7 @@
                       plot_subtitle = NULL,
                       x_lab = "quantiles, theoretical normal distribution",
                       y_lab = "quantiles, observed distribution",
-                      cust_theme = theme_classic(), ...) {
+                      cust_theme = eda_classic_theme(), ...) {
 
     ## input control -------
 
@@ -503,9 +522,13 @@
     stopifnot(is.numeric(line_width))
     line_width <- line_width[1]
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
+
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+
+      }
 
     }
 
@@ -524,8 +547,9 @@
 
     ## the QQ plot -------
 
-    ggplot(plot_data,
-           aes(sample = .data[["value"]])) +
+    qq_plot <-
+      ggplot(plot_data,
+             aes(sample = .data[["value"]])) +
       geom_qq(shape = 21,
               size = point_size,
               alpha = point_alpha,
@@ -534,11 +558,14 @@
                                          height = point_hjitter)) +
       geom_qq_line(color = line_color,
                    linewidth = line_width) +
-      cust_theme +
       labs(title = plot_title,
            subtitle = plot_subtitle,
            x = x_lab,
            y = y_lab)
+
+    if(!is.null(cust_theme)) qq_plot <- qq_plot + cust_theme
+
+    qq_plot
 
   }
 
