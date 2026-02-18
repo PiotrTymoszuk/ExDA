@@ -55,20 +55,21 @@
 #' with descriptive statistics.
 #'
 #' @md
+#' @export explore.data.frame
 #' @export
 
-  explore <- function(data,
-                      variables = NULL,
-                      split_factor = NULL,
-                      what = c("table", "list", "skewness", "kurtosis"),
-                      .drop = TRUE,
-                      signif_digits = 2,
-                      one_table = TRUE,
-                      total_text = "observations, total, N",
-                      style = c("full", "mean/SD", "median/IQR"),
-                      rm_range = FALSE,
-                      rm_complete = FALSE,
-                      ...) {
+  explore.data.frame <- function(data,
+                                 variables = NULL,
+                                 split_factor = NULL,
+                                 what = c("table", "list", "skewness", "kurtosis"),
+                                 .drop = TRUE,
+                                 signif_digits = 2,
+                                 one_table = TRUE,
+                                 total_text = "observations, total, N",
+                                 style = c("full", "mean/SD", "median/IQR"),
+                                 rm_range = FALSE,
+                                 rm_complete = FALSE,
+                                 ...) {
 
     ## entry control ----------
 

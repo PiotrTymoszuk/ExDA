@@ -3,8 +3,9 @@
 #' Plot utilities for single `eda` objects.
 #'
 #' @description
-#' Bar, stack, violin and box plots, histograms, violin and quantile - quantile
-#' (QQ) plots for factor and numeric \code{\link{eda}} objects.
+#' Bar, stack, bubble, violin and box plots, histograms, density plots, violin and
+#' quantile - quantile (QQ) plots for factor and numeric
+#' \code{\link{eda}} objects.
 #'
 #' @return
 #' A `ggplot` object.
@@ -31,8 +32,14 @@
 #' @param show_txt logical, should text labels with frequencies be
 #' displayed in the plot?
 #' @param txt_size size of text labels in the plots.
-#' @param show_stats logical, should vertical lines representing median (solid)
-#' and interquartile range (dashed) be shown in the histogram?
+#' @param txt_vjust vertical justification of the text labels in the plots.
+#' Plot type-specific defaults are applied if set to `NULL`.
+#' @param txt_hjust horizontal justification of the text labels in the plots.
+#' Plot type-specific defaults are applied if set to `NULL`.
+#' @param show_stats logical. Histograms: should vertical lines representing
+#' median (solid) and interquartile range (dashed) be shown?
+#' Violin plots: should diamonds and whiskers representing median with
+#' interquartile range be displayed?
 #' @param plot_title plot title.
 #' @param plot_subtitle plot subtitle; if `NULL` numbers of all and complete
 #' observations are shown here.
@@ -42,11 +49,12 @@
 #' @param y_lab title of the Y axis.
 #' @param cust_theme custom `ggplot`'s `theme` object.
 #' @param ... additional arguments passed to \code{\link[ggplot2]{geom_boxplot}},
-#' \code{\link[ggplot2]{geom_violin}}, \code{\link[ggplot2]{geom_histogram}}.
+#' \code{\link[ggplot2]{geom_violin}}, \code{\link[ggplot2]{geom_histogram}},
+#' and \code{\link[ggplot2]{geom_density}}.
 
   plot_factor <- function(eda_object,
                           .drop = TRUE,
-                          type = c("bar", "stack"),
+                          type = c("stack", "bar", "bubble"),
                           scale = c("none", "percent"),
                           signif_digits = 2,
                           shape_fill = "steelblue",
@@ -55,6 +63,8 @@
                           cust_theme = theme_classic(),
                           show_txt = TRUE,
                           txt_size = 2.75,
+                          txt_vjust = NULL,
+                          txt_hjust = NULL,
                           plot_title = NULL,
                           plot_subtitle = NULL,
                           x_txt = "",
@@ -68,9 +78,7 @@
     stopifnot(is.logical(.drop))
     .drop <- .drop[1]
 
-    if(.drop) eda_object <- droplevels(eda_object)
-
-    type <- match.arg(type[1], c("bar", "stack"))
+    type <- match.arg(type[1], c("stack", "bar", "bubble"))
 
     scale <- match.arg(scale[1], c("none", "percent"))
 
@@ -91,7 +99,7 @@
 
     ## plotting data and meta-data -----
 
-    plot_data <- frequency(eda_object)
+    plot_data <- frequency(eda_object, .drop)
 
     if(is.null(plot_subtitle)) {
 
@@ -147,15 +155,18 @@
 
       if(show_txt) {
 
+        if(is.null(txt_hjust)) txt_hjust <- 0.5
+        if(is.null(txt_vjust)) txt_vjust <- -0.4
+
         fct_plot <- fct_plot +
           geom_text(aes(label = .data[["plot_label"]]),
-                    hjust = 0.5,
-                    vjust = -0.4,
+                    hjust = txt_hjust,
+                    vjust = txt_vjust,
                     size = txt_size)
 
       }
 
-    } else {
+    } else if(type == "stack") {
 
       fct_plot <- ggplot(plot_data,
                          aes(x = x_txt,
@@ -176,6 +187,38 @@
 
       }
 
+    } else {
+
+      fct_plot <- ggplot(plot_data,
+                         aes(x = .data[["category"]],
+                             y = "",
+                             size = .data[[plot_var]],
+                             fill = .data[[plot_var]])) +
+        geom_point(shape = 21,
+                   color = shape_color) +
+        scale_fill_gradient() +
+        scale_size_area() +
+        guides(size = guide_legend(),
+               fill = guide_legend()) +
+        labs(x = x_lab,
+             size = y_lab,
+             fill = y_lab)
+
+        y_lab <- ""
+
+      if(show_txt) {
+
+        if(is.null(txt_hjust)) txt_hjust <- 0.5
+        if(is.null(txt_vjust)) txt_vjust <- -1.2
+
+        fct_plot <- fct_plot +
+          geom_text(aes(label = .data[["plot_label"]]),
+                    hjust = txt_hjust,
+                    vjust = txt_vjust,
+                    size = txt_size)
+
+      }
+
     }
 
     fct_plot +
@@ -190,6 +233,7 @@
 
   plot_numeric <- function(eda_object,
                            type = c("violin", "box"),
+                           show_stats = TRUE,
                            shape_fill = "steelblue",
                            shape_color = "black",
                            shape_alpha = 0.3,
@@ -214,6 +258,9 @@
     stopifnot(is.numeric(eda_object))
 
     type <- match.arg(type[1], c("violin", "box"))
+
+    stopifnot(is.logical(show_stats))
+    show_stats <- show_stats[1]
 
     stopifnot(is.numeric(shape_alpha))
     shape_alpha <- shape_alpha[1]
@@ -254,7 +301,9 @@
                                     "statistic")
 
     stat_data <-
-      as.data.frame(t(stat_data[c("median", "perc_25", "perc_75"), "value", drop = FALSE]))
+      as.data.frame(t(stat_data[c("median", "perc_25", "perc_75"),
+                                "value",
+                                drop = FALSE]))
 
     ## plots ---------
 
@@ -275,22 +324,28 @@
       num_plot <- num_plot +
         geom_violin(fill = shape_fill,
                     color = shape_color,
-                    alpha = shape_alpha, ...) +
-        geom_point(data = stat_data,
-                   aes(x = x_txt,
-                       y = .data[["median"]]),
-                   shape = 23,
-                   fill = line_color,
-                   color = line_color,
-                   size = point_size + 1) +
-        geom_errorbar(data = stat_data,
-                      aes(x = x_txt,
-                          y = .data[["median"]],
-                          ymin = .data[["perc_25"]],
-                          ymax = .data[["perc_75"]]),
-                      color = line_color,
-                      linewidth = line_width,
-                      width = 0)
+                    alpha = shape_alpha, ...)
+
+      if(show_stats) {
+
+        num_plot <- num_plot +
+          geom_point(data = stat_data,
+                     aes(x = x_txt,
+                         y = .data[["median"]]),
+                     shape = 23,
+                     fill = line_color,
+                     color = line_color,
+                     size = point_size + 1) +
+          geom_errorbar(data = stat_data,
+                        aes(x = x_txt,
+                            y = .data[["median"]],
+                            ymin = .data[["perc_25"]],
+                            ymax = .data[["perc_75"]]),
+                        color = line_color,
+                        linewidth = line_width,
+                        width = 0)
+
+      }
 
     }
 
@@ -312,6 +367,7 @@
 #' @rdname plot_factor
 
   plot_histogram <- function(eda_object,
+                             type = c("histogram", "density"),
                              shape_fill = "steelblue",
                              shape_color = "black",
                              shape_alpha = 0.75,
@@ -322,12 +378,14 @@
                              plot_title = NULL,
                              plot_subtitle = NULL,
                              x_lab = "value",
-                             y_lab = "observations, N",
+                             y_lab = NULL,
                              ...) {
 
     ## input controls --------
 
     stopifnot(is_eda(eda_object))
+
+    type <- match.arg(type[1], c("histogram", "density"))
 
     stopifnot(is.numeric(shape_alpha))
     shape_alpha <- shape_alpha[1]
@@ -357,15 +415,27 @@
     ## histogram --------
 
     hist_plot <- ggplot(plot_data,
-                        aes(x = .data[["value"]])) +
-      geom_histogram(color = shape_color,
+                        aes(x = .data[["value"]]))
+
+    if(type == "histogram") {
+
+      if(is.null(y_lab)) y_lab <- "observations, N"
+
+      hist_plot <- hist_plot  +
+        geom_histogram(color = shape_color,
+                       fill = shape_fill,
+                       alpha = shape_alpha, ...)
+
+    } else {
+
+      if(is.null(y_lab)) y_lab <- "observation density"
+
+      hist_plot <- hist_plot  +
+        geom_density(color = shape_color,
                      fill = shape_fill,
-                     alpha = shape_alpha, ...) +
-      cust_theme +
-      labs(title = plot_title,
-           subtitle = plot_subtitle,
-           x = x_lab,
-           y = y_lab)
+                     alpha = shape_alpha, ...)
+
+    }
 
     if(show_stats) {
 
@@ -389,7 +459,12 @@
 
     }
 
-    hist_plot
+    hist_plot +
+      cust_theme +
+      labs(title = plot_title,
+           subtitle = plot_subtitle,
+           x = x_lab,
+           y = y_lab)
 
   }
 
@@ -468,4 +543,3 @@
   }
 
 # END --------
-

@@ -377,17 +377,19 @@
 #' @description
 #' Distribution plots for `eda` objects storing factors (bar and stack plots
 #' with frequencies of observations in the categories) and numeric values
-#' (violin and box plots, histograms, and quantile - quantile/QQ plots).
+#' (violin and box plots, histograms, density plots,
+#' and quantile - quantile/QQ plots).
 #'
 #' @return a `ggplot` object.
 #'
 #' @param x \code{\link{eda}} object.
-#' @param type plot type: "bar", "stack", "violin", "box", "histogram", or "qq".
-#' If not provided, a bar plot is returned for factors and a violin plot is returned
-#' for numeric objects.
+#' @param type plot type: "stack", "bar", "violin", "box", "histogram", "density,
+#' or "qq".
+#' If not provided, a stack plot is returned for factors and a violin plot is
+#' returned for numeric objects.
 #' @param ... additional arguments passed to internal plotting functions
 #' (bar and stack plots: \code{\link{plot_factor}}, violin and box plots:
-#' \code{\link{plot_numeric}}, histograms: \code{\link{plot_qq}}, QQ plots:
+#' \code{\link{plot_numeric}}, histograms: \code{\link{plot_histogram}}, QQ plots:
 #' \code{\link{plot_qq}}). They specify, among others, colors and opacity of
 #' points and shapes, point sizes, text labels, and `ggplot` themes.
 #'
@@ -409,8 +411,8 @@
 
     }
 
-    factor_types <- c("bar", "stack")
-    numeric_types <- c("violin", "box", "histogram", "qq")
+    factor_types <- c("bar", "stack", "bubble")
+    numeric_types <- c("violin", "box", "histogram", "density", "qq")
 
     if(!is.null(type)) {
 
@@ -441,7 +443,7 @@
 
       if(is.factor(x)) {
 
-        type <- "bar"
+        type <- "stack"
 
       } else {
 
@@ -456,9 +458,11 @@
     switch(type,
            bar = plot_factor(x, type = "bar", ...),
            stack = plot_factor(x, type = "stack", ...),
+           bubble = plot_factor(x, type = "bubble", ...),
            violin = plot_numeric(x, type = "violin", ...),
            box = plot_numeric(x, type = "box", ...),
-           histogram = plot_histogram(x, ...),
+           histogram = plot_histogram(x, type = "histogram", ...),
+           density = plot_histogram(x, type = "density", ...),
            qq = plot_qq(x, ...))
 
   }
