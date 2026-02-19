@@ -1,6 +1,9 @@
 # Plotting utilities for data frames
 
-#' Plotting utilities for factor and numeric types.
+# Distribution of single variables ---------
+
+#' Plotting utilities for distribution of factor and numeric variables
+#' in analysis groups.
 #'
 #' @description
 #' Internal functions which generate `ggplot` plots for data frame's variables
@@ -328,7 +331,6 @@
                               show_stats = TRUE,
                               shape_color = "black",
                               shape_alpha = 0.3,
-                              point_color = 'gray40',
                               point_size = 2,
                               point_alpha = 0.75,
                               point_hjitter = 0,
@@ -831,15 +833,13 @@
     stopifnot(is.numeric(line_width))
     line_width <- line_width[1]
 
-    if(!is_theme(cust_theme)) {
+    if(!is.null(cust_theme)) {
 
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      if(!is_theme(cust_theme)) {
 
-    }
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
 
-    if(!is_theme(cust_theme)) {
-
-      stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+      }
 
     }
 
@@ -955,5 +955,356 @@
     qq_plot
 
   }
+
+# Scatter and heat map plots for two variables ---------
+
+#' Scatter, heat map, and dot plots for two variables.
+#'
+#' @description
+#' Plots for two variables in a data frame.
+#' For a pair of numeric variables, a scatter plot with an optional trend/standard
+#' error line is implemented.
+#' For a pair of factors, a heat map or a bubble plot with counts or percentages
+#' of complete observations is available.
+#'
+#' @details
+#' The observations presented in the plot are restricted to cases with complete
+#' `variable1` and variable `variable2` information.
+#'
+#' @return a `ggplot` object.
+#'
+#' @inheritParams plot_df_factor
+#' @param variable1 name of the data frame's variable whose distribution will be
+#' shown in the X axis of the plot. Provided as a string.
+#' @param variable2 name of the data frame's variable whose distribution will be
+#' shown in the Y axis of the plot. Provided as a string.
+#' @param show_trend logical, should the trend line be displayed in the plot?
+#' The line is generated with \code{\link[ggplot2]{geom_smooth}}.
+#' @param point_color color of data points.
+#' @param line_color color of the trend line.
+#' @param line_width width of the trend line.
+#' @param line_alpha alpha (opacity) of the trend line.
+#' @param txt_x_nudge X axis nudging/offset of text labels with frequencies in
+#' bubble plots.
+#' @param txt_style style of the frequencies displayed in the plot.
+#' If `txt_style = "minimal"` (default), numbers of observations or percentages
+#' are displayed in the plot, as appropriate for `scale`.
+#' If `txt_style = "full"`, both percentages and numbers of observations are
+#' shown.
+#' @param ... additional arguments passed to \code{\link[ggplot2]{geom_smooth}},
+#' \code{\link[ggplot2]{geom_tile}}, or \code{\link[ggplot2]{geom_point}}.
+
+  plot_2df_numeric <- function(data,
+                               variable1,
+                               variable2,
+                               point_color = "steelblue",
+                               point_size = 2,
+                               point_alpha = 0.75,
+                               point_hjitter = 0,
+                               point_wjitter = 0,
+                               show_trend = TRUE,
+                               line_color = "gray40",
+                               line_width = 0.75,
+                               line_alpha = 0.5,
+                               cust_theme = eda_classic_theme(),
+                               plot_title = NULL,
+                               plot_subtitle = NULL,
+                               x_lab = NULL,
+                               y_lab = NULL, ...) {
+
+    ## entry control --------
+
+    stopifnot(is.numeric(point_size))
+    point_size <- point_size[1]
+
+    stopifnot(is.numeric(point_alpha))
+    point_alpha <- point_alpha[1]
+
+    stopifnot(is.numeric(point_hjitter))
+    point_hjitter <- point_hjitter[1]
+
+    stopifnot(is.numeric(point_wjitter))
+    point_wjitter <- point_wjitter[1]
+
+    stopifnot(is.logical(show_trend))
+    show_trend <- show_trend[1]
+
+    stopifnot(is.numeric(line_width))
+    line_width <- line_width[1]
+
+    stopifnot(is.numeric(line_alpha))
+    line_alpha <- line_alpha[1]
+
+    if(!is.null(cust_theme)) {
+
+      if(!is_theme(cust_theme)) {
+
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+
+      }
+
+    }
+
+    ## plotting data and meta-data ---------
+
+    data <- validate_2df(data, variable1, variable2)
+
+    if(!is.numeric(data[[variable1]])) {
+
+      stop("`variable1` and `variable2` have to specify numeric variables in the data frame.",
+           call. = FALSE)
+
+    }
+
+    if(!is.numeric(data[[variable2]])) {
+
+      stop("`variable1` and `variable2` have to specify numeric variables in the data frame.",
+           call. = FALSE)
+
+    }
+
+    n_numbers <- attr(data, "n_numbers")
+
+    if(is.null(plot_subtitle)) {
+
+      plot_subtitle <- paste0("total: n = ", n_numbers[["total"]],
+                              ", complete: n = ", n_numbers[["complete"]])
+
+    }
+
+    if(is.null(x_lab)) x_lab <- paste(variable1, "value")
+    if(is.null(y_lab)) y_lab <- paste(variable2, "value")
+
+    ## scatter plot --------
+
+    num_plot <- ggplot(data,
+                       aes(x = .data[[variable1]],
+                           y = .data[[variable2]]))
+
+    if(show_trend) {
+
+      num_plot <- num_plot +
+        geom_smooth(linewidth = line_width,
+                    alpha = line_alpha,
+                    color = line_color, ...)
+
+    }
+
+    if(!is.null(cust_theme)) num_plot <- num_plot + cust_theme
+
+    num_plot +
+      geom_point(shape = 21,
+                 color = "black",
+                 fill = point_color,
+                 size = point_size,
+                 alpha = point_alpha,
+                 position = position_jitter(width = point_wjitter,
+                                            height = point_hjitter)) +
+      labs(title = plot_title,
+           subtitle = plot_subtitle,
+           x = x_lab,
+           y = y_lab)
+
+  }
+
+#' @rdname plot_2df_numeric
+
+  plot_2df_factor <- function(data,
+                              variable1,
+                              variable2,
+                              type = c("heat_map", "bubble"),
+                              scale = c("none", "percent"),
+                              shape_color = "black",
+                              shape_alpha = 1,
+                              show_txt = TRUE,
+                              txt_size = 2.75,
+                              txt_vjust = NULL,
+                              txt_hjust = NULL,
+                              txt_x_nudge = 0.1,
+                              txt_style = c("minimal", "full"),
+                              signif_digits = 2,
+                              cust_theme = eda_classic_theme(),
+                              plot_title = NULL,
+                              plot_subtitle = NULL,
+                              x_lab = NULL,
+                              y_lab = NULL,
+                              fill_lab = NULL, ...) {
+
+    ## entry control -------
+
+    type <- match.arg(type[1], c("heat_map", "bubble"))
+    scale <- match.arg(scale[1], c("none", "percent"))
+
+    stopifnot(is.numeric(shape_alpha))
+    shape_alpha <- shape_alpha[1]
+
+    if(!is.null(cust_theme)) {
+
+      if(!is_theme(cust_theme)) {
+
+        stop("`cust_theme` has to be a valid `ggplot` theme.", call. = FALSE)
+
+      }
+
+    }
+
+    stopifnot(is.logical(show_txt))
+    show_txt <- show_txt[1]
+
+    txt_style <- match.arg(txt_style[1], c("minimal", "full"))
+
+    ## plotting data and meta-data ---------
+
+    ### raw plotting data and N numbers
+
+    data <- validate_2df(data, variable1, variable2)
+
+    if(!is.factor(data[[variable1]])) {
+
+      stop("`variable1` and `variable2` have to specify factor variables in the data frame.",
+           call. = FALSE)
+
+    }
+
+    if(!is.factor(data[[variable2]])) {
+
+      stop("`variable1` and `variable2` have to specify factor variables in the data frame.",
+           call. = FALSE)
+
+    }
+
+    n_numbers <- attr(data, "n_numbers")
+
+    ### plot subtitle, X and Y axis titles
+
+    if(is.null(plot_subtitle)) {
+
+      plot_subtitle <- paste0("total: n = ", n_numbers[["total"]],
+                              ", complete: n = ", n_numbers[["complete"]])
+
+    }
+
+    ax_title_suffix <- switch(scale,
+                              none = "observations, N",
+                              percent = "% of complete observations")
+
+    if(is.null(x_lab)) x_lab <- paste(variable1, ax_title_suffix, sep = "\n")
+    if(is.null(y_lab)) y_lab <- paste(variable2, ax_title_suffix, sep = "\n")
+    if(is.null(fill_lab)) fill_lab <- ax_title_suffix
+
+    ### observation frequencies and tile/point labels with frequencies
+
+    plot_data <- as.data.frame(table(data))
+
+    plot_data[["n"]] <- plot_data[["Freq"]]
+    plot_data[["n_total"]] <- n_numbers["total"]
+    plot_data[["n_complete"]] <- sum(plot_data[["n"]])
+    plot_data[["percent_complete"]] <-
+      plot_data[["n"]]/plot_data[["n_complete"]] * 100
+
+    plot_data[["Freq"]] <- NULL
+
+    if(show_txt) {
+
+      if(txt_style == "full") {
+
+        plot_data[["plot_label"]] <-
+          paste(signif(plot_data[["percent_complete"]], signif_digits),
+                plot_data[["n"]],
+                sep = "%\nn = ")
+
+      } else {
+
+        if(scale == "none") {
+
+          plot_data[["plot_label"]] <- plot_data[["n"]]
+
+        } else {
+
+          plot_data[["plot_label"]] <-
+            paste0(signif(plot_data[["percent_complete"]], signif_digits),
+                   "%")
+
+        }
+
+      }
+
+    }
+
+    ### fill variable
+
+    fill_var <- switch(scale,
+                       none = "n",
+                       percent = "percent_complete")
+
+    ## plots ---------
+
+    fct_plot <- ggplot(plot_data,
+                       aes(x = .data[[variable1]],
+                           y = .data[[variable2]]))
+
+    if(type == "heat_map") {
+
+      fct_plot <- fct_plot +
+        geom_tile(aes(fill = .data[[fill_var]]),
+                  color = shape_color,
+                  alpha = shape_alpha, ...) +
+        scale_fill_gradient() +
+        labs(fill = fill_lab)
+
+      if(show_txt) {
+
+        if(is.null(txt_hjust)) txt_hjust <- 0.5
+        if(is.null(txt_vjust)) txt_vjust <- 0.5
+
+        fct_plot <- fct_plot +
+          geom_text(aes(label = .data[["plot_label"]]),
+                    size = txt_size,
+                    hjust = txt_hjust,
+                    vjust = txt_vjust)
+
+      }
+
+    } else {
+
+      fct_plot <- fct_plot +
+        geom_point(aes(fill = .data[[fill_var]],
+                       size = .data[[fill_var]]),
+                   shape = 21,
+                   color = shape_color,
+                   alpha = shape_alpha, ...) +
+        scale_size_area() +
+        scale_fill_gradient() +
+        guides(fill = guide_legend(),
+               size = guide_legend()) +
+        labs(fill = fill_lab,
+             size = fill_lab)
+
+      if(show_txt) {
+
+        if(is.null(txt_hjust)) txt_hjust <- 0
+        if(is.null(txt_vjust)) txt_vjust <- 0.5
+
+        fct_plot <- fct_plot +
+          geom_text(aes(label = .data[["plot_label"]]),
+                    size = txt_size,
+                    hjust = txt_hjust,
+                    vjust = txt_vjust,
+                    nudge_x = txt_x_nudge)
+
+      }
+
+    }
+
+    if(!is.null(cust_theme)) fct_plot <- fct_plot + cust_theme
+
+    fct_plot +
+      labs(title = plot_title,
+           subtitle = plot_subtitle,
+           x = x_lab,
+           y = y_lab)
+
+  }
+
 
 # END ---------

@@ -2,9 +2,9 @@
 % Please edit documentation in R/plots.R
 \name{plot_variable}
 \alias{plot_variable}
-\title{Plot variable distribution.}
+\title{Plot distribution of a variable in a data frame.}
 \usage{
-plot_variable(data, variable, split_factor, type = NULL, ...)
+plot_variable(data, variable, split_factor = NULL, type = NULL, ...)
 }
 \arguments{
 \item{data}{a data frame.}
@@ -20,24 +20,40 @@ be used to split values of \code{variable} in the plot. Provided as a string.}
 If not provided, a stack plot is returned for factors and a violin plot is
 returned for numeric objects.}
 
-\item{...}{additional arguments passed to internal plotting functions
-(bar and stack plots: \code{\link{plot_df_factor}}; violin, box and paired
-plots: \code{\link{plot_df_numeric}}, histograms: \code{\link{plot_df_histogram}},
-QQ plots: \code{\link{plot_df_qq}}).
-They specify, among others, colors and opacity of
-points and shapes, point sizes, text labels, and \code{ggplot} themes.}
+\item{...}{additional arguments passed to internal plotting functions.
+They specify, among others, type of plotted frequency data, colors and opacity of
+points and shapes, point sizes, text labels, and \code{ggplot} themes.
+See Details.}
 }
 \value{
 a \code{ggplot} object.
 }
 \description{
-\code{ggplot} plots with distribution of a variable in analysis groups.
+\code{plot_variable()} creates \code{ggplot} plots with distribution of a variable:
+alone or in an analysis.
 For factor variables, stack, bar, and dot plots with counts or percentages of
 observations in the analysis groups.
 For numeric variables, violin and box plots, paired/matched plots ("before/after"),
 histograms, density plots, and quantile - quantile (QQ) plots are available.
 }
 \details{
+If \code{split_factor = NULL}, distribution plots for the requested variable
+in the whole data frame are generated.
 If \code{type = "paired"}, a before-after plot is generated and its assumed that
-the plotting data are already arranged by the blocking or identified variable.
+the plotting data are already arranged by the blocking or identified variable;
+please note that this type is available only if \code{split_factor} is not \code{NULL}.
+The dots (\code{...}) pass additional arguments to internal plotting functions.
+These internal plottin functions are:
+\itemize{
+\item if \code{split_factor} is \code{NULL}.
+Bar, stack and bubble plots: \code{\link{plot_factor}}.
+Violin and box plots: \code{\link{plot_numeric}}.
+Histograms: \code{\link{plot_histogram}}.
+QQ plots: \code{\link{plot_qq}}.
+\item if \code{split_factor} is not \code{NULL}.
+Bar, stack and bubble plots: \code{\link{plot_df_factor}}.
+Violin, box and paired plots: \code{\link{plot_df_numeric}}.
+Histograms: \code{\link{plot_df_histogram}}.
+QQ plots: \code{\link{plot_df_qq}}.
+}
 }

@@ -108,6 +108,8 @@
 
     plot_data <- frequency(eda_object, .drop)
 
+    plot_data <- plot_data[!is.na(plot_data[["category"]]), ]
+
     if(is.null(plot_subtitle)) {
 
       plot_subtitle <- paste0("total: n = ", plot_data[["n_total"]][1],

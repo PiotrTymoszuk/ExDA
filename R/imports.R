@@ -26,6 +26,7 @@
 #' @importFrom rlang `.data`
 #' @importFrom rlang `!!`
 #' @importFrom rlang `:=`
+#' @importFrom rlang list2
 #'
 #' @importFrom purrr map
 #' @importFrom purrr map_dbl
@@ -60,6 +61,8 @@
 #' @importFrom ggplot2 geom_qq
 #' @importFrom ggplot2 geom_qq_line
 #' @importFrom ggplot2 geom_vline
+#' @importFrom ggplot2 geom_smooth
+#' @importFrom ggplot2 geom_tile
 #'
 #' @importFrom ggplot2 scale_fill_manual
 #' @importFrom ggplot2 scale_color_manual

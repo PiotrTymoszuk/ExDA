@@ -15,8 +15,8 @@ If not provided, a stack plot is returned for factors and a violin plot is
 returned for numeric objects.}
 
 \item{...}{additional arguments passed to internal plotting functions
-(bar and stack plots: \code{\link{plot_factor}}, violin and box plots:
-\code{\link{plot_numeric}}, histograms: \code{\link{plot_histogram}}, QQ plots:
+(bar, stack and bubble plots: \code{\link{plot_factor}}; violin and box plots:
+\code{\link{plot_numeric}}; histograms: \code{\link{plot_histogram}}; QQ plots:
 \code{\link{plot_qq}}). They specify, among others, colors and opacity of
 points and shapes, point sizes, text labels, and \code{ggplot} themes.}
 }

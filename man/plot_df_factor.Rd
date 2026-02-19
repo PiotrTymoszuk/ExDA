@@ -5,7 +5,8 @@
 \alias{plot_df_numeric}
 \alias{plot_df_histogram}
 \alias{plot_df_qq}
-\title{Plotting utilities for factor and numeric types.}
+\title{Plotting utilities for distribution of factor and numeric variables
+in analysis groups.}
 \usage{
 plot_df_factor(
   data,
@@ -43,7 +44,6 @@ plot_df_numeric(
   show_stats = TRUE,
   shape_color = "black",
   shape_alpha = 0.3,
-  point_color = "gray40",
   point_size = 2,
   point_alpha = 0.75,
   point_hjitter = 0,
@@ -179,8 +179,6 @@ splitting factor.}
 median (solid) and interquartile range (dashed) be shown?
 Violin plots: should diamonds and whiskers representing median with
 interquartile range be displayed?}
-
-\item{point_color}{color of data points.}
 
 \item{point_size}{size of data points}
 

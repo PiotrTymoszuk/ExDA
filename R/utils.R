@@ -73,10 +73,12 @@
 #' optionally, empty levels.
 #'
 #' @return a data frame with columns whose names are specified by arguments
-#' `variable` and `split_factor`. Numbers of observation before and after
-#' pre-processing are stored as the `n_number` attribute.
+#' `variable` and `split_factor`, or `variable1` and `variable2`.
+#' Numbers of observation before and after pre-processing are stored as
+#' the `n_number` attribute.
 #'
 #' @inheritParams plot_df_factor
+#' @inheritParams plot_2df_numeric
 
   validate_df <- function(data, variable, split_factor, .drop = TRUE) {
 
@@ -134,6 +136,66 @@
 
     n_numbers <- c(n_numbers,
                    c("complete" = nrow(data)))
+
+    attr(data, "n_numbers") <- n_numbers
+
+    return(data)
+
+  }
+
+#' @rdname validate_df
+
+  validate_2df <- function(data, variable1, variable2, .drop = TRUE) {
+
+    ## validation ------
+
+    if(!is.data.frame(data)) {
+
+      stop("`data` has to be a data frame.", call. = FALSE)
+
+    }
+
+    stopifnot(is.character(variable1))
+    stopifnot(is.character(variable2))
+
+    if(!variable1 %in% names(data)) {
+
+      stop("`variable1` absent from the data frame.", call. = FALSE)
+
+    }
+
+    if(!variable2 %in% names(data)) {
+
+      stop("`variable2` absent from the data frame.", call. = FALSE)
+
+    }
+
+    if((is.factor(data[[variable1]]) & is.numeric(data[[variable2]])) |
+       (is.factor(data[[variable2]]) & is.numeric(data[[variable1]]))) {
+
+      stop(paste("Both variables have to be either numeric or factors.",
+                 "For plotting of a numeric/factor pair, please use `plot_variables()`."),
+           call. = FALSE)
+
+    }
+
+    ## pre-processing --------
+
+    n_numbers <- c("total" = nrow(data))
+
+    data <- data[, c(variable1, variable2)]
+
+    data <- data[complete.cases(data), ]
+
+    n_numbers <- c(n_numbers,
+                   c("complete" = nrow(data)))
+
+    if(is.factor(data[[variable1]]) & .drop) {
+
+      data[[variable1]] <- droplevels(data[[variable1]])
+      data[[variable2]] <- droplevels(data[[variable2]])
+
+    }
 
     attr(data, "n_numbers") <- n_numbers
 

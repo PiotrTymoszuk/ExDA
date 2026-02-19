@@ -131,12 +131,14 @@
            car_group = sample(c("A", "B", "C"),
                               size = nrow(.),
                               replace = TRUE),
+           car_group = factor(car_group),
            na_dummy = NA,
            car_pair = c(rep("group1", 16),
                         rep("group2", 16)),
            car_pair = factor(car_pair))
 
   my_cars[5, "disp"] <- NA
+  my_cars[6, "car_group"] <- NA
 
   ## the entire data frame, no splitting factor
 
@@ -180,54 +182,62 @@
             style = "median/IQR",
             .drop = TRUE)
 
-# plotting methods for `eda` objects --------
+# plotting methods for single variables in the whole data frame --------
 
   ## plots for factors
 
-  my_cars$vs %>%
-    eda(.drop = FALSE) %>%
-    plot(type = "stack", .drop = FALSE)
+  my_cars %>%
+    plot_variable(variable = "vs",
+                  .drop = FALSE)
 
-  my_cars$vs %>%
-    eda(.drop = FALSE) %>%
-    plot(type = "bar")
+  my_cars %>%
+    plot_variable(variable = "vs",
+                  type = "stack",
+                  scale = "percent",
+                  .drop = FALSE)
 
-  my_cars$vs %>%
-    eda(.drop = FALSE) %>%
-    plot(type = "bubble", .drop = FALSE)
+  my_cars %>%
+    plot_variable(variable = "vs",
+                  type = "bar",
+                  .drop = FALSE)
+
+  my_cars %>%
+    plot_variable(variable = "vs",
+                  type = "bubble",
+                  .drop = FALSE)
 
   ## plots for numeric objects
 
-  my_cars$mpg %>%
-    eda %>%
-    plot
+  my_cars %>%
+    plot_variable(variable = "mpg")
 
-  my_cars$mpg %>%
-    eda %>%
-    plot(type = "box")
+  my_cars %>%
+    plot_variable(variable = "mpg",
+                  type = "box")
 
-  c(my_cars$mpg, NA) %>%
-    eda %>%
-    plot(type = "histogram",
-         bins = 10)
+  my_cars %>%
+    plot_variable(variable = "mpg",
+                  type = "histogram",
+                  bins = 10)
 
-  c(my_cars$mpg, NA) %>%
-    eda %>%
-    plot(type = "density")
+  my_cars %>%
+    plot_variable(variable = "mpg",
+                  type = "density")
 
-  c(my_cars$mpg, NA) %>%
-    eda %>%
-    plot(type = "qq",
-         point_size = 4)
+  my_cars %>%
+    plot_variable(variable = "disp",
+                  type = "qq")
 
-  plot_lst <- my_cars %>%
-    map(eda) %>%
-    list(x = .,
-         plot_title = names(.)) %>%
-    pmap(plot,
-         cust_theme = NULL)
+  plot_lst <-
+    list(variable = names(my_cars)) %>%
+    pmap(plot_variable,
+         data = my_cars,
+         cust_theme = NULL) %>%
+    set_names(names(my_cars))
 
 # plots for data frame variables -------
+
+  ## variable and a split factor
 
   plot_variable(data = my_cars,
                 split_factor = "car_group",
@@ -293,5 +303,34 @@
                 split_factor = "car_group",
                 variable = "vs",
                 scale = "percent")
+
+  ## two variables
+
+  plot_two_variables(data = my_cars,
+                     variable1 = "disp",
+                     variable2 = "mpg",
+                     line_alpha = 0.5,
+                     point_alpha = 1,
+                     x_lab = "displacemant",
+                     y_lab = "miles per galon",
+                     plot_title = "Engine size and economics",
+                     method = "gam",
+                     formula = y ~ s(x, bs = "cs", k = 3))
+
+  plot_two_variables(data = my_cars,
+                     variable1 = "car_group",
+                     variable2 = "car_pair",
+                     txt_style = "full",
+                     type = "heat_map",
+                     scale = "percent")
+
+  plot_two_variables(data = my_cars,
+                     variable1 = "car_group",
+                     variable2 = "car_pair",
+                     txt_style = "full",
+                     type = "bubble",
+                     scale = "percent")
+
+
 
 # END --------
