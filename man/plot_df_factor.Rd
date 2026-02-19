@@ -119,7 +119,7 @@ shown in the plot. Provided as a string.}
 \item{split_factor}{name of the data frame's variable, whose categories will
 be used to split values of \code{variable} in the plot. Provided as a string.}
 
-\item{.drop}{should empty levels of a factor be dropped.}
+\item{.drop}{logical, should empty levels of a factor be dropped?}
 
 \item{type}{plot type.}
 

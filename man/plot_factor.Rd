@@ -89,7 +89,7 @@ plot_qq(
 \arguments{
 \item{eda_object}{and \code{\link{eda}} object.}
 
-\item{.drop}{should empty levels of a factor be dropped.}
+\item{.drop}{logical, should empty levels of a factor be dropped?}
 
 \item{type}{plot type.}
 

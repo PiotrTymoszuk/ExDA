@@ -12,7 +12,7 @@
 #'
 #' @param eda_object and \code{\link{eda}} object.
 #' @param type plot type.
-#' @param .drop should empty levels of a factor be dropped.
+#' @param .drop logical, should empty levels of a factor be dropped?
 #' @param scale type of frequency data to be presented in bar and stack plots:
 #' none (counts) or percents,
 #' @param signif_digits significant digits used to round numeric values displayed

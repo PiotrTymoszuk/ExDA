@@ -75,10 +75,14 @@
 #' @return a data frame with columns whose names are specified by arguments
 #' `variable` and `split_factor`, or `variable1` and `variable2`.
 #' Numbers of observation before and after pre-processing are stored as
-#' the `n_number` attribute.
+#' the `n_numbers` and `n_categories` attributes.
 #'
 #' @inheritParams plot_df_factor
 #' @inheritParams plot_2df_numeric
+#' @inheritParams draw_numeric_panel
+#' @param format the intended format of the variables: numeric of factor.
+#' If there are any requested variables in the data frame incompatible with
+#' the `format`, and error is raised.
 
   validate_df <- function(data, variable, split_factor, .drop = TRUE) {
 
@@ -198,6 +202,148 @@
     }
 
     attr(data, "n_numbers") <- n_numbers
+
+    return(data)
+
+  }
+
+#' @rdname validate_df
+
+  validate_multi_df <- function(data,
+                                variables,
+                                split_factor = NULL,
+                                format = c("numeric", "factor"),
+                                .drop = TRUE) {
+
+    ## input control and validation --------
+
+    if(!is.data.frame(data)) {
+
+      stop("`data` has to be a data frame.", call. = FALSE)
+
+    }
+
+    stopifnot(is.character(variables))
+
+    if(length(variables) < 2) {
+
+      stop(paste("`variables` must have at least two elements.",
+                 "For plotting single variables or a",
+                 "splitting factor - variable pair, please consider",
+                 "`plot_variable()`."),
+           call. = FALSE)
+
+    }
+
+
+
+    if(!is.null(split_factor)) {
+
+      stopifnot(is.character(split_factor))
+
+      if(!split_factor %in% names(data)) {
+
+        stop("`split_factor` absent from the data frame.", call. = FALSE)
+
+      }
+
+      if(!is.factor(data[[split_factor]])) {
+
+        data[[split_factor]] <- factor(data[[split_factor]])
+
+      }
+
+      data[[split_factor]] <- droplevels(data[[split_factor]])
+
+      if(length(levels(data[[split_factor]])) == 1) {
+
+        stop("The `split_factor` must have at least two non-empty categories.",
+             call. = FALSE)
+
+      }
+
+    }
+
+    missing_vars <- setdiff(variables, names(data))
+
+    if(length(missing_vars) > 0) {
+
+      stop(paste("Some variables are missing from the data frame:",
+                 paste(missing_vars, collapse = ", ")),
+           call. = FALSE)
+
+    }
+
+    format <- match.arg(format[1], c("numeric", "factor"))
+
+    if(format == "numeric") {
+
+      var_form <- map_lgl(data[, variables], is.numeric)
+
+      if(any(!var_form)) {
+
+        stop(paste("The following variables are not numeric:",
+                   paste(variables[!var_form], collapse = ", ")),
+             call. = FALSE)
+
+      }
+
+    } else {
+
+      var_form <- map_lgl(data[, variables], is.factor)
+
+      if(any(!var_form)) {
+
+        stop(paste("The following variables are not factors:",
+                   paste(variables[!var_form], collapse = ", ")),
+             call. = FALSE)
+
+      }
+
+      if(.drop) {
+
+        data[, variables] <- map_dfc(data[, variables], droplevels)
+
+      }
+
+    }
+
+    ## N numbers and NA processing ----------
+
+    ### total N numbers and numbers of records with the complete
+    ### splitting factor
+
+    n_numbers <- c("total" = nrow(data))
+
+    if(!is.null(split_factor)) {
+
+      data <- data[!is.na(data[[split_factor]]),
+                   c(split_factor, variables)]
+
+      n_numbers <- c(n_numbers,
+                     c("split_complete" = nrow(data)))
+
+      ### numbers of complete cases in categories of the splitting
+      ### factor for each variable
+
+      n_categories <-
+        map(variables,
+            function(x) data[!is.na(data[[x]]), split_factor, drop = TRUE])
+
+      n_categories <- set_names(map(n_categories, table), variables)
+
+    } else {
+
+      data <- data[, variables]
+
+      n_categories <- map_dbl(data, ~length(.x[!is.na(.x)]))
+
+    }
+
+    ## the output plotting data ---------
+
+    attr(data, "n_numbers") <- n_numbers
+    attr(data, "n_categories") <- n_categories
 
     return(data)
 

@@ -3,11 +3,20 @@
 \name{validate_df}
 \alias{validate_df}
 \alias{validate_2df}
+\alias{validate_multi_df}
 \title{Check validity of a data frame and it's variables.}
 \usage{
 validate_df(data, variable, split_factor, .drop = TRUE)
 
 validate_2df(data, variable1, variable2, .drop = TRUE)
+
+validate_multi_df(
+  data,
+  variables,
+  split_factor = NULL,
+  format = c("numeric", "factor"),
+  .drop = TRUE
+)
 }
 \arguments{
 \item{data}{a data frame.}
@@ -18,19 +27,25 @@ shown in the plot. Provided as a string.}
 \item{split_factor}{name of the data frame's variable, whose categories will
 be used to split values of \code{variable} in the plot. Provided as a string.}
 
-\item{.drop}{should empty levels of a factor be dropped.}
+\item{.drop}{logical, should empty levels of a factor be dropped?}
 
 \item{variable1}{name of the data frame's variable whose distribution will be
 shown in the X axis of the plot. Provided as a string.}
 
 \item{variable2}{name of the data frame's variable whose distribution will be
 shown in the Y axis of the plot. Provided as a string.}
+
+\item{variables}{a character vector with variable names}
+
+\item{format}{the intended format of the variables: numeric of factor.
+If there are any requested variables in the data frame incompatible with
+the \code{format}, and error is raised.}
 }
 \value{
 a data frame with columns whose names are specified by arguments
 \code{variable} and \code{split_factor}, or \code{variable1} and \code{variable2}.
 Numbers of observation before and after pre-processing are stored as
-the \code{n_number} attribute.
+the \code{n_numbers} and \code{n_categories} attributes.
 }
 \description{
 An internal function used to validate if an object is a data frame, and whether

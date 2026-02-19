@@ -393,7 +393,6 @@
 #' \code{\link{plot_qq}}). They specify, among others, colors and opacity of
 #' points and shapes, point sizes, text labels, and `ggplot` themes.
 #'
-#' @export plot.eda
 #' @export
 
   plot.eda <- function(x,
