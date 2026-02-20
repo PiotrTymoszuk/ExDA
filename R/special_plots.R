@@ -9,9 +9,13 @@
 #'
 #' @details
 #' `draw_numeric_panel()` creates panel/compound graphs with distribution of
-#' numeric variables presented in violins or box plots, or summary graphics of
+#' numeric variables presented in violins, box,, histogram or density plots,
+#' or summary graphics of
 #' centrality and distribution statistics in bar/whiskers plots, ribbon
 #' and Forest plots.
+#' If `split_factor = NULL`, distributions in the whole data frame are plotted;
+#' if `split_factor` specifies a factor variable, distribution in analysis
+#' groups defined by `split_factor` categories are plotted.
 #' The `central_stat` argument specifies which statistic of central tendency, mean
 #' or median, will be presented in bars, ribbon plots (as thick line), and
 #' Forest plots (as point).
@@ -22,7 +26,10 @@
 #' `"2sem"`: double standard of the mean, `"2sd"`: double standard deviation,
 #' `"none"`: no dispersion statistic is shown).
 #'
-#' `draw_factor()`
+#' `draw_factor()` creates a panel of stack plots with numbers of complete
+#' observations or percentages of complete observations in the whole data
+#' frame (if `split_factor = NULL`) or in analysis groups (if `split_factor`
+#' specifies a factor variable in the data set).
 #'
 #' @return a `ggplot` object.
 #'

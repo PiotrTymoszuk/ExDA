@@ -19,7 +19,7 @@
 #' the plotting data are already arranged by the blocking or identified variable;
 #' please note that this type is available only if `split_factor` is not `NULL`.
 #' The dots (`...`) pass additional arguments to internal plotting functions.
-#' These internal plottin functions are:
+#' These internal plotting functions are:
 #'
 #' * if `split_factor` is `NULL`.
 #' Bar, stack and bubble plots: \code{\link{plot_factor}}.
@@ -364,6 +364,96 @@
                        variables[1],
                        variables[2],
                        type = type, ...)
+
+  }
+
+#' Plot distribution of multiple variables in a data frame.
+#'
+#' @description
+#' Function `plot_multi_variables()` generates compound plots or panels
+#' which display distribution of multiple numeric or factor variables in a
+#' data frame.
+#'
+#' @details
+#' Variables specified by `variable` character vector of names have to be
+#' all numeric or all factor objects - mixed types cause an error.
+#'
+#' @return a `ggplot` object.
+#'
+#' @inheritParams draw_numeric_panel
+#' @param type plot type. For numeric variables: "violin", "box", "histogram",
+#' "density", "bar", "ribbon", and "forest". For factors: "stack".
+#' If `type = NULL` (default), a panel of violin plots is generated for numeric
+#' variables, and a panel of stack plots is returned for factor variables.
+#' @param ... additional arguments passed to internal plotting functions
+#' (for violin. box, bar, ribbon, and Forest plots: \code{\link{draw_numeric_panel}};
+#' for stack plots of factor frequencies: \code{\link{draw_factor_panel}}).
+#' They specify, among others, type of frequency data presented in the plots,
+#' appearance of shapes and data point, and text labels.
+#'
+#' @export
+
+  plot_multi_variables <- function(data,
+                                   variables,
+                                   split_factor = NULL,
+                                   type = NULL, ...) {
+
+    ## entry control ---------
+
+    ### only minimal checks, the details are handled by
+    ### the internal plotting functions
+
+    numeric_types <-
+      c("violin", "box",
+        "histogram", "density",
+        "bar", "ribbon", "forest")
+
+    factor_types <- "stack"
+
+    if(!is.null(type)) {
+
+      if(!type %in% c(numeric_types, factor_types)) {
+
+        stop(paste("Available plot types are:",
+                   paste(c(numeric_types, factor_types),
+                         collapse = ", ")),
+             call. = FALSE)
+
+      }
+
+    } else {
+
+      stopifnot(is.data.frame(data))
+      stopifnot(variables[1] %in% names(data))
+
+      if(is.numeric(data[[variables[1]]])) {
+
+        type <- "violin"
+
+      } else {
+
+        type <- "stack"
+
+      }
+
+    }
+
+    ## re-routing ----------
+
+    if(type == "stack") {
+
+      return(draw_factor_panel(data = data,
+                               variables = variables,
+                               split_factor = split_factor, ...))
+
+    } else {
+
+      return(draw_numeric_panel(data = data,
+                                variables = variables,
+                                split_factor = split_factor,
+                                type = type, ...))
+
+    }
 
   }
 

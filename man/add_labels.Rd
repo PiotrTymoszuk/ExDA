@@ -28,6 +28,9 @@ Relevant for axis labels only if \code{n_labs = TRUE}.}
 
 \item{labeller_fun}{a function used to transform names of variables presented
 in the plot axes and facets. Defaults to identity.}
+
+\item{n_column}{name of the data frame column storing information on N number
+of complete observations to be included in axis labels if \code{n_labs = TRUE}.}
 }
 \value{
 a data frame with additional columns \code{axis_label} and \code{facet_label}.

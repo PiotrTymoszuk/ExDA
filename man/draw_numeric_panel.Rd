@@ -153,7 +153,9 @@ For violin and box plots, the arguments are passed to
 \code{\link[ggplot2]{geom_violin}} and \code{\link[ggplot2]{geom_boxplot}},
 for bar plots they are passed to \code{\link[ggplot2]{geom_bar}}, for
 ribbon plots the arguments are passed to \code{\link[ggplot2]{geom_line}},
-and for Forest plots to \code{\link[ggplot2]{geom_point}}.}
+for Forest plots to \code{\link[ggplot2]{geom_point}}, for stack plots of
+factor's category frequencies the arguments are passed to
+\code{\link[ggplot2]{geom_bar}}}
 
 \item{.drop}{logical, should empty levels of a factor be dropped?}
 
@@ -177,9 +179,13 @@ variables in a data frame.
 }
 \details{
 \code{draw_numeric_panel()} creates panel/compound graphs with distribution of
-numeric variables presented in violins or box plots, or summary graphics of
+numeric variables presented in violins, box,, histogram or density plots,
+or summary graphics of
 centrality and distribution statistics in bar/whiskers plots, ribbon
 and Forest plots.
+If \code{split_factor = NULL}, distributions in the whole data frame are plotted;
+if \code{split_factor} specifies a factor variable, distribution in analysis
+groups defined by \code{split_factor} categories are plotted.
 The \code{central_stat} argument specifies which statistic of central tendency, mean
 or median, will be presented in bars, ribbon plots (as thick line), and
 Forest plots (as point).
@@ -189,4 +195,9 @@ will be presented as whiskers or ribbons (\code{"sem"}: standard error of the me
 of distribution/range where 95\% of non-extreme observations are located,
 \code{"2sem"}: double standard of the mean, \code{"2sd"}: double standard deviation,
 \code{"none"}: no dispersion statistic is shown).
+
+\code{draw_factor()} creates a panel of stack plots with numbers of complete
+observations or percentages of complete observations in the whole data
+frame (if \code{split_factor = NULL}) or in analysis groups (if \code{split_factor}
+specifies a factor variable in the data set).
 }

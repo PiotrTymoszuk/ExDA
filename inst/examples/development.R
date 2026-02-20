@@ -335,98 +335,100 @@
 
   ## without a splitting factor
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = NULL,
-                            type = "violin",
-                            labeller_fun = toupper,
-                            scale = "width")
+  car_numerics <- c("mpg", "disp", "qsec", "hp")
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = NULL,
-                            type = "histogram",
-                            labeller_fun = toupper,
-                            bins = 10)
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = NULL,
+                       type = "violin",
+                       labeller_fun = toupper,
+                       scale = "width")
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = NULL,
-                            type = "density",
-                            labeller_fun = toupper,
-                            shape_color = "steelblue4")
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = NULL,
+                       type = "histogram",
+                       labeller_fun = toupper,
+                       bins = 10)
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = NULL,
-                            type = "bar",
-                            labeller_fun = toupper,
-                            distribution_stat = "2sd")
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = NULL,
+                       type = "density",
+                       labeller_fun = toupper,
+                       shape_color = "steelblue4")
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = NULL,
-                            type = "forest",
-                            labeller_fun = toupper,
-                            distribution_stat = "2sd")
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = NULL,
+                       type = "bar",
+                       labeller_fun = toupper,
+                       distribution_stat = "2sd")
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = NULL,
-                            type = "ribbon",
-                            labeller_fun = toupper,
-                            central_stat = "median",
-                            distribution_stat = "iqr")
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = NULL,
+                       type = "forest",
+                       labeller_fun = toupper,
+                       distribution_stat = "2sd")
+
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = NULL,
+                       type = "ribbon",
+                       labeller_fun = toupper,
+                       central_stat = "median",
+                       distribution_stat = "iqr")
 
   ## with a splitting factor
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = "car_group",
-                            type = "violin",
-                            scale = "width",
-                            labeller_fun = toupper)
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = "car_group",
+                       type = "violin",
+                       scale = "width",
+                       labeller_fun = toupper)
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = "car_group",
-                            type = "histogram",
-                            labeller_fun = toupper,
-                            bins = 10)
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = "car_group",
+                       type = "histogram",
+                       labeller_fun = toupper,
+                       bins = 10)
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = "car_group",
-                            type = "density",
-                            labeller_fun = toupper,
-                            plot_title = "Cars Dataset")
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = "car_group",
+                       type = "density",
+                       labeller_fun = toupper,
+                       plot_title = "Cars Dataset")
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = "car_group",
-                            type = "bar",
-                            labeller_fun = toupper,
-                            plot_title = "Cars Dataset")
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = "car_group",
+                       type = "bar",
+                       labeller_fun = toupper,
+                       plot_title = "Cars Dataset")
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = "car_group",
-                            type = "forest",
-                            labeller_fun = toupper,
-                            plot_title = "Cars Dataset",
-                            distribution_stat = "2sd",
-                            point_size = 3)
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = "car_group",
+                       type = "forest",
+                       labeller_fun = toupper,
+                       plot_title = "Cars Dataset",
+                       distribution_stat = "2sd",
+                       point_size = 3)
 
 
-  exda:::draw_numeric_panel(my_cars,
-                            variables = c("mpg", "disp", "qsec"),
-                            split_factor = "car_group",
-                            type = "ribbon",
-                            labeller_fun = toupper,
-                            plot_title = "Cars Dataset",
-                            central_stat = "median",
-                            distribution_stat = "iqr",
-                            fill_lab = "car group") +
+  plot_multi_variables(my_cars,
+                       variables = car_numerics,
+                       split_factor = "car_group",
+                       type = "ribbon",
+                       labeller_fun = toupper,
+                       plot_title = "Cars Dataset",
+                       central_stat = "median",
+                       distribution_stat = "iqr",
+                       fill_lab = "car group") +
     facet_grid(. ~ car_group)
 
 # distribution panels of stack plots -------
@@ -438,26 +440,20 @@
   my_biopsy[, biopsy_vars] <- my_biopsy[, biopsy_vars] %>%
     map_dfc(factor, levels = as.character(1:11))
 
-  exda:::draw_factor_panel(my_biopsy,
-                           variables = biopsy_vars,
-                           palette = tableau20_colors(),
-                           fill_lab = "feature level",
-                           .drop = FALSE)
+  plot_multi_variables(my_biopsy,
+                       variables = biopsy_vars,
+                       palette = tableau20_colors(),
+                       fill_lab = "feature level",
+                       .drop = FALSE)s
 
-  exda:::draw_factor_panel(my_biopsy,
-                           variables = biopsy_vars,
-                           split_factor = "class",
-                           scale = "percent",
-                           palette = tableau20_colors(),
-                           fill_lab = "feature level",
-                           .drop = FALSE,
-                           labeller_fun = function(x) paste("feature", x),
-                           plot_title = "Biopsy data set")
-
-
-
-
-
-
+  plot_multi_variables(my_biopsy,
+                       variables = biopsy_vars,
+                       split_factor = "class",
+                       scale = "percent",
+                       palette = tableau20_colors(),
+                       fill_lab = "feature level",
+                       .drop = FALSE,
+                       labeller_fun = function(x) paste("feature", x),
+                       plot_title = "Biopsy data set")
 
 # END --------
