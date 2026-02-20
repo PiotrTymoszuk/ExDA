@@ -383,13 +383,16 @@
 #' @return a data frame with additional columns `axis_label` and `facet_label`.
 #'
 #' @inheritParams draw_numeric_panel
+#' @param n_column name of the data frame column storing information on N number
+#' of complete observations to be included in axis labels if `n_labs = TRUE`.
 #' @param plot_data a data frame used for later for plotting, already pre-formatted.
 
   add_labels <- function(plot_data,
                          split_factor = NULL,
                          n_labs = TRUE,
                          n_lab_sep = "\n",
-                         labeller_fun = identity) {
+                         labeller_fun = identity,
+                         n_column = "n") {
 
     ## assuming the data is already pre-formatted and no checks required
 
@@ -404,7 +407,7 @@
 
         plot_data[["axis_label"]] <-
           paste(plot_data[["axis_label"]],
-                plot_data[["n"]],
+                plot_data[[n_column]],
                 sep = paste0(n_lab_sep, "n = "))
 
       }
@@ -423,7 +426,7 @@
 
         plot_data[["axis_label"]] <-
           paste(plot_data[["axis_label"]],
-                plot_data[["n"]],
+                plot_data[[n_column]],
                 sep = paste0(n_lab_sep, "n = "))
 
       }

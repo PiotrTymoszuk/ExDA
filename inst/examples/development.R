@@ -431,6 +431,30 @@
 
 # distribution panels of stack plots -------
 
+  my_biopsy <- MASS::biopsy
+
+  biopsy_vars <- paste0("V", 1:9)
+
+  my_biopsy[, biopsy_vars] <- my_biopsy[, biopsy_vars] %>%
+    map_dfc(factor, levels = as.character(1:11))
+
+  exda:::draw_factor_panel(my_biopsy,
+                           variables = biopsy_vars,
+                           palette = tableau20_colors(),
+                           fill_lab = "feature level",
+                           .drop = FALSE)
+
+  exda:::draw_factor_panel(my_biopsy,
+                           variables = biopsy_vars,
+                           split_factor = "class",
+                           scale = "percent",
+                           palette = tableau20_colors(),
+                           fill_lab = "feature level",
+                           .drop = FALSE,
+                           labeller_fun = function(x) paste("feature", x),
+                           plot_title = "Biopsy data set")
+
+
 
 
 

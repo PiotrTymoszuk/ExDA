@@ -22,6 +22,8 @@
 #' `"2sem"`: double standard of the mean, `"2sd"`: double standard deviation,
 #' `"none"`: no dispersion statistic is shown).
 #'
+#' `draw_factor()`
+#'
 #' @return a `ggplot` object.
 #'
 #' @inheritParams plot_df_factor
@@ -65,7 +67,9 @@
 #' \code{\link[ggplot2]{geom_violin}} and \code{\link[ggplot2]{geom_boxplot}},
 #' for bar plots they are passed to \code{\link[ggplot2]{geom_bar}}, for
 #' ribbon plots the arguments are passed to \code{\link[ggplot2]{geom_line}},
-#' and for Forest plots to \code{\link[ggplot2]{geom_point}}.
+#' for Forest plots to \code{\link[ggplot2]{geom_point}}, for stack plots of
+#' factor's category frequencies the arguments are passed to
+#' \code{\link[ggplot2]{geom_bar}}
 #'
 #' @export
 
@@ -886,13 +890,14 @@
   draw_factor_panel <- function(data,
                                 variables,
                                 split_factor = NULL,
+                                .drop = TRUE,
+                                scale = c("none", "percent"),
                                 palette = tableau10_colors(),
                                 shape_color = "black",
-                                shape_alpha = NULL,
+                                shape_alpha = 1,
                                 show_txt = TRUE,
                                 txt_size = 2.75,
-                                txt_vjust = NULL,
-                                txt_hjust = NULL,
+                                signif_digits = 2,
                                 cust_theme = eda_classic_theme(),
                                 plot_title = NULL,
                                 plot_subtitle = NULL,
@@ -908,6 +913,14 @@
 
     stopifnot(is.logical(show_txt))
     show_txt <- show_txt[1]
+
+    scale <- match.arg(scale[1], c("none", "percent"))
+
+    stopifnot(is.logical(show_txt))
+    show_txt <- show_txt[1]
+
+    stopifnot(is.numeric(signif_digits))
+    signif_digits <- as.integer(signif_digits[1])
 
     if(!is.null(cust_theme)) {
 
@@ -928,12 +941,32 @@
 
     }
 
+    ## X axis and fill scale labels and ploting variables ---------
+
+    if(is.null(x_lab)) {
+
+      x_lab <-
+        switch(scale,
+               none = "observations, N",
+               percent = "% of complete observations")
+
+    }
+
+    if(is.null(fill_lab)) fill_lab <- "category"
+    if(is.null(y_lab) & !is.null(split_factor)) y_lab <- split_factor
+
+    plot_var <-
+      switch(scale,
+             none = "n",
+             percent = "percent_complete")
+
     ## plotting data ------------
 
     data <- validate_multi_df(data,
                               variables,
                               split_factor,
-                              format = "factor")
+                              format = "factor",
+                              .drop = FALSE)
 
     if(is.null(split_factor)) {
 
@@ -945,9 +978,142 @@
 
     }
 
-    return(data)
+    if(is.null(plot_subtitle)) {
+
+      plot_subtitle <-
+        paste("total: n = ", attr(data, "n_numbers")["total"])
+
+    }
+
+    ## calculating the frequencies --------
+
+    variable <- NULL
+    plot_pos <- NULL
+
+    if(is.null(split_factor)) {
+
+      plot_data <- map(data[, variables], eda, .drop = FALSE)
+
+      plot_data <- map(plot_data, frequency, .drop = .drop)
+
+      if(show_txt) {
+
+        plot_data <- map(plot_data, arrange, desc(.data[["category"]]))
+
+        plot_data <-
+          map(plot_data,
+              ~mutate(.x,
+                      plot_pos = cumsum(.data[[plot_var]]) - 0.5 * .data[[plot_var]]))
+
+      }
+
+      plot_data <- map2_dfr(plot_data, names(plot_data),
+                            ~mutate(.x,
+                                    variable = factor(.y, variables)))
+
+    } else {
+
+      plot_data <- split(data[, variables],
+                         data[[split_factor]])
+
+      plot_data <- map(plot_data, map, eda, .drop = FALSE)
+
+      plot_data <- map(plot_data, map, frequency, .drop = .drop)
+
+      if(show_txt) {
+
+        plot_data <-
+          map(plot_data, map, arrange, desc(.data[["category"]]))
+
+        plot_data <-
+          map(plot_data,
+              map,
+              ~mutate(.x,
+                      plot_pos = cumsum(.data[[plot_var]]) - 0.5 * .data[[plot_var]]))
+
+      }
+
+      plot_data <- map(plot_data,
+                       ~map2_dfr(.x, names(.x),
+                                 ~mutate(.x,
+                                         variable = factor(.y, variables))))
+
+      plot_data <- map2_dfr(plot_data, names(plot_data),
+                            ~mutate(.x,
+                                    !!split_factor := factor(.y,
+                                                             levels(data[[split_factor]]))))
+
+    }
+
+    plot_data <- plot_data[!is.na(plot_data[["category"]]), ]
+
+    plot_data <- add_labels(plot_data,
+                            split_factor = split_factor,
+                            n_labs = n_labs,
+                            n_lab_sep = n_lab_sep,
+                            labeller_fun = labeller_fun,
+                            n_column = "n_complete")
+
+    if(show_txt) {
+
+      if(scale == "none") {
+
+        plot_data[["plot_label"]] <- plot_data[["n"]]
+
+      } else {
+
+       plot_data[["plot_label"]] <-
+         paste0(signif(plot_data[["percent_complete"]],
+                       signif_digits),
+                "%")
+
+      }
+
+    }
+
+    ## the plots ----------
+
+    fct_plot <- ggplot(plot_data,
+                       aes(x = .data[[plot_var]],
+                           y = .data[["axis_label"]],
+                           fill = .data[["category"]]))
+
+    if(!is.null(split_factor)) {
+
+      fct_plot <- fct_plot +
+        facet_grid(facet_label ~ .,
+                   scales = "free_y")
+
+    }
+
+    fct_plot <- fct_plot +
+      geom_bar(stat = "identity",
+               color = shape_color,
+               alpha = shape_alpha, ...) +
+      scale_fill_manual(values = palette)
+
+    if(show_txt) {
+
+      fct_plot <- fct_plot +
+        geom_label(aes(label = .data[["plot_label"]],
+                       x = .data[["plot_pos"]]),
+                   color = shape_color,
+                   size = txt_size,
+                   show.legend = FALSE)
+
+    }
+
+    ## final edits ----------
+
+    if(!is.null(cust_theme)) fct_plot <- fct_plot + cust_theme
+
+    fct_plot +
+      labs(title = plot_title,
+           subtitle = plot_subtitle,
+           x = x_lab,
+           y = y_lab,
+           fill = fill_lab)
 
   }
 
-
-
+# END --------

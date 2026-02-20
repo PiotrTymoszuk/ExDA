@@ -43,13 +43,14 @@ draw_factor_panel(
   data,
   variables,
   split_factor = NULL,
+  .drop = TRUE,
+  scale = c("none", "percent"),
   palette = tableau10_colors(),
   shape_color = "black",
-  shape_alpha = NULL,
+  shape_alpha = 1,
   show_txt = TRUE,
   txt_size = 2.75,
-  txt_vjust = NULL,
-  txt_hjust = NULL,
+  signif_digits = 2,
   cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
@@ -154,16 +155,18 @@ for bar plots they are passed to \code{\link[ggplot2]{geom_bar}}, for
 ribbon plots the arguments are passed to \code{\link[ggplot2]{geom_line}},
 and for Forest plots to \code{\link[ggplot2]{geom_point}}.}
 
+\item{.drop}{logical, should empty levels of a factor be dropped?}
+
+\item{scale}{type of frequency data to be presented in bar and stack plots:
+none (counts) or percents,}
+
 \item{show_txt}{logical, should text labels with frequencies be
 displayed in the plot?}
 
 \item{txt_size}{size of text labels in the plots.}
 
-\item{txt_vjust}{vertical justification of the text labels in the plots.
-Plot type-specific defaults are applied if set to \code{NULL}.}
-
-\item{txt_hjust}{horizontal justification of the text labels in the plots.
-Plot type-specific defaults are applied if set to \code{NULL}.}
+\item{signif_digits}{significant digits used to round numeric values displayed
+in the plot (e.g. percentages).}
 }
 \value{
 a \code{ggplot} object.

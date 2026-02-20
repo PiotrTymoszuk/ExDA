@@ -9,7 +9,8 @@ add_labels(
   split_factor = NULL,
   n_labs = TRUE,
   n_lab_sep = "\\n",
-  labeller_fun = identity
+  labeller_fun = identity,
+  n_column = "n"
 )
 }
 \arguments{
