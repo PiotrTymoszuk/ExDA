@@ -2,45 +2,121 @@
 % Please edit documentation in R/special_plots.R
 \name{draw_numeric_panel}
 \alias{draw_numeric_panel}
+\alias{draw_factor_panel}
 \title{Panel with distribution of multiple variables in a data frame.}
 \usage{
 draw_numeric_panel(
   data,
   variables,
   split_factor = NULL,
-  distr_geom = c("violin", "box"),
-  alpha = 0.25,
-  non_zero = FALSE,
+  type = c("violin", "box", "histogram", "density", "bar", "ribbon", "forest"),
+  central_stat = c("mean", "median"),
+  distribution_stat = c("sem", "sd", "iqr", "95\%", "2sem", "2sd", "none"),
+  palette = tableau10_colors(),
+  shape_fill = "steelblue",
+  shape_color = "black",
+  shape_alpha = NULL,
   point_size = 2,
-  point_rim_color = "black",
-  point_alpha = 0.5,
-  point_hjitter = 0.15,
+  point_color = shape_fill,
+  point_alpha = NULL,
   point_wjitter = 0,
-  dodge_w = 0.75,
-  fill = "cornsilk4",
+  point_hjitter = 0.1,
+  line_color = NULL,
+  line_width = 0.75,
+  line_alpha = 1,
+  ribbon_line_width = 0.5 * line_width,
+  cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
-  plot_tag = NULL,
-  x_lab = "Variable value",
-  cust_theme = ggplot2::theme_classic(),
+  x_lab = NULL,
+  y_lab = NULL,
+  fill_lab = NULL,
+  n_labs = TRUE,
+  n_lab_sep = "\\n",
+  labeller_fun = identity,
+  overlap_density = FALSE,
+  show_stats = TRUE,
+  ...
+)
+
+draw_factor_panel(
+  data,
+  variables,
+  split_factor = NULL,
+  palette = tableau10_colors(),
+  shape_color = "black",
+  shape_alpha = NULL,
+  show_txt = TRUE,
+  txt_size = 2.75,
+  txt_vjust = NULL,
+  txt_hjust = NULL,
+  cust_theme = eda_classic_theme(),
+  plot_title = NULL,
+  plot_subtitle = NULL,
+  x_lab = NULL,
+  y_lab = NULL,
+  fill_lab = NULL,
+  n_labs = TRUE,
+  n_lab_sep = "\\n",
+  labeller_fun = identity,
   ...
 )
 }
 \arguments{
 \item{data}{a data frame.}
 
-\item{variables}{a character vector with variable names}
+\item{variables}{a character vector with variable names.}
 
-\item{split_factor}{name of the data frame's variable, whose categories will
-be used to split values of \code{variable} in the plot. Provided as a string.}
+\item{split_factor}{optional, a character string with the name of the factor
+defining analysis groups. If \code{split_factor = NULL}, the distributions in
+the whole data frame will be shown.}
+
+\item{type}{plot type. In ribbon plots, N numbers of observations in
+the \code{split_factor}'s categories won't be shown; the numbers displayed in the
+Y axis when \code{n_labs = TRUE} refer to the sum of complete observations for the
+given variable in the whole data frame.}
+
+\item{central_stat}{statistic of centrality to be presented in bar, ribbon
+and Forest plots. Ignored for other plot types.}
+
+\item{distribution_stat}{statistic of distribution/dispersion to be presented
+in bar, ribbon, and Forest plots as ribbons or whiskers.
+Ignored for other plot types.}
+
+\item{palette}{a vector with color names or hex codes for fill scales.}
+
+\item{shape_fill}{fill color of bars, boxes, violins, etc. Ignored if
+\code{split_factor} is provided.}
+
+\item{shape_color}{color of rims of bars, boxes, violins, and histograms.}
+
+\item{shape_alpha}{alpha (opacity) of bars, boxes, violins, and histograms.}
 
 \item{point_size}{size of data points}
 
+\item{point_color}{color of data points. Ignored if
+\code{split_factor} is provided.}
+
 \item{point_alpha}{alpha (opacity) of data points.}
+
+\item{point_wjitter}{vertical jittering of data points.}
 
 \item{point_hjitter}{horizontal jittering of data points}
 
-\item{point_wjitter}{vertical jittering of data points.}
+\item{line_color}{color of lines in ribbon and Forest plots; ignored if
+\code{split_factor} is provided. In violin plots: color of diamonds and whiskers
+depicting medians with interquartile ranges.}
+
+\item{line_width}{width of interquartile whiskers in violin plots, and
+lines depicting statistics in histograms.}
+
+\item{line_alpha}{alpha/opacity of lines in ribbon and Forest plots.}
+
+\item{ribbon_line_width}{width of lines of the distribution ribbons in
+ribbon plots.}
+
+\item{cust_theme}{custom \code{ggplot}'s \code{theme} object or \code{NULL}. If \code{NULL} no
+custom theme is applied, which makes the plot objects much smaller.}
 
 \item{plot_title}{plot title.}
 
@@ -49,11 +125,45 @@ observations are shown here.}
 
 \item{x_lab}{title of the X axis.}
 
-\item{cust_theme}{custom \code{ggplot}'s \code{theme} object or \code{NULL}. If \code{NULL} no
-custom theme is applied, which makes the plot objects much smaller.}
+\item{y_lab}{title of the Y axis, if \code{NULL} the title is set with a simple
+heuristics (e.g. if \code{scale = "none"}, \verb{"observations, N}).}
 
-\item{...}{additional arguments passed to \code{\link[ggplot2]{geom_boxplot}},
-\code{\link[ggplot2]{geom_violin}}, \code{\link[ggplot2]{geom_histogram}}.}
+\item{fill_lab}{title of the fill scale.}
+
+\item{n_labs}{logical. If TRUE, N numbers of complete observations are displayed
+in the axis labels. Defaults to \code{TRUE}.}
+
+\item{n_lab_sep}{separator between the category name and N number of observations.
+Relevant for axis labels only if \code{n_labs = TRUE}.}
+
+\item{labeller_fun}{a function used to transform names of variables presented
+in the plot axes and facets. Defaults to identity.}
+
+\item{overlap_density}{logical, should histograms and density plots for particular
+variables be overlaid? Concerns only histogram and density plots, when \code{split_factor}
+is specified. If \code{TRUE}, N numbers of observations in the \code{split_factor}'s
+categories won't be shown.}
+
+\item{show_stats}{logical. Violin plots: should diamonds and whiskers
+representing median with interquartile range be displayed?}
+
+\item{...}{additional arguments passed to \code{ggplot} \code{geom} objects.
+For violin and box plots, the arguments are passed to
+\code{\link[ggplot2]{geom_violin}} and \code{\link[ggplot2]{geom_boxplot}},
+for bar plots they are passed to \code{\link[ggplot2]{geom_bar}}, for
+ribbon plots the arguments are passed to \code{\link[ggplot2]{geom_line}},
+and for Forest plots to \code{\link[ggplot2]{geom_point}}.}
+
+\item{show_txt}{logical, should text labels with frequencies be
+displayed in the plot?}
+
+\item{txt_size}{size of text labels in the plots.}
+
+\item{txt_vjust}{vertical justification of the text labels in the plots.
+Plot type-specific defaults are applied if set to \code{NULL}.}
+
+\item{txt_hjust}{horizontal justification of the text labels in the plots.
+Plot type-specific defaults are applied if set to \code{NULL}.}
 }
 \value{
 a \code{ggplot} object.
@@ -61,4 +171,19 @@ a \code{ggplot} object.
 \description{
 \code{ggplot} graphics with plots of distribution of multiple numeric or factor
 variables in a data frame.
+}
+\details{
+\code{draw_numeric_panel()} creates panel/compound graphs with distribution of
+numeric variables presented in violins or box plots, or summary graphics of
+centrality and distribution statistics in bar/whiskers plots, ribbon
+and Forest plots.
+The \code{central_stat} argument specifies which statistic of central tendency, mean
+or median, will be presented in bars, ribbon plots (as thick line), and
+Forest plots (as point).
+The \code{distribution_stat} argument specifies which statistic of distribution/dispersion
+will be presented as whiskers or ribbons (\code{"sem"}: standard error of the mean,
+\code{"sd"}: standard deviation, \code{"iqr"}: interquartile range, \code{"95\%"}: 95\% quantile
+of distribution/range where 95\% of non-extreme observations are located,
+\code{"2sem"}: double standard of the mean, \code{"2sd"}: double standard deviation,
+\code{"none"}: no dispersion statistic is shown).
 }

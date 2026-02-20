@@ -331,6 +331,109 @@
                      type = "bubble",
                      scale = "percent")
 
+# multi-variable panels -----------
+
+  ## without a splitting factor
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = NULL,
+                            type = "violin",
+                            labeller_fun = toupper,
+                            scale = "width")
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = NULL,
+                            type = "histogram",
+                            labeller_fun = toupper,
+                            bins = 10)
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = NULL,
+                            type = "density",
+                            labeller_fun = toupper,
+                            shape_color = "steelblue4")
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = NULL,
+                            type = "bar",
+                            labeller_fun = toupper,
+                            distribution_stat = "2sd")
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = NULL,
+                            type = "forest",
+                            labeller_fun = toupper,
+                            distribution_stat = "2sd")
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = NULL,
+                            type = "ribbon",
+                            labeller_fun = toupper,
+                            central_stat = "median",
+                            distribution_stat = "iqr")
+
+  ## with a splitting factor
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = "car_group",
+                            type = "violin",
+                            scale = "width",
+                            labeller_fun = toupper)
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = "car_group",
+                            type = "histogram",
+                            labeller_fun = toupper,
+                            bins = 10)
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = "car_group",
+                            type = "density",
+                            labeller_fun = toupper,
+                            plot_title = "Cars Dataset")
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = "car_group",
+                            type = "bar",
+                            labeller_fun = toupper,
+                            plot_title = "Cars Dataset")
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = "car_group",
+                            type = "forest",
+                            labeller_fun = toupper,
+                            plot_title = "Cars Dataset",
+                            distribution_stat = "2sd",
+                            point_size = 3)
+
+
+  exda:::draw_numeric_panel(my_cars,
+                            variables = c("mpg", "disp", "qsec"),
+                            split_factor = "car_group",
+                            type = "ribbon",
+                            labeller_fun = toupper,
+                            plot_title = "Cars Dataset",
+                            central_stat = "median",
+                            distribution_stat = "iqr",
+                            fill_lab = "car group") +
+    facet_grid(. ~ car_group)
+
+# distribution panels of stack plots -------
+
+
+
+
 
 
 # END --------

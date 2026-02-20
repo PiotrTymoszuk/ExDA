@@ -308,7 +308,21 @@
 
     }
 
-    ## N numbers and NA processing ----------
+    ## handling of NA-only variables ---------
+
+    na_only_check <- map_lgl(data[, variables], ~all(is.na(.x)))
+
+    if(sum(na_only_check) == length(variables)) {
+
+      stop("Nothing to plot: all variables are `NA`.", call. = FALSE)
+
+    }
+
+    na_only_vars <- names(na_only_check)[na_only_check]
+
+    data <- data[, !names(data) %in% na_only_vars]
+
+    ## N numbers and processing of single NA values ----------
 
     ### total N numbers and numbers of records with the complete
     ### splitting factor
@@ -328,9 +342,18 @@
 
       n_categories <-
         map(variables,
-            function(x) data[!is.na(data[[x]]), split_factor, drop = TRUE])
+            function(x) data[!is.na(data[[x]]), split_factor, drop = FALSE])
 
-      n_categories <- set_names(map(n_categories, table), variables)
+      n_categories <- set_names(map(n_categories,
+                                    count,
+                                    .data[[split_factor]]),
+                                variables)
+
+      variable <- NULL
+
+      n_categories <- map2_dfr(n_categories,
+                               names(n_categories),
+                               ~mutate(.x, variable = .y))
 
     } else {
 
@@ -346,6 +369,79 @@
     attr(data, "n_categories") <- n_categories
 
     return(data)
+
+  }
+
+# Axis and facet labels in plotting data ---------
+
+#' Axis and facet labels for plotting data.
+#'
+#' @description
+#' An internal function, which appends the plotting data with labels to
+#' be presented in plot axes and facets.
+#'
+#' @return a data frame with additional columns `axis_label` and `facet_label`.
+#'
+#' @inheritParams draw_numeric_panel
+#' @param plot_data a data frame used for later for plotting, already pre-formatted.
+
+  add_labels <- function(plot_data,
+                         split_factor = NULL,
+                         n_labs = TRUE,
+                         n_lab_sep = "\n",
+                         labeller_fun = identity) {
+
+    ## assuming the data is already pre-formatted and no checks required
+
+    if(is.null(split_factor)) {
+
+      ### axis labels
+
+      plot_data[["axis_label"]] <-
+        labeller_fun(as.character(plot_data[["variable"]]))
+
+      if(n_labs) {
+
+        plot_data[["axis_label"]] <-
+          paste(plot_data[["axis_label"]],
+                plot_data[["n"]],
+                sep = paste0(n_lab_sep, "n = "))
+
+      }
+
+      plot_data[["axis_label"]] <-
+        reorder(plot_data[["axis_label"]],
+                as.numeric(plot_data[["variable"]]))
+
+    } else {
+
+      ### axis and facet labels
+
+      plot_data[["axis_label"]] <- as.character(plot_data[[split_factor]])
+
+      if(n_labs) {
+
+        plot_data[["axis_label"]] <-
+          paste(plot_data[["axis_label"]],
+                plot_data[["n"]],
+                sep = paste0(n_lab_sep, "n = "))
+
+      }
+
+      plot_data[["axis_label"]] <-
+        reorder(plot_data[["axis_label"]],
+                -as.numeric(plot_data[[split_factor]]))
+
+      plot_data[["facet_label"]] <-
+        labeller_fun(as.character(plot_data[["variable"]]))
+
+      plot_data[["facet_label"]] <-
+        reorder(plot_data[["facet_label"]],
+                as.numeric(plot_data[["variable"]]))
+
+    }
+
+    plot_data
 
   }
 

@@ -174,11 +174,14 @@
     stat_funs <- list(mean,
                       sd,
                       median,
-                      function(x) quantile(x, c(0.25, 0.75)),
+                      function(x) quantile(x, c(0.25, 0.75, 0.025, 0.975)),
                       function(x) quantile(x, c(0, 1)))
 
     stat_names <-
-      c("mean", "sd", "median", "perc_25", "perc_75", "min", "max")
+      c("mean", "sd",
+        "median", "perc_25", "perc_75",
+        "perc_025", "perc_975",
+        "min", "max")
 
     stats <- map_dfr(stat_funs, ~.x(object))
 
@@ -198,8 +201,8 @@
                           "\nmedian = ", signif(stats$value[3], signif_digits),
                           " [IQR: ", signif(stats$value[4], signif_digits),
                           " - ", signif(stats$value[5], signif_digits), "]",
-                          "\nrange: ", signif(stats$value[6], signif_digits),
-                          " - ", signif(stats$value[7], signif_digits))
+                          "\nrange: ", signif(stats$value[8], signif_digits),
+                          " - ", signif(stats$value[9], signif_digits))
 
     stat_string <- paste(stat_string,
                          complete_observations,

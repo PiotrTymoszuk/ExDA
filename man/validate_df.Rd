@@ -35,7 +35,7 @@ shown in the X axis of the plot. Provided as a string.}
 \item{variable2}{name of the data frame's variable whose distribution will be
 shown in the Y axis of the plot. Provided as a string.}
 
-\item{variables}{a character vector with variable names}
+\item{variables}{a character vector with variable names.}
 
 \item{format}{the intended format of the variables: numeric of factor.
 If there are any requested variables in the data frame incompatible with
