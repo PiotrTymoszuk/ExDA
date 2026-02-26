@@ -3,12 +3,14 @@
 \name{etest}
 \alias{etest}
 \alias{is_etest}
+\alias{as_etest}
 \title{Generate \code{eTest} objects.}
 \usage{
 etest(
   test,
   stat_name = NA,
   stat = NA,
+  n = NA,
   df1 = NA,
   df2 = NA,
   estimate_name = NA,
@@ -16,33 +18,72 @@ etest(
   lower_ci = NA,
   upper_ci = NA,
   p_value = NA,
-  n = NA
+  p_adjust_method = NA,
+  p_adjusted = NA,
+  significant_p = 0.05,
+  simplify_p = 0.001,
+  signif_digits = 2,
+  effect_name = NA,
+  effect_size = NA,
+  plot_caption = c("effect_size_txt", "significance"),
+  plot_caption_sep = "\\n",
+  ...
 )
 
 is_etest(x)
+
+as_etest(x)
 }
 \arguments{
-\item{test}{name of the statistical test.}
+\item{test}{vector with names of the statistical test.}
 
-\item{stat_name}{name of the test statistic.}
+\item{stat_name}{vector with names of the test statistic.}
 
-\item{stat}{value of the test statistic.}
+\item{stat}{vector with values of the test statistic.}
 
-\item{df1}{= degrees of freedom.}
+\item{n}{vectors of number of complete observations used for testing}
 
-\item{df2}{degrees of freedom.}
+\item{df1}{vector of degrees of freedom.}
 
-\item{estimate_name}{name of the test estimate.}
+\item{df2}{vector of degrees of freedom.}
 
-\item{estimate}{value of the test estimate.}
+\item{estimate_name}{vector of names name of the test estimate.}
 
-\item{lower_ci}{value of the lower confidence interval limit.}
+\item{estimate}{vector of values of the test estimate.}
 
-\item{upper_ci}{value of the upper confidence interval limit.}
+\item{lower_ci}{vector of values of the lower confidence interval limit.}
 
-\item{p_value}{p value.}
+\item{upper_ci}{vector of value of the upper confidence interval limit.}
 
-\item{n}{number of complete observations used for testing.}
+\item{p_value}{vector of raw p value not adjusted for multiple testing.}
+
+\item{p_adjust_method}{vector of names of the p value adjustment methods.}
+
+\item{p_adjusted}{vector of adjusted p value.}
+
+\item{significant_p}{significance threshold, defaults to p = 0.05.}
+
+\item{simplify_p}{a numeric value, p values below \code{simplify_p} are presented
+in a form \code{p < ...}, e.g. for the default p values < 0.001 be presented in a
+p < 0.001 form.}
+
+\item{signif_digits}{number of significant digits used for rounding of
+p values.}
+
+\item{effect_name}{vector of names of effect size statistics.}
+
+\item{effect_size}{vector of values of effect size statistics.}
+
+\item{plot_caption}{names of the columns of the output data frame which are
+merged in the ready-to-use plot captions. By default they are \code{"eff_size_txt"}
+and \code{"significance"}, which means that the plot caption column will contain
+formatted text with the effect size information and p values adjusted for
+multiple testing.}
+
+\item{plot_caption_sep}{character separator pasted between statistics in the
+plot caption (\code{plot_caption}) column.}
+
+\item{...}{additional arguments, currently none.}
 
 \item{x}{an object.}
 }
@@ -53,4 +94,12 @@ with a "canonical" data frame.
 \description{
 Generates \code{eTest} objects storing results of statistical hypothesis tests
 in a standardized data frame.
+}
+\details{
+The formatted significance and adjusted significance information
+appear in the columns \code{raw_significance} and \code{significance}.
+The formatted effect size text (e.g. \code{"V = 0.32"}) is stored in the
+column \code{effect_size_txt}.
+Ready-to-use subtitles/captions for plots with effect sizes and significance
+are stored in the column named \code{plot_caption}.
 }

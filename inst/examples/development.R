@@ -444,7 +444,7 @@
                        variables = biopsy_vars,
                        palette = tableau20_colors(),
                        fill_lab = "feature level",
-                       .drop = FALSE)s
+                       .drop = FALSE)
 
   plot_multi_variables(my_biopsy,
                        variables = biopsy_vars,
@@ -455,5 +455,29 @@
                        .drop = FALSE,
                        labeller_fun = function(x) paste("feature", x),
                        plot_title = "Biopsy data set")
+
+# correlation tests ---------
+
+  correlate_variables(my_biopsy[paste0("V", 1:9)],
+                      type = NULL,
+                      method = "equal",
+                      test_method = "bootstrap",
+                      adj_method = "BH")
+
+  correlate_variables(map_dfc(my_biopsy[paste0("V", 1:9)],
+                              ~as.integer(as.numeric(.x))),
+                      type = NULL,
+                      test_method = "permutation")
+
+  correlate_variables(my_cars,
+                      variables = c("mpg", "cyl", "disp", "hp"),
+                      type = "kendallB",
+                      test_method = "bootstrap")
+
+# distribution tests -------
+
+
+# statistical hypothesis testing ---------
+
 
 # END --------

@@ -116,18 +116,39 @@
 #' Generates `eTest` objects storing results of statistical hypothesis tests
 #' in a standardized data frame.
 #'
+#' @details
+#' The formatted significance and adjusted significance information
+#' appear in the columns `raw_significance` and `significance`.
+#' The formatted effect size text (e.g. `"V = 0.32"`) is stored in the
+#' column `effect_size_txt`.
+#' Ready-to-use subtitles/captions for plots with effect sizes and significance
+#' are stored in the column named `plot_caption`.
+#'
+#' @inheritParams format_p
 #' @param x an object.
-#' @param test name of the statistical test.
-#' @param stat_name name of the test statistic.
-#' @param stat value of the test statistic.
-#' @param df1 = degrees of freedom.
-#' @param df2 degrees of freedom.
-#' @param estimate_name name of the test estimate.
-#' @param estimate value of the test estimate.
-#' @param lower_ci value of the lower confidence interval limit.
-#' @param upper_ci value of the upper confidence interval limit.
-#' @param p_value p value.
-#' @param n number of complete observations used for testing.
+#' @param test vector with names of the statistical test.
+#' @param stat_name vector with names of the test statistic.
+#' @param stat vector with values of the test statistic.
+#' @param n vectors of number of complete observations used for testing
+#' @param df1 vector of degrees of freedom.
+#' @param df2 vector of degrees of freedom.
+#' @param estimate_name vector of names name of the test estimate.
+#' @param estimate vector of values of the test estimate.
+#' @param lower_ci vector of values of the lower confidence interval limit.
+#' @param upper_ci vector of value of the upper confidence interval limit.
+#' @param p_value vector of raw p value not adjusted for multiple testing.
+#' @param p_adjust_method vector of names of the p value adjustment methods.
+#' @param p_adjusted vector of adjusted p value.
+#' @param effect_name vector of names of effect size statistics.
+#' @param effect_size vector of values of effect size statistics.
+#' @param plot_caption names of the columns of the output data frame which are
+#' merged in the ready-to-use plot captions. By default they are `"eff_size_txt"`
+#' and `"significance"`, which means that the plot caption column will contain
+#' formatted text with the effect size information and p values adjusted for
+#' multiple testing.
+#' @param plot_caption_sep character separator pasted between statistics in the
+#' plot caption (`plot_caption`) column.
+#' @param ... additional arguments, currently none.
 #'
 #' @return an `etest` data frame. It shares most of its methods
 #' with a "canonical" data frame.
@@ -137,6 +158,7 @@
   etest <- function(test,
                     stat_name = NA,
                     stat = NA,
+                    n = NA,
                     df1 = NA,
                     df2 = NA,
                     estimate_name = NA,
@@ -144,11 +166,22 @@
                     lower_ci = NA,
                     upper_ci = NA,
                     p_value = NA,
-                    n = NA) {
+                    p_adjust_method = NA,
+                    p_adjusted = NA,
+                    significant_p = 0.05,
+                    simplify_p = 0.001,
+                    signif_digits = 2,
+                    effect_name = NA,
+                    effect_size = NA,
+                    plot_caption = c("effect_size_txt", "significance"),
+                    plot_caption_sep = "\n", ...) {
+
+    ## bare container with the testing results ------
 
     x <- tibble(test = test,
                 stat_name = stat_name,
                 stat = stat,
+                n = n,
                 df1 = df1,
                 df2 = df2,
                 estimate_name = estimate_name,
@@ -156,15 +189,107 @@
                 lower_ci = lower_ci,
                 upper_ci = upper_ci,
                 p_value = p_value,
-                n = n)
+                p_adjust_method = p_adjust_method,
+                p_adjusted = p_adjusted,
+                effect_name = effect_name,
+                effect_size = effect_size)
 
-    structure(x, class = c("etest", class(x)))
+    ## formatting of the testing results ---------
+
+    x[["raw_significance"]] <- format_p(x[["p_value"]],
+                                        significant_p = significant_p,
+                                        simplify_p = simplify_p)
+
+    x[["significance"]] <- format_p(x[["p_adjusted"]],
+                                    significant_p = significant_p,
+                                    simplify_p = simplify_p)
+
+    x[["n_txt"]] <- paste("n =", x[["n"]])
+
+    if(any(!is.na(x[["lower_ci"]])) | any(!is.na(x[["upper_ci"]]))) {
+
+      x[["ci_text"]] <-
+        paste0("[", signif(x[["lower_ci"]], signif_digits),
+               " to ", signif(x[["upper_ci"]], signif_digits), "]")
+
+    }
+
+    x[["effect_size_txt"]] <- paste(x[["effect_name"]],
+                                    signif(x[["effect_size"]], signif_digits),
+                                    sep = " = ")
+
+    stopifnot(is.character(plot_caption))
+    stopifnot(length(plot_caption) > 0)
+
+    if(any(!plot_caption %in% names(x))) {
+
+      stop("Components of the plot caption not found in the testing result data frame.",
+           call. = FALSE)
+
+    }
+
+    x[["plot_caption"]] <-
+      reduce(x[plot_caption], paste, sep = plot_caption_sep)
+
+    ## the output object -------
+
+    as_etest(x)
 
   }
 
 #' @rdname etest
-#' @export
 
   is_etest <- function(x) inherits(x, "etest")
+
+#' @rdname etest
+
+  as_etest <- function(x) {
+
+    if(is_etest(x)) return(x)
+
+    etest_cols <-
+      c("test", "stat_name", "stat",
+        "n", "df1", "df2",
+        "estimate_name", "estimate", "lower_ci", "upper_ci",
+        "p_value", "p_adjust_method", "p_adjusted",
+        "effect_name", "effect_size")
+
+    if(!is.data.frame(x)) stop("`x` has to be a data frame.", call. = FALSE)
+
+    missing_cols <- setdiff(etest_cols, names(x))
+
+    if(length(missing_cols) > 0) {
+
+      stop(paste("The following obligatory columns are missing:",
+                 paste(missing_cols, collapse = ", ")),
+           call. = FALSE)
+
+    }
+
+    num_cols <- c("stat",
+                  "n", "df1", "df2",
+                  "estimate", "lower_ci", "upper_ci",
+                  "p_value", "p_adjusted", "effect_size")
+
+    num_check <- map(x[num_cols],
+                     function(v) is.na(v) | is.numeric(v))
+
+    num_check <- map_lgl(num_check, all)
+
+    if(any(!num_check)) {
+
+      stop(paste("The following columns are not numeric or NA:",
+                 paste(num_cols[!num_check]), collapse = ", "),
+           call. = FALSE)
+
+    }
+
+    ## the output ------
+
+    x <- as_tibble(x)
+
+    structure(x, class = c("etest", class(x)))
+
+  }
 
 # END -------

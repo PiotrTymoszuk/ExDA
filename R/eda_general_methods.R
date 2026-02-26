@@ -200,9 +200,9 @@
                           " (SD: ", signif(stats$value[2], signif_digits), ")",
                           "\nmedian = ", signif(stats$value[3], signif_digits),
                           " [IQR: ", signif(stats$value[4], signif_digits),
-                          " - ", signif(stats$value[5], signif_digits), "]",
+                          " to ", signif(stats$value[5], signif_digits), "]",
                           "\nrange: ", signif(stats$value[8], signif_digits),
-                          " - ", signif(stats$value[9], signif_digits))
+                          " to ", signif(stats$value[9], signif_digits))
 
     stat_string <- paste(stat_string,
                          complete_observations,

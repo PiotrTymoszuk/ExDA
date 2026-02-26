@@ -448,4 +448,58 @@
 
   }
 
+# Formatting of p values ----------
+
+#' Format p values in results of statistical hypothesis tests.
+#'
+#' @description
+#' Formatting of p values.
+#' P values greater or equal than 0.05 are presented in a `ns (p = ...)` form.
+#' P values lower that `simplify_p` value are presented in a `p < ...` form.
+#'
+#' @return a character vector with the formatted p values.
+#'
+#' @param x a numeric vector.
+#' @param significant_p significance threshold, defaults to p = 0.05.
+#' @param simplify_p a numeric value, p values below `simplify_p` are presented
+#' in a form `p < ...`, e.g. for the default p values < 0.001 be presented in a
+#' p < 0.001 form.
+#' @param signif_digits number of significant digits used for rounding of
+#' p values.
+#'
+#' @export
+
+  format_p <- function(x,
+                       significant_p = 0.05,
+                       simplify_p = 0.001,
+                       signif_digits = 2) {
+
+    ## input control -----
+
+    if(!is.numeric(x)) stop("`x` has to be a numeric vector.", call. = FALSE)
+
+    stopifnot(is.numeric(significant_p))
+
+    if(significant_p >= 1) stop("`significant_p` must be < 1.", call. = FALSE)
+
+    stopifnot(is.numeric(simplify_p))
+
+    if(simplify_p > significant_p) {
+
+      stop("`simplify_p` has to be lower than `significant_p`.", call. = FALSE)
+
+    }
+
+    ## formatting -----
+
+    simplify_txt <- paste("p <", simplify_p)
+
+    ifelse(x >= significant_p,
+           paste0("ns (p = ", signif(x, signif_digits), ")"),
+           ifelse(x >= simplify_p,
+                  paste("p =", signif(x, signif_digits)),
+                  simplify_txt))
+
+  }
+
 # END -------

@@ -28,6 +28,7 @@
 #' @importFrom tidyr pivot_longer
 #'
 #' @importFrom tibble tibble
+#' @importFrom tibble as_tibble
 #' @importFrom tibble rownames_to_column
 #' @importFrom tibble column_to_rownames
 #'
@@ -102,6 +103,9 @@
 #' @importFrom ggplot2 guides
 #' @importFrom ggplot2 guide_legend
 #' @importFrom ggplot2 labs
+#'
+#' @importFrom fastTest f_cor_test
+#' @importFrom fastTest f_kappa_test
 #'
 #' @importFrom generics explore
 

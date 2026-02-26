@@ -43,7 +43,7 @@ If \code{type = "paired"}, a before-after plot is generated and its assumed that
 the plotting data are already arranged by the blocking or identified variable;
 please note that this type is available only if \code{split_factor} is not \code{NULL}.
 The dots (\code{...}) pass additional arguments to internal plotting functions.
-These internal plottin functions are:
+These internal plotting functions are:
 \itemize{
 \item if \code{split_factor} is \code{NULL}.
 Bar, stack and bubble plots: \code{\link{plot_factor}}.

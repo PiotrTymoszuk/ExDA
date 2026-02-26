@@ -12,6 +12,7 @@ Authors@R:
            comment = c(ORCID = "0000-0002-0398-6034"))
 Imports: 
     dplyr,
+    fastTest,
     ggplot2,
     microViz,
     purrr,
