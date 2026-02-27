@@ -64,11 +64,12 @@
 
 # Check validity of a data frame and it's variables ---------
 
-#' Check validity of a data frame and it's variables.
+#' Check validity of a plotting data frame and it's variables.
 #'
 #' @description
-#' An internal function used to validate if an object is a data frame, and whether
+#' Internal functions used to validate if an object is a data frame, and whether
 #' it has specific variables.
+#' Used by plotting functions.
 #' Subsequently, the object is processed by removal of `NA` values, and,
 #' optionally, empty levels.
 #'
@@ -235,8 +236,6 @@
 
     }
 
-
-
     if(!is.null(split_factor)) {
 
       stopifnot(is.character(split_factor))
@@ -367,6 +366,151 @@
 
     attr(data, "n_numbers") <- n_numbers
     attr(data, "n_categories") <- n_categories
+
+    return(data)
+
+  }
+
+#' Check validity of a data frame used in statistical tests.
+#'
+#' @description
+#' An internal function testing if variables and splitting factors are present
+#' in a data frame, and retrieve their formats.
+#'
+#' @return a data frame with the variables and splitting factors of interest.
+#' Variable formats (numeric or factor) are stored as `variable_format` attribute.
+#' Empty categories of the splitting factor are automatically dropped.
+#'
+#' @param data a data frame.
+#' @param variables a character vector of variables. If `NULL`, all variables of
+#' the data frame except of `split_factor` are considered.
+#' @param split_factor `NULL` or a name of a variable used as the splitting factor.
+#' @param coerce logical: should character and logical variables be coerced to
+#' factors with the default level setting option? Defaults to `TRUE`.
+
+  validate_tst_df <- function(data,
+                              variables = NULL,
+                              split_factor = NULL,
+                              coerce = TRUE){
+
+    ## format control ------
+
+    if(!is.data.frame(data)) {
+
+      stop("`data` has to be a data frame.", call. = FALSE)
+
+    }
+
+    if(!is.null(variables)) {
+
+      stopifnot(is.character(variables))
+      stopifnot(length(variables) > 0)
+
+    }
+
+    if(!is.null(split_factor)) {
+
+      stopifnot(is.character(split_factor))
+      split_factor <- split_factor[1]
+
+      if(!split_factor %in% names(data)) {
+
+        stop("`split_factor` absent from the data frame.", call. = FALSE)
+
+      }
+
+      if(is.null(variables)) {
+
+        variables <- names(data)[names(data) != split_factor]
+
+      }
+
+    } else {
+
+      if(is.null(variables)) variables <- names(data)
+
+    }
+
+    missing_vars <- setdiff(variables, names(data))
+
+    if(length(missing_vars) > 0) {
+
+      stop(paste("Some variables are missing from the data frame:",
+                 paste(missing_vars, collapse = ", ")),
+           call. = FALSE)
+
+    }
+
+    stopifnot(is.logical(coerce))
+    coerce <- coerce[1]
+
+    ## formatting of the splitting factor --------
+
+    if(!is.null(split_factor)) {
+
+      data <- as_tibble(data[, c(split_factor, variables), drop = FALSE])
+
+      if(!coerce & !is.factor(data[[split_factor]])) {
+
+        stop(paste("`split_factor` has to be a name of a factor variable.",
+                   "Alternatively, choose `coerce = TRUE`."),
+             call. = FALSE)
+
+      }
+
+      if(!is.factor(data[[split_factor]])) {
+
+        data[[split_factor]] <- factor(data[[split_factor]])
+
+      }
+
+      data[[split_factor]] <- droplevels(data[[split_factor]])
+
+      split_levs <- levels(data[[split_factor]])
+
+      if(length(split_levs) < 2) {
+
+        stop(paste("`split_factor` specifies a variable with a single category:",
+                   "testing is not possible."),
+             call. = FALSE)
+
+      }
+
+    } else {
+
+      data <- as_tibble(data[, variables, drop = FALSE])
+
+    }
+
+    ## formatting of the variables to be tested ---------
+
+    num_fct_vars <-
+      map_lgl(data[, variables],
+              function(x) is.numeric(x) | is.factor(x))
+
+    if(!coerce & any(!num_fct_vars)) {
+
+      stop(paste("The following variables are neither numeric nor factors:",
+                 paste(variables[!num_fct_vars], collapse = ", "),
+                 "Alternatively, choose `coerce = TRUE`."),
+           call. = FALSE)
+
+    }
+
+    if(any(!num_fct_vars)) {
+
+      data[, any(!num_fct_vars)] <-
+        map_dfc(data[, any(!num_fct_vars)], factor)
+
+    }
+
+    ## variable format ---------
+
+    var_formats <- map_lgl(data[, variables], is.numeric)
+
+    var_formats <- ifelse(var_formats, "numeric", "factor")
+
+    attr(data, "variable_format") <- var_formats
 
     return(data)
 

@@ -460,21 +460,35 @@
 
   correlate_variables(my_biopsy[paste0("V", 1:9)],
                       type = NULL,
-                      method = "equal",
+                      method = "unweighted",
                       test_method = "bootstrap",
-                      adj_method = "BH")
+                      adj_method = "BH",
+                      signif_digits = 4)
+
+  table(my_biopsy[, c("V1", "V2")]) %>%
+    vcd::Kappa()
 
   correlate_variables(map_dfc(my_biopsy[paste0("V", 1:9)],
                               ~as.integer(as.numeric(.x))),
-                      type = NULL,
+                      type = "spearman",
                       test_method = "permutation")
 
   correlate_variables(my_cars,
-                      variables = c("mpg", "cyl", "disp", "hp"),
+                      variables = c("mpg", "cyl", "disp", "hp", "wt"),
                       type = "kendallB",
-                      test_method = "bootstrap")
+                      test_method = "bootstrap",
+                      signif_digits = 4)
 
 # distribution tests -------
+
+  exda:::validate_tst_df(my_biopsy)
+
+  check_normality(my_cars,
+                  variables = c("mpg", "cyl", "disp", "hp", "wt"))
+
+  check_normality(my_cars,
+                  variables = c("mpg", "cyl", "disp", "hp", "wt"),
+                  split_factor = "car_group")
 
 
 # statistical hypothesis testing ---------

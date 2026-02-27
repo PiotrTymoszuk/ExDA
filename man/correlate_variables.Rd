@@ -13,7 +13,6 @@ correlate_variables(
   boot_method = c("bca", "percentile"),
   conf_level = 0.95,
   n_iter = 1000,
-  signif_digits = 2,
   adj_method = "none",
   pub_styled = TRUE,
   ...
@@ -49,9 +48,6 @@ confidence intervals.}
 
 \item{n_iter}{number of permutation or bootstraps.}
 
-\item{signif_digits}{significant digits used for rounding in the
-publication-style output.}
-
 \item{adj_method}{the method for adjusting p values for multiple testing,
 as defined for \code{\link[stats]{p.adjust}},
 defaults to \code{"none"}. The adjusted p value appears in the \code{p_adjusted} column.}
@@ -64,13 +60,15 @@ data frame (class \code{\link{etest}})?}
 to format the results when \code{pub_styled = TRUE}.}
 }
 \value{
-a data frame with the correlation results.
+a data frame with the correlation results: either in a native form
+of the \code{fastTest} functions or, if \code{pub_styled = TRUE}, in a pre-formatted
+form with significance and effect size texts, and ready-to-use plot labels.
 }
 \description{
 Tests for significant correlations of two numeric variables (methods: Pearson,
 Spearman, Kendall TauA and TauB, Chatterjee's XiA and XiB) or two integer/factor
 variables (Cohen's kappa inter-rater reliability statistic).
-P values are computed with the parmutation or bootstrap method.
+P values are computed with the permutation or bootstrap method.
 }
 \details{
 The function uses internally \code{\link[fastTest]{f_cor_test}} and

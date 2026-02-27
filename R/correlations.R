@@ -6,7 +6,7 @@
 #' Tests for significant correlations of two numeric variables (methods: Pearson,
 #' Spearman, Kendall TauA and TauB, Chatterjee's XiA and XiB) or two integer/factor
 #' variables (Cohen's kappa inter-rater reliability statistic).
-#' P values are computed with the parmutation or bootstrap method.
+#' P values are computed with the permutation or bootstrap method.
 #'
 #' @details
 #' The function uses internally \code{\link[fastTest]{f_cor_test}} and
@@ -15,7 +15,9 @@
 #' If `type = NULL`, `correlate_variables()` resorts to Spearman's correlations
 #' for numeric variables and Cohen's kappa for factors or integers.
 #'
-#' @return a data frame with the correlation results.
+#' @return a data frame with the correlation results: either in a native form
+#' of the `fastTest` functions or, if `pub_styled = TRUE`, in a pre-formatted
+#' form with significance and effect size texts, and ready-to-use plot labels.
 #'
 #' @param data a data frame.
 #' @param variables a vector with names of variables for which the correlations
@@ -38,8 +40,6 @@
 #' @param conf_level confidence level used for computation of the
 #' confidence intervals.
 #' @param n_iter number of permutation or bootstraps.
-#' @param signif_digits significant digits used for rounding in the
-#' publication-style output.
 #' @param adj_method the method for adjusting p values for multiple testing,
 #' as defined for \code{\link[stats]{p.adjust}},
 #' defaults to `"none"`. The adjusted p value appears in the `p_adjusted` column.
@@ -59,7 +59,6 @@
                                   boot_method = c("bca", "percentile"),
                                   conf_level = 0.95,
                                   n_iter = 1000,
-                                  signif_digits = 2,
                                   adj_method = "none",
                                   pub_styled = TRUE, ...) {
 
@@ -85,9 +84,6 @@
 
     stopifnot(is.numeric(n_iter))
     n_iter <- as.integer(n_iter[1])
-
-    stopifnot(is.numeric(signif_digits))
-    signif_digits <- as.integer(signif_digits[1])
 
     stopifnot(is.logical(pub_styled))
 

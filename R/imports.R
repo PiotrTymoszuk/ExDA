@@ -106,6 +106,9 @@
 #'
 #' @importFrom fastTest f_cor_test
 #' @importFrom fastTest f_kappa_test
+#' @importFrom fastTest f_shapiro_test
+#' @importFrom fastTest f_ks_test
+#' @importFrom fastTest f_levene_test
 #'
 #' @importFrom generics explore
 

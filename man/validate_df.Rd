@@ -4,7 +4,7 @@
 \alias{validate_df}
 \alias{validate_2df}
 \alias{validate_multi_df}
-\title{Check validity of a data frame and it's variables.}
+\title{Check validity of a plotting data frame and it's variables.}
 \usage{
 validate_df(data, variable, split_factor, .drop = TRUE)
 
@@ -48,8 +48,9 @@ Numbers of observation before and after pre-processing are stored as
 the \code{n_numbers} and \code{n_categories} attributes.
 }
 \description{
-An internal function used to validate if an object is a data frame, and whether
+Internal functions used to validate if an object is a data frame, and whether
 it has specific variables.
+Used by plotting functions.
 Subsequently, the object is processed by removal of \code{NA} values, and,
 optionally, empty levels.
 }

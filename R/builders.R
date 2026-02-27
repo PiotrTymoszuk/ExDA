@@ -114,7 +114,9 @@
 #'
 #' @description
 #' Generates `eTest` objects storing results of statistical hypothesis tests
-#' in a standardized data frame.
+#' in a standardized data frame, with ready-to-use features applicable in
+#' to plots and tables in scientific publications (e.g. plot labels/subtitles,
+#' pre-formatted significance and effect size texts).
 #'
 #' @details
 #' The formatted significance and adjusted significance information
