@@ -202,7 +202,97 @@
                                     split_factor = NULL,
                                     pub_styled = TRUE, ...) {
 
-    NULL
+    ## entry control --------
+
+    stopifnot(is.logical(pub_styled))
+
+    data <-
+      validate_tst_df(data, variables, split_factor, coerce = TRUE)
+
+    var_formats <- attr(data, "variable_format")
+
+    variables <- names(var_formats)
+
+    non_numeric_variables <-
+      variables[var_formats != "numeric"]
+
+    if(length(non_numeric_variables) > 0) {
+
+      stop(paste("The following variables are not numeric:",
+                 paste(non_numeric_variables, collapse = ", ")),
+           call. = FALSE)
+
+    }
+
+    ## cases with more than two categories of the splitting factor ------
+
+    if(!is.null(split_factor)) {
+
+      split_levs <- levels(data[[split_factor]])
+
+      if(length(split_levs) > 2) {
+
+        data <- filter(data, .data[[split_factor]] %in% split_levs[1:2])
+
+        data[[split_factor]] <- droplevels(data[[split_factor]])
+
+        warning(paste("More than two categories of the splitting factor.",
+                      "The first two categories:",
+                      paste(split_levs[1:2], collapse = ", "),
+                      "will be compared."),
+                call. = FALSE)
+
+      }
+
+    }
+
+    ## testing ---------
+
+    if(is.null(split_factor)) {
+
+      result <- f_ks_test(x = data[, variables],
+                          as_data_frame = TRUE, ...)
+
+    } else {
+
+      result <- f_ks_test(x = data[, variables],
+                          f = data[[split_factor]],
+                          as_data_frame = TRUE, ...)
+
+    }
+
+    result <- as_tibble(result)
+
+    if(!pub_styled) return(result)
+
+    ## publication-styled output -------
+
+    pub_result <-
+      etest(test = "Kolmogorov-Smirnov test",
+            stat_name = "d",
+            stat = result[["d"]],
+            n = result[["n1"]] + result[["n2"]],
+            p_value = result[["p_value"]],
+            p_adjust_method = "none",
+            p_adjusted = result[["p_value"]],
+            effect_name = "d",
+            effect_size = result[["d"]])
+
+    if(is.null(split_factor)) {
+
+      pub_result <-
+        cbind(result[, c("variable1", "variable2", "n1", "n2", "ties")],
+              pub_result)
+
+    } else {
+
+      pub_result <-
+        cbind(result[, c("variable", "n1", "n2", "ties")],
+              pub_result)
+
+    }
+
+    return(as_etest(pub_result))
 
   }
 

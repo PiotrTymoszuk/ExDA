@@ -16,7 +16,13 @@ check_normality(
 
 compare_variances(data, variables = NULL, split_factor, pub_styled = TRUE, ...)
 
-compare_distributions()
+compare_distributions(
+  data,
+  variables = NULL,
+  split_factor = NULL,
+  pub_styled = TRUE,
+  ...
+)
 }
 \arguments{
 \item{data}{a data frame.}

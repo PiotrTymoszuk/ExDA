@@ -503,6 +503,12 @@
 
   ## comparison of distributions
 
+  compare_distributions(my_cars,
+                        variables = c("mpg", "cyl", "disp", "hp", "wt"))
+
+  compare_distributions(my_cars,
+                        variables = c("mpg", "cyl", "disp", "hp", "wt"),
+                        split_factor = "car_group", pub_styled = F)
 
 # statistical hypothesis testing ---------
 
