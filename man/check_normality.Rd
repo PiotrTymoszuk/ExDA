@@ -2,6 +2,8 @@
 % Please edit documentation in R/distribution.R
 \name{check_normality}
 \alias{check_normality}
+\alias{compare_variances}
+\alias{compare_distributions}
 \title{Normality and comparison of distribution of variables in a data frame.}
 \usage{
 check_normality(
@@ -11,6 +13,10 @@ check_normality(
   pub_styled = TRUE,
   ...
 )
+
+compare_variances(data, variables = NULL, split_factor, pub_styled = TRUE, ...)
+
+compare_distributions()
 }
 \arguments{
 \item{data}{a data frame.}

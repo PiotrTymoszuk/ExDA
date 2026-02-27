@@ -132,7 +132,7 @@
                               size = nrow(.),
                               replace = TRUE),
            car_group = factor(car_group),
-           na_dummy = NA,
+           na_dummy = NA_real_,
            car_pair = c(rep("group1", 16),
                         rep("group2", 16)),
            car_pair = factor(car_pair))
@@ -481,7 +481,7 @@
 
 # distribution tests -------
 
-  exda:::validate_tst_df(my_biopsy)
+  ## nomrlaity with Shapiro-Wilk test
 
   check_normality(my_cars,
                   variables = c("mpg", "cyl", "disp", "hp", "wt"))
@@ -489,6 +489,19 @@
   check_normality(my_cars,
                   variables = c("mpg", "cyl", "disp", "hp", "wt"),
                   split_factor = "car_group")
+
+  ## equality of variances
+
+  compare_variances(my_cars,
+                    variables = c("mpg", "cyl", "disp", "hp", "wt"),
+                    split_factor = "car_group")
+
+  compare_variances(my_cars,
+                    variables = c("mpg", "cyl", "disp", "hp", "wt"),
+                    split_factor = "car_group",
+                    type = "bf")
+
+  ## comparison of distributions
 
 
 # statistical hypothesis testing ---------

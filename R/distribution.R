@@ -135,4 +135,75 @@
 
   }
 
+#' @rdname check_normality
+#' @export
+
+  compare_variances <- function(data,
+                                variables = NULL,
+                                split_factor,
+                                pub_styled = TRUE, ...) {
+
+    ## input controls ---------
+
+    stopifnot(is.logical(pub_styled))
+    pub_styled <- pub_styled[1]
+
+    data <- validate_tst_df(data, variables, split_factor, coerce = TRUE)
+
+    var_formats <- attr(data, "variable_format")
+
+    variables <- names(var_formats)
+
+    non_numeric_variables <-
+      variables[var_formats != "numeric"]
+
+    if(length(non_numeric_variables) > 0) {
+
+      stop(paste("The following variables are not numeric:",
+                 paste(non_numeric_variables, collapse = ", ")),
+           call. = FALSE)
+
+    }
+
+    ## testing --------
+
+    result <-
+      f_levene_test(x = data[, variables],
+                    f = data[[split_factor]],
+                    as_data_frame = TRUE,
+                    safely = TRUE, ...)
+
+    result <- as_tibble(result)
+
+    if(!pub_styled) return(result)
+
+    pub_test <- etest(test = "Levene test",
+                      stat_name = "F",
+                      stat = result[["f"]],
+                      n = result[["n"]],
+                      df1 = result[["df1"]],
+                      df2 = result[["df2"]],
+                      p_value = result[["p_value"]],
+                      p_adjust_method = "none",
+                      p_adjusted = result[["p_value"]],
+                      effect_name = "F",
+                      effect_size = result[["f"]], ...)
+
+    as_etest(cbind(result[, "variable"],
+                   pub_test))
+
+  }
+
+#' @rdname check_normality
+#' @export
+
+  compare_distributions <- function(data,
+                                    variables = NULL,
+                                    split_factor = NULL,
+                                    pub_styled = TRUE, ...) {
+
+    NULL
+
+  }
+
 # END --------
