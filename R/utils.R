@@ -387,11 +387,15 @@
 #' @param split_factor `NULL` or a name of a variable used as the splitting factor.
 #' @param coerce logical: should character and logical variables be coerced to
 #' factors with the default level setting option? Defaults to `TRUE`.
+#' @param minimal logical: should minimal checks of the data frame be conducted?
+#' If `TRUE`, the function checks only if variables and split factors are
+#' in the data frame.
 
   validate_tst_df <- function(data,
                               variables = NULL,
                               split_factor = NULL,
-                              coerce = TRUE){
+                              coerce = TRUE,
+                              minimal = FALSE){
 
     ## format control ------
 
@@ -443,6 +447,8 @@
 
     stopifnot(is.logical(coerce))
     coerce <- coerce[1]
+
+    if(minimal) return(data)
 
     ## formatting of the splitting factor --------
 

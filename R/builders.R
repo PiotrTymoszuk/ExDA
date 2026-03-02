@@ -198,27 +198,52 @@
 
     ## formatting of the testing results ---------
 
-    x[["raw_significance"]] <- format_p(x[["p_value"]],
-                                        significant_p = significant_p,
-                                        simplify_p = simplify_p)
+    x[["raw_significance"]] <-
+      ifelse(is.na(x[["p_value"]]),
+             NA,
+             format_p(x[["p_value"]],
+                      significant_p = significant_p,
+                      simplify_p = simplify_p))
 
-    x[["significance"]] <- format_p(x[["p_adjusted"]],
-                                    significant_p = significant_p,
-                                    simplify_p = simplify_p)
+    x[["significance"]] <-
+      ifelse(is.na(x[["p_adjusted"]]),
+             NA,
+             format_p(x[["p_adjusted"]],
+                      significant_p = significant_p,
+                      simplify_p = simplify_p))
 
-    x[["n_txt"]] <- paste("n =", x[["n"]])
+    x[["n_txt"]] <- ifelse(is.na(x[["n"]]),
+                           NA,
+                           paste("n =", x[["n"]]))
+
+    x[["stat_txt"]] <- paste(x[["stat_name"]],
+                             signif(x[["stat"]], signif_digits),
+                             sep = " = ")
+
+    x[["estimate_txt"]] <-
+      ifelse(is.na(x[["estimate"]]),
+             NA,
+             paste(x[["estimate_name"]],
+                   signif(x[["estimate"]], signif_digits),
+                   sep = " = "))
 
     if(any(!is.na(x[["lower_ci"]])) | any(!is.na(x[["upper_ci"]]))) {
 
       x[["ci_text"]] <-
-        paste0("[", signif(x[["lower_ci"]], signif_digits),
-               " to ", signif(x[["upper_ci"]], signif_digits), "]")
+        ifelse(is.na(x[["lower_ci"]]),
+               NA,
+               paste0("[", signif(x[["lower_ci"]], signif_digits),
+                      " to ", signif(x[["upper_ci"]], signif_digits), "]"))
 
     }
 
-    x[["effect_size_txt"]] <- paste(x[["effect_name"]],
-                                    signif(x[["effect_size"]], signif_digits),
-                                    sep = " = ")
+    x[["effect_size_txt"]] <-
+      ifelse(is.na(x[["effect_size"]]),
+             NA,
+             paste(x[["effect_name"]],
+                   signif(x[["effect_size"]], signif_digits),
+                   sep = " = "))
+
 
     stopifnot(is.character(plot_caption))
     stopifnot(length(plot_caption) > 0)

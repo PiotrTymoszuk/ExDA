@@ -4,7 +4,13 @@
 \alias{validate_tst_df}
 \title{Check validity of a data frame used in statistical tests.}
 \usage{
-validate_tst_df(data, variables = NULL, split_factor = NULL, coerce = TRUE)
+validate_tst_df(
+  data,
+  variables = NULL,
+  split_factor = NULL,
+  coerce = TRUE,
+  minimal = FALSE
+)
 }
 \arguments{
 \item{data}{a data frame.}
@@ -16,6 +22,10 @@ the data frame except of \code{split_factor} are considered.}
 
 \item{coerce}{logical: should character and logical variables be coerced to
 factors with the default level setting option? Defaults to \code{TRUE}.}
+
+\item{minimal}{logical: should minimal checks of the data frame be conducted?
+If \code{TRUE}, the function checks only if variables and split factors are
+in the data frame.}
 }
 \value{
 a data frame with the variables and splitting factors of interest.

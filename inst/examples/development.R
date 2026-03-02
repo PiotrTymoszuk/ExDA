@@ -456,6 +456,22 @@
                        labeller_fun = function(x) paste("feature", x),
                        plot_title = "Biopsy data set")
 
+# covariance and correlation coefficients -------
+
+  fastTest::f_cov(my_cars[, c("mpg", "cyl", "disp", "hp", "wt")])
+
+  cov_variables(my_cars[, c("mpg", "cyl", "disp", "hp", "wt")],
+                type = "pearson",
+                pub_styled = TRUE)
+
+  cor_variables(my_biopsy[paste0("V", 1:9)],
+                type = NULL,
+                pub_styled = TRUE)
+
+  cor_variables(my_cars[, c("mpg", "cyl", "disp", "hp", "wt")],
+                type = "spearman",
+                pub_styled = TRUE)
+
 # correlation tests ---------
 
   correlate_variables(my_biopsy[paste0("V", 1:9)],
@@ -508,9 +524,9 @@
 
   compare_distributions(my_cars,
                         variables = c("mpg", "cyl", "disp", "hp", "wt"),
-                        split_factor = "car_group", pub_styled = F)
+                        split_factor = "car_group")
 
-# statistical hypothesis testing ---------
+# comparison of means/medians: statistical hypothesis testing ---------
 
 
 # END --------

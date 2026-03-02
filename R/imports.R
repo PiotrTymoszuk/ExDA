@@ -45,6 +45,7 @@
 #' @importFrom purrr map_lgl
 #' @importFrom purrr map_dfc
 #' @importFrom purrr map2
+#' @importFrom purrr map2_dbl
 #' @importFrom purrr map2_dfr
 #' @importFrom purrr map2_chr
 #' @importFrom purrr pmap_chr
@@ -104,6 +105,9 @@
 #' @importFrom ggplot2 guide_legend
 #' @importFrom ggplot2 labs
 #'
+#' @importFrom fastTest f_cov
+#' @importFrom fastTest f_cor
+#' @importFrom fastTest f_kappa
 #' @importFrom fastTest f_cor_test
 #' @importFrom fastTest f_kappa_test
 #' @importFrom fastTest f_shapiro_test
