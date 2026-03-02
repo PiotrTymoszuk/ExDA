@@ -448,13 +448,13 @@
     stopifnot(is.logical(coerce))
     coerce <- coerce[1]
 
+    data <- as_tibble(data[, c(split_factor, variables), drop = FALSE])
+
     if(minimal) return(data)
 
     ## formatting of the splitting factor --------
 
     if(!is.null(split_factor)) {
-
-      data <- as_tibble(data[, c(split_factor, variables), drop = FALSE])
 
       if(!coerce & !is.factor(data[[split_factor]])) {
 
@@ -481,10 +481,6 @@
              call. = FALSE)
 
       }
-
-    } else {
-
-      data <- as_tibble(data[, variables, drop = FALSE])
 
     }
 

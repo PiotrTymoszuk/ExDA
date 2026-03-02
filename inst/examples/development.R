@@ -497,7 +497,7 @@
 
 # distribution tests -------
 
-  ## nomrlaity with Shapiro-Wilk test
+  ## normality with Shapiro-Wilk test
 
   check_normality(my_cars,
                   variables = c("mpg", "cyl", "disp", "hp", "wt"))
@@ -528,5 +528,24 @@
 
 # comparison of means/medians: statistical hypothesis testing ---------
 
+  compare_variables(my_cars,
+                    variables = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs"),
+                    split_factor = "car_group",
+                    adj_method = "BH",
+                    pub_styled = TRUE)
+
+  compare_variables(my_cars,
+                    variables = c("mpg", "cyl", "disp", "hp", "vs", "na_dummy"),
+                    type = c("t", "kruskal", "wilcoxon", "one_anova", "chisq", "wilcoxon"),
+                    split_factor = "car_group")
+
+  compare_variables(my_cars,
+                    variables = c("mpg", "cyl", "disp"),
+                    type = "paired_wilcoxon",
+                    split_factor = "car_pair")
+
+  compare_variables(map_dfc(my_biopsy[, -1], as.numeric),
+                    type = "welch_t",
+                    split_factor = "class")
 
 # END --------

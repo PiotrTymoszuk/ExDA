@@ -10,6 +10,7 @@
 #' @importFrom stats complete.cases
 #' @importFrom stats reorder
 #' @importFrom stats qnorm
+#' @importFrom stats p.adjust
 #'
 #' @importFrom dplyr count
 #' @importFrom dplyr select
@@ -48,9 +49,12 @@
 #' @importFrom purrr map2_dbl
 #' @importFrom purrr map2_dfr
 #' @importFrom purrr map2_chr
+#' @importFrom purrr pmap
+#' @importFrom purrr pmap_dfr
 #' @importFrom purrr pmap_chr
 #' @importFrom purrr compact
 #' @importFrom purrr reduce
+#' @importFrom purrr safely
 #'
 #' @importFrom microViz Gini
 #' @importFrom microViz Gmean
@@ -113,6 +117,12 @@
 #' @importFrom fastTest f_shapiro_test
 #' @importFrom fastTest f_ks_test
 #' @importFrom fastTest f_levene_test
+#'
+#' @importFrom fastTest f_t_test
+#' @importFrom fastTest f_wilcox_test
+#' @importFrom fastTest f_chisq_test
+#' @importFrom fastTest f_kruskal_test
+#' @importFrom fastTest f_one_anova
 #'
 #' @importFrom generics explore
 

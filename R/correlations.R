@@ -381,9 +381,9 @@
 
     ### type consistency
 
-    fct_tst <- map_lgl(data, is.factor)
-    int_tst <- map_lgl(data, is.integer)
-    num_tst <- map_lgl(data, is.numeric)
+    fct_tst <- map_lgl(data, ~is.factor(.x[!is.na(.x)]))
+    int_tst <- map_lgl(data, ~is.integer(.x[!is.na(.x)]))
+    num_tst <- map_lgl(data, ~is.numeric(.x[!is.na(.x)]))
 
     types_consistent <- FALSE
 
