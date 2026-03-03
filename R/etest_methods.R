@@ -198,7 +198,13 @@
 
       n_numbers <- map(plot_data, ~range(.x[["n"]]))
 
-      n_numbers <- map(n_numbers, paste, collapse = " to ")
+      n_numbers <- map(n_numbers,
+                       function(x){
+
+                         if(length(unique(x)) > 1) return(paste(x, collapse = " to "))
+                         return(unique(x))
+
+                       })
 
       plot_subtitle <- map(n_numbers,
                            ~paste("observations: n =", .x))
@@ -237,8 +243,10 @@
              geom_point(shape = 21,
                         size = point_size,
                         alpha = point_alpha, ...) +
-             scale_fill_manual(values = palette) +
-             scale_color_manual(values = palette) +
+             scale_fill_manual(values = palette,
+                               drop = FALSE) +
+             scale_color_manual(values = palette,
+                                drop = FALSE) +
              labs(title = y,
                   subtitle = v,
                   x = u,
