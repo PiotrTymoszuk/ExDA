@@ -266,10 +266,12 @@
   }
 
 #' @rdname etest
+#' @export
 
   is_etest <- function(x) inherits(x, "etest")
 
 #' @rdname etest
+#' @export
 
   as_etest <- function(x) {
 
@@ -369,6 +371,7 @@
   }
 
 #' @rdname destat
+#' @export
 
   is_destat <- function(x) inherits(x, "destat")
 

@@ -99,6 +99,12 @@
 
     label_type <- match.arg(label_type[1], c("text", "label"))
 
+    if(!is_function(labeller_fun)) {
+
+      stop("`labeller_fun` has to be a function.", call. = FALSE)
+
+    }
+
     stopifnot(is.character(palette))
 
     stopifnot(is.numeric(point_size))

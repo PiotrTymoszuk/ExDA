@@ -591,4 +591,20 @@
          point_wjitter = 0.01,
          point_hjitter = 0.00005)
 
+# result summary --------
+
+  desc_stats <-  my_cars %>%
+    mutate(cyl = factor(cyl)) %>%
+    explore(split_factor = "cyl")
+
+  tst_results <- my_cars %>%
+    mutate(cyl = factor(cyl)) %>%
+    compare_variables(split_factor = "cyl")
+
+  result_summary(desc_stats,
+                 labeller_fun = function(x) paste("variable:", x))
+
+  result_summary(desc_stats,
+                 tst_results)
+
 # END --------

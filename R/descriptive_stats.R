@@ -296,4 +296,101 @@
 
 # Summary of descriptive statistics and hypothesis testing results --------
 
+#' Summary table with descriptive statistics and results of statistical hypothesis tests.
+#'
+#' @description
+#' Function `result_summary()` creates a ready-to-use summary table which bundles
+#' a data frame with descriptive statistics (created with \code{\link{explore.data.frame}})
+#' with results of statistical hypothesis tests for comparison of expected values
+#' (optional, created with \code{\link{compare_variables}}).
+#'
+#' @return
+#' A data frame with formatted descriptive statistics and, optionally,
+#' test type information, raw and adjusted p values, and effect sizes.
+#'
+#' @param x a data frame with descriptive statistics: an object of class
+#' \code{\link{destat}} created with \code{\link{explore.data.frame}}.
+#' @param y `NULL` or a data frame of \code{\link{etest}} with results of
+#' statistical hypothesis testing created with \code{\link{compare_variables}}.
+#' @param test_columns a character vector of names of columns in `y` to be merged
+#' with the descriptive statistic information.
+#' @param labeller_fun a function used to transform names of variables in the
+#' result summary data frame.
+#' @param ... additional arguments, currently none.
+#'
+#' @export
+
+  result_summary <- function(x,
+                             y = NULL,
+                             labeller_fun = identity,
+                             test_columns = c("test",
+                                              "raw_significance",
+                                              "significance",
+                                              "effect_size_txt"),
+                             ...) {
+
+    ## input control --------
+
+    if(!is_destat(x)) {
+
+      stop("`x` has to be a data frame created with `explore.data.frame()`.",
+           call. = FALSE)
+
+    }
+
+    if(!is_function(labeller_fun)) {
+
+      stop("`labeller_fun` has to be a function.", call. = FALSE)
+
+    }
+
+    if(!is.null(y)) {
+
+      if(!is_etest(y)) {
+
+        stop("`y` has to be an `etest` data frame returned by `compare_variables()`.",
+             call. = FALSE)
+
+      }
+
+      if(!"variable" %in% names(y)) {
+
+        stop("Column `variable` must be present in `y` data frame.",
+             call. = FALSE)
+
+      }
+
+      missing_cols <- setdiff(test_columns, names(y))
+
+      if(length(missing_cols) > 0) {
+
+        stop(paste("The following columns specified in `test_columns` are missing:",
+                   paste(missing_cols, collapse = ", ")),
+             call. = FALSE)
+
+      }
+
+    }
+
+    # result summary ---------
+
+    variables <- attr(x, "variable_names")
+
+    if(!is.null(y)) {
+
+      x <- left_join(x,
+                     y[c("variable", test_columns)],
+                     by = "variable")
+
+    }
+
+    x[["variable"]] <-
+      ifelse(x[["variable"]] %in% variables,
+             labeller_fun(x[["variable"]]),
+             x[["variable"]])
+
+    return(x)
+
+  }
+
 # END ---------
