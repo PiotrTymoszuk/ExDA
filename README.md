@@ -283,7 +283,8 @@ for those variables in the cylinder groups returned with `plot_variable()`:
   hp_qq_plot + disp_qq_plot + plot_layout(nrow = 2)
 
 ```
----place for the QQ plots -----
+
+<img width="765" height="753" alt="QQplots" src="https://github.com/user-attachments/assets/e185b1e6-c2e7-4c6e-9dac-4bf423d7bc1d" />
 
 Equality of variance in the cylinder groups can be explored with Levene tests 
 implemented by `compare_variances()`: 
@@ -346,7 +347,8 @@ can be easily customized, e.g. by hiding the legends with `theme()`:
   mpg_density + hp_density + plot_layout(ncol = 2)
 
 ```
----place for density plots----
+
+<img width="935" height="557" alt="density_plots" src="https://github.com/user-attachments/assets/96837291-8de0-4635-b255-d7bc84b97cd9" />
 
 With the density plots, we can easily identify the inflated variance of 
 `mpg` variable in the four-cylinder group, and the increased variance of `hp` in 
@@ -380,7 +382,8 @@ sure they are located in similar scales:
                          scale = "width")
 
 ```
----place for the violin plot panel----
+
+<img width="775" height="850" alt="violin_plots" src="https://github.com/user-attachments/assets/94deb7be-7e0c-48d2-b373-afabf6476032" />
 
 Percentages of observations in categories of factor variables in 4-, 6-, and 8-cylinder 
 cars can be presented in a stack plot panel: 
@@ -398,7 +401,7 @@ cars can be presented in a stack plot panel:
 
 ```
 
-----place for the stack plot panel-----
+<img width="775" height="547" alt="factor_plots" src="https://github.com/user-attachments/assets/1cc1e260-985d-459f-968f-2e0917fc815e" />
 
 ### Pairwise correlations between numeric variables
 
@@ -462,8 +465,7 @@ in the plot:
     plot(cor_test, n_top = 5)
 
 ```
-
-----place for the Volcano plot of effect sizes-----
+<img width="775" height="547" alt="correlation_effect_sizes" src="https://github.com/user-attachments/assets/e85575f5-5e91-4f09-ba74-1713574a4c60" />
 
 ### Statistical tests for differences of expected values/distribution between analysis groups
 
@@ -537,6 +539,7 @@ top three strongest differences with the variable names:
 
 ```
 
+<img width="929" height="541" alt="comparison_effect_size_plots" src="https://github.com/user-attachments/assets/3bcc4276-b0e0-4ec3-8421-cedea995b063" />
 
 With `plot_variables`, we can visualize the particularly interesting results, 
 namely differences in `mpg` and `vs` between the cylinder groups. 
@@ -574,7 +577,8 @@ labels:
   mpg_cyl_plot + vs_cyl_plot
 
 ```
---- plots for single variables -------
+
+<img width="775" height="547" alt="selected_variables" src="https://github.com/user-attachments/assets/cdd991d5-7126-4e9c-b2f3-ba19064202d1" />
 
 ### Result summary 
 
