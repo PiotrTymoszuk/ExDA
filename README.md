@@ -494,6 +494,7 @@ correlation with scatter plots generated with function `plot_two_variables()`:
 
 ```
 
+<img width="1058" height="532" alt="scatter_plots" src="https://github.com/user-attachments/assets/24cd18be-0664-4499-9825-1f268a309245" />
 
 ### Statistical tests for differences of expected values/distribution between analysis groups
 
