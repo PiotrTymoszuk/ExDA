@@ -61,6 +61,10 @@ of \code{explore()}, which took e.g. \code{pub_styled} argument.}
 as specified by the 'what' argument: a list of stats, a data frame
 (if \code{one_table = TRUE}) or a list of data frames (if \code{one_table = FALSE})
 with descriptive statistics.
+If \code{one_table = TRUE} and \code{what = "table"},
+the function returns a single data frame of class \code{\link{destat}}, which
+may be later merged with statistical hypothesis test results
+(\code{\link{compare_variables}}) into a publication-ready result summary table.
 }
 \description{
 Performs exploratory data analysis for the selected variables of a data frame.

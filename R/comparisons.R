@@ -329,26 +329,28 @@
     pub_results <-
       pmap_dfr(list(x = results,
                     y = type,
-                    z = variables,
-                    dfs),
-               function(x, y, z, dfs) etest(variable = z,
-                                        test = test_names[[y]],
-                                        stat_name = stat_names[[y]],
-                                        stat = x[[stat_values[[y]]]],
-                                        n = reduce(x[n_values[[y]]], `+`),
-                                        df1 = dfs,
-                                        df2 = if("df2" %in% names(x)) x[["df2"]] else NA,
-                                        estimate_name = estimate_names[[y]],
-                                        estimate = if("estimate" %in% names(x)) x[["estimate"]] else NA,
-                                        lower_ci = if("lower_ci" %in% names(x)) x[["lower_ci"]] else NA,
-                                        upper_ci = if("lower_ci" %in% names(x)) x[["lower_ci"]] else NA,
-                                        p_value = x[["p_value"]],
-                                        p_adjust_method = adj_method,
-                                        p_adjusted = x[["p_adjusted"]],
-                                        effect_name = eff_names[[y]],
-                                        effect_size = x[[eff_values[[y]]]], ...))
+                    z = dfs),
+               function(x, y, z, deg)
+                 etest(test = test_names[[y]],
+                       stat_name = stat_names[[y]],
+                       stat = x[[stat_values[[y]]]],
+                       n = reduce(x[n_values[[y]]], `+`),
+                       df1 = z,
+                       df2 = if("df2" %in% names(x)) x[["df2"]] else NA,
+                       estimate_name = estimate_names[[y]],
+                       estimate = if("estimate" %in% names(x)) x[["estimate"]] else NA,
+                       lower_ci = if("lower_ci" %in% names(x)) x[["lower_ci"]] else NA,
+                       upper_ci = if("lower_ci" %in% names(x)) x[["lower_ci"]] else NA,
+                       p_value = x[["p_value"]],
+                       p_adjust_method = adj_method,
+                       p_adjusted = x[["p_adjusted"]],
+                       effect_name = eff_names[[y]],
+                       effect_size = x[[eff_values[[y]]]], ...))
 
-    return(as_etest(pub_results))
+    variable <- NULL
+
+    return(as_etest(cbind(variable = variables,
+                          pub_results)))
 
   }
 

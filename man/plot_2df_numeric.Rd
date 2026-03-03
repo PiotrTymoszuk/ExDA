@@ -65,9 +65,9 @@ shown in the Y axis of the plot. Provided as a string.}
 
 \item{point_alpha}{alpha (opacity) of data points.}
 
-\item{point_hjitter}{horizontal jittering of data points}
+\item{point_hjitter}{height of jittering of data points.}
 
-\item{point_wjitter}{vertical jittering of data points.}
+\item{point_wjitter}{width of jittering of data points.}
 
 \item{show_trend}{logical, should the trend line be displayed in the plot?
 The line is generated with \code{\link[ggplot2]{geom_smooth}}.}

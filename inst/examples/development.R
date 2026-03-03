@@ -548,4 +548,47 @@
                     type = "welch_t",
                     split_factor = "class")
 
+# Plotting of effect sizes and statistical significance p values -------
+
+  tst_results <- my_cars %>%
+    mutate(cyl = factor(cyl)) %>%
+    compare_variables(variables = c("mpg",
+                                    "disp",
+                                    "drat",
+                                    "hp",
+                                    "qsec",
+                                    "wt",
+                                    "car_pair",
+                                    "car_group",
+                                    "vs",
+                                    "na_dummy"),
+                      type = c("wilcoxon",
+                               "kruskal",
+                               "wilcoxon",
+                               "wilcoxon",
+                               "kruskal",
+                               "kruskal",
+                               "chisq",
+                               "chisq",
+                               "chisq",
+                               "wilcoxon"),
+                      split_factor = "cyl")
+
+  tst_results %>%
+    plot(n_top = 2)
+
+  cor_results <-
+    correlate_variables(my_cars,
+                        variables = c("mpg", "cyl",
+                                      "disp", "hp",
+                                      "wt", "qsec",
+                                      "drat", "wt"),
+                        type = "kendallB",
+                        test_method = "bootstrap")
+
+  cor_results %>%
+    plot(n_top = 4,
+         point_wjitter = 0.01,
+         point_hjitter = 0.00005)
+
 # END --------

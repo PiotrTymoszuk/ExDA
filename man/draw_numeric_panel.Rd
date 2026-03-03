@@ -100,9 +100,9 @@ Ignored for other plot types.}
 
 \item{point_alpha}{alpha (opacity) of data points.}
 
-\item{point_wjitter}{vertical jittering of data points.}
+\item{point_wjitter}{width of jittering of data points.}
 
-\item{point_hjitter}{horizontal jittering of data points}
+\item{point_hjitter}{height of jittering of data points.}
 
 \item{line_color}{color of lines in ribbon and Forest plots; ignored if
 \code{split_factor} is provided. In violin plots: color of diamonds and whiskers

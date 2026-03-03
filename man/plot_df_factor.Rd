@@ -184,9 +184,9 @@ interquartile range be displayed?}
 
 \item{point_alpha}{alpha (opacity) of data points.}
 
-\item{point_hjitter}{horizontal jittering of data points}
+\item{point_hjitter}{height of jittering of data points.}
 
-\item{point_wjitter}{vertical jittering of data points.}
+\item{point_wjitter}{width of jittering of data points.}
 
 \item{line_color}{color of interquartile whiskers in violin plots, and
 lines depicting statistics in histograms.}

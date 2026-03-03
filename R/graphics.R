@@ -72,11 +72,13 @@
 #'
 #' @description
 #' A medley of functions returning named character vectors with
-#' Tableau and Wes Anderson colors.
+#' Tableau and Wes Anderson colors, and colors used for plotting of effects
+#' in \code{\link{etest}} objects.
 #'
 #' @param name logical should the vector be returned with the color names?
 #'
-#' @return named or unnamed character vectors with hex codes of colors.
+#' @return named or unnamed character vectors with hex codes of colors or
+#' color names.
 #'
 #' @export
 
@@ -217,6 +219,25 @@
       )
 
     if(name) return(cols) else return(unname(cols))
+
+  }
+
+#' @rdname tableau20_colors
+#' @export
+
+  etest_colors <- function(name = TRUE) {
+
+    stopifnot(is.logical(name))
+    name <- name[1]
+
+    etest_cols <- c("ns" = "gray70",
+                    "significant" = "orangered3",
+                    "upregulated" = "firebrick",
+                    "downregulated" = "steelblue")
+
+    if(name) return(etest_cols)
+
+    unname(etest_cols)
 
   }
 

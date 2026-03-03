@@ -110,10 +110,10 @@
 
 # Test class objects ----
 
-#' Generate `eTest` objects.
+#' Generate `etest` objects.
 #'
 #' @description
-#' Generates `eTest` objects storing results of statistical hypothesis tests
+#' Generates `etest` objects storing results of statistical hypothesis tests
 #' in a standardized data frame, with ready-to-use features applicable in
 #' to plots and tables in scientific publications (e.g. plot labels/subtitles,
 #' pre-formatted significance and effect size texts).
@@ -190,6 +190,7 @@
                 estimate = estimate,
                 lower_ci = lower_ci,
                 upper_ci = upper_ci,
+                p_cutoff = significant_p,
                 p_value = p_value,
                 p_adjust_method = p_adjust_method,
                 p_adjusted = p_adjusted,
@@ -318,5 +319,57 @@
     structure(x, class = c("etest", class(x)))
 
   }
+
+# Storage of descriptive statistics ---------
+
+#' Create `destat` objects with descriptive statistics.
+#'
+#' @description
+#' Creates a data frame of `destat` class, which stores variable names and
+#' descriptive statistics in one or more analysis groups.
+#'
+#' @return
+#' A data frame/tibble of `destat` class, which inherits most of its methods
+#' from a "canonical" data frame.
+#' Names of variables are stored as an attribute `"variable_names"`.
+#'
+#' @param x a data frame with at least two column; the first one must be named
+#' `variable`.
+#' @param variables NULL or a character vector with variable names. If `NULL`, the variable
+#' names will be inferred from the fist column of the `x` data frame.
+#' @param ... additional arguments, currently none.
+#'
+#' @export
+
+  destat <- function(x,
+                     variables = NULL, ...) {
+
+    ## input controls ------
+
+    if(is_destat(x)) return(x)
+
+    if(!is.data.frame(x)) stop("`x` has to be a data frame.", call. = FALSE)
+
+    if(ncol(x) < 2) stop("`x` must have at least two columns.", call. = FALSE)
+
+    if(names(x)[1] != "variable") {
+
+      stop("The first column of `x` must be named 'variable'.", call. = FALSE)
+
+    }
+
+    if(is.null(variables)) variables <- x[[1]][-1]
+
+    ## attributes and structure -------
+
+    attr(x, "variable_names") <- variables
+
+    structure(x, class = c("destat", class(x)))
+
+  }
+
+#' @rdname destat
+
+  is_destat <- function(x) inherits(x, "destat")
 
 # END -------

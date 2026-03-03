@@ -24,8 +24,8 @@
 #' @param point_color color of data points.
 #' @param point_size size of data points
 #' @param point_alpha alpha (opacity) of data points.
-#' @param point_hjitter horizontal jittering of data points
-#' @param point_wjitter vertical jittering of data points.
+#' @param point_hjitter height of jittering of data points.
+#' @param point_wjitter width of jittering of data points.
 #' @param line_color color of interquartile whiskers in violin plots, and
 #' lines depicting statistics in histograms and QQ plots.
 #' @param line_width width of interquartile whiskers in violin plots, and

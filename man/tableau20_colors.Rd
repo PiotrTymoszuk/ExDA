@@ -8,6 +8,7 @@
 \alias{wes_zissou1_colors}
 \alias{wes_fantasticfox1_colors}
 \alias{wes_moonrise1_colors}
+\alias{etest_colors}
 \title{Color palettes.}
 \usage{
 tableau20_colors(name = FALSE)
@@ -23,14 +24,18 @@ wes_zissou1_colors(name = FALSE)
 wes_fantasticfox1_colors(name = FALSE)
 
 wes_moonrise1_colors(name = FALSE)
+
+etest_colors(name = TRUE)
 }
 \arguments{
 \item{name}{logical should the vector be returned with the color names?}
 }
 \value{
-named or unnamed character vectors with hex codes of colors.
+named or unnamed character vectors with hex codes of colors or
+color names.
 }
 \description{
 A medley of functions returning named character vectors with
-Tableau and Wes Anderson colors.
+Tableau and Wes Anderson colors, and colors used for plotting of effects
+in \code{\link{etest}} objects.
 }

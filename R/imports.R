@@ -11,6 +11,8 @@
 #' @importFrom stats reorder
 #' @importFrom stats qnorm
 #' @importFrom stats p.adjust
+#' @importFrom stats sd
+#' @importFrom stats rnorm
 #'
 #' @importFrom dplyr count
 #' @importFrom dplyr select
@@ -25,6 +27,7 @@
 #' @importFrom dplyr all_of
 #' @importFrom dplyr any_of
 #' @importFrom dplyr summarise
+#' @importFrom dplyr slice_max
 #'
 #' @importFrom tidyr pivot_longer
 #'
@@ -44,6 +47,7 @@
 #' @importFrom purrr map_dbl
 #' @importFrom purrr map_dfr
 #' @importFrom purrr map_lgl
+#' @importFrom purrr map_chr
 #' @importFrom purrr map_dfc
 #' @importFrom purrr map2
 #' @importFrom purrr map2_dbl
@@ -109,6 +113,9 @@
 #' @importFrom ggplot2 guide_legend
 #' @importFrom ggplot2 labs
 #'
+#' @importFrom ggrepel geom_text_repel
+#' @importFrom ggrepel geom_label_repel
+#'
 #' @importFrom fastTest f_cov
 #' @importFrom fastTest f_cor
 #' @importFrom fastTest f_kappa
@@ -117,7 +124,6 @@
 #' @importFrom fastTest f_shapiro_test
 #' @importFrom fastTest f_ks_test
 #' @importFrom fastTest f_levene_test
-#'
 #' @importFrom fastTest f_t_test
 #' @importFrom fastTest f_wilcox_test
 #' @importFrom fastTest f_chisq_test

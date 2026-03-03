@@ -1,4 +1,6 @@
-# Functions for computation of descriptive statistics
+# Functions for computation of descriptive statistics and result summaries
+
+# Descriptive statistics --------
 
 #' Exploratory data analysis of a data frame.
 #'
@@ -53,6 +55,10 @@
 #' @return as specified by the 'what' argument: a list of stats, a data frame
 #' (if `one_table = TRUE`) or a list of data frames (if `one_table = FALSE`)
 #' with descriptive statistics.
+#' If `one_table = TRUE` and `what = "table"`,
+#' the function returns a single data frame of class \code{\link{destat}}, which
+#' may be later merged with statistical hypothesis test results
+#' (\code{\link{compare_variables}}) into a publication-ready result summary table.
 #'
 #' @md
 #' @export explore.data.frame
@@ -180,7 +186,9 @@
 
           res <- reduce(res, full_join, by = "variable")
 
-          return(set_names(res, c("variable", split_names)))
+          res <- set_names(res, c("variable", split_names))
+
+          return(destat(res, variables))
 
         } else {
 
@@ -278,10 +286,14 @@
 
       }
 
-      return(relocate(rbind(n_obs_info, stat_lst), variable))
+      res <- relocate(rbind(n_obs_info, stat_lst), variable)
+
+      return(destat(res, variables))
 
     }
 
   }
+
+# Summary of descriptive statistics and hypothesis testing results --------
 
 # END ---------

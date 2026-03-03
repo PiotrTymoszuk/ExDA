@@ -1,4 +1,4 @@
-# Non-exported utilities
+# Non-exported and exported utilities
 
 # Descriptive stats ---------
 
@@ -645,6 +645,134 @@
            ifelse(x >= simplify_p,
                   paste("p =", signif(x, signif_digits)),
                   simplify_txt))
+
+  }
+
+# Significance and regulation sign ----------
+
+#' Statistical significance and regulation sign.
+#'
+#' @description
+#' The function infers statistical significance and sign of the effect
+#' from results of statistical hypothesis testing.
+#' Intended for internal use.
+#'
+#' @return the input data frame appended with columns `significant` and
+#' `regulation` which store information on significance and sign of the effect.
+#'
+#' @param x a data frame with results of statistical hypothesis testing.
+#' @param p_variable name of the variable storing p values to infer the
+#' significance information.
+#' If `p_variable = "p_value"`, raw p values will be used.
+
+  find_effect <- function(x,
+                          p_variable = c("p_adjusted", "p_value")) {
+
+    stopifnot(is.data.frame(x))
+
+    p_variable <- match.arg(p_variable[1], c("p_adjusted", "p_value"))
+
+    p_cutoff <- x[["p_cutoff"]][[1]]
+    effect_stat <- x[["effect_name"]][[1]]
+
+    x[["significant"]] <- x[[p_variable]] < p_cutoff
+
+    if(effect_stat %in% c("V", "\u03B7\u00B2", "D", "W", "F")) {
+
+      x[["regulation"]] <-
+        ifelse(!x[["significant"]], "ns", "significant")
+
+      x[["regulation"]] <-
+        factor(x[["regulation"]], c("significant", "ns"))
+
+    } else {
+
+      x[["regulation"]] <-
+        ifelse(!x[["significant"]],
+               "ns",
+               ifelse(x[["effect_size"]] < 0,
+                      "downregulated",
+                      ifelse(x[["effect_size"]] > 0,
+                             "upregulated",
+                             "ns")))
+
+      x[["regulation"]] <-
+        factor(x[["regulation"]], c("upregulated", "downregulated", "ns"))
+
+    }
+
+    return(x)
+
+  }
+
+# Jittering of plot coordinates ---------
+
+#' Move plotting coordinates by random values.
+#'
+#' @description
+#' The function is intended for internal use.
+#' Plotting coordinates specified by two numeric variables are modified
+#' by addition of a random value drawn from normal distribution (mean is zero,
+#' the standard deviation provided by the user).
+#'
+#' @details
+#' When standard deviation values are `NULL`, they will be set to 10% of
+#' actual standard deviation values of `x_variable` and `y_variable`.
+#'
+#' @return the input data frame appended with columns `.x` and `.y` with
+#' the modified plotting coordinates.
+#'
+#' @param x a data frame.
+#' @param x_variable name of the plotting variable to be presented in
+#' the X axis.
+#' @param x_sd `NULL` or value of standard deviation for the `x_variable`
+#' modification.
+#' @param y_variable name of the plotting variable to be presented in
+#' the Y axis.
+#' @param y_sd `NULL` or value of standard deviation for the `y_variable`
+#' modification.
+
+  jitter_coordinates <- function(x,
+                                 x_variable,
+                                 x_sd = NULL,
+                                 y_variable,
+                                 y_sd = NULL) {
+    ## input control -------
+
+    stopifnot(is.data.frame(x))
+
+    stopifnot(x_variable %in% names(x))
+    stopifnot(y_variable %in% names(x))
+
+    stopifnot(is.numeric(x[[x_variable]]))
+    stopifnot(is.numeric(x[[y_variable]]))
+
+    if(!is.null(x_sd)) stopifnot(is.numeric(x_sd))
+    if(!is.null(y_sd)) stopifnot(is.numeric(y_sd))
+
+    ## defaults ------
+
+    if(is.null(x_sd)) x_sd = 0.1 * sd(x[[x_variable]], na.rm = TRUE)
+    if(is.null(y_sd)) y_sd = 0.1 * sd(x[[y_variable]], na.rm = TRUE)
+
+    ## jittering -------
+
+    x[[".x"]] <- x[[x_variable]]
+    x[[".y"]] <- x[[y_variable]]
+
+    if(x_sd != 0) {
+
+      x[[".x"]] <- x[[".x"]] + rnorm(n = nrow(x), mean = 0, sd = x_sd)
+
+    }
+
+    if(y_sd != 0) {
+
+      x[[".y"]] <- x[[".y"]] + rnorm(n = nrow(x), mean = 0, sd = y_sd)
+
+    }
+
+    return(x)
 
   }
 

@@ -269,13 +269,13 @@
 
     pub_result <-
       etest(test = "Kolmogorov-Smirnov test",
-            stat_name = "d",
+            stat_name = "D",
             stat = result[["d"]],
             n = result[["n1"]] + result[["n2"]],
             p_value = result[["p_value"]],
             p_adjust_method = "none",
             p_adjusted = result[["p_value"]],
-            effect_name = "d",
+            effect_name = "D",
             effect_size = result[["d"]])
 
     if(is.null(split_factor)) {

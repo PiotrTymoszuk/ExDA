@@ -4,7 +4,7 @@
 \alias{etest}
 \alias{is_etest}
 \alias{as_etest}
-\title{Generate \code{eTest} objects.}
+\title{Generate \code{etest} objects.}
 \usage{
 etest(
   test,
@@ -92,7 +92,7 @@ an \code{etest} data frame. It shares most of its methods
 with a "canonical" data frame.
 }
 \description{
-Generates \code{eTest} objects storing results of statistical hypothesis tests
+Generates \code{etest} objects storing results of statistical hypothesis tests
 in a standardized data frame, with ready-to-use features applicable in
 to plots and tables in scientific publications (e.g. plot labels/subtitles,
 pre-formatted significance and effect size texts).
