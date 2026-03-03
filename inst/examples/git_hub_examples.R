@@ -161,8 +161,31 @@
                         test_method = "bootstrap",
                         adj_method = "BH")
 
+  ## effect size plot
+
   plot(cor_test,
        n_top = 5)
+
+  ## scatter plots for MPG and DISP, and DISP and WT
+
+  mpg_disp_plot <-
+    plot_two_variables(my_cars,
+                       variable1 = "disp",
+                       variable2 = "mpg",
+                       plot_title = "Engine size and efficacy", ### plot title
+                       x_lab = "engine displacement", ### X axis title
+                       y_lab = "efficacy, MPG") ### Y axis title
+
+  mpg_wt_plot <-
+    plot_two_variables(my_cars,
+                       variable1 = "disp",
+                       variable2 = "wt",
+                       plot_title = "Engine size and car weight",
+                       x_lab = "engine displacement",
+                       y_lab = "weight, 1000 lbs")
+
+  mpg_disp_plot + mpg_wt_plot
+
 
 # Comparison of expected values ---------
 

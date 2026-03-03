@@ -467,6 +467,34 @@ in the plot:
 ```
 <img width="775" height="547" alt="correlation_effect_sizes" src="https://github.com/user-attachments/assets/e85575f5-5e91-4f09-ba74-1713574a4c60" />
 
+We can take a closer look at the strongest negative and the strongest positive 
+correlation with scatter plots generated with function `plot_two_variables()`: 
+
+```r
+
+  ## scatter plots for MPG and DISP, and DISP and WT
+
+  mpg_disp_plot <-
+    plot_two_variables(my_cars,
+                       variable1 = "disp",
+                       variable2 = "mpg",
+                       plot_title = "Engine size and efficacy", ### plot title
+                       x_lab = "engine displacement", ### X axis title
+                       y_lab = "efficacy, MPG") ### Y axis title
+
+  mpg_wt_plot <-
+    plot_two_variables(my_cars,
+                       variable1 = "disp",
+                       variable2 = "wt",
+                       plot_title = "Engine size and car weight",
+                       x_lab = "engine displacement",
+                       y_lab = "weight, 1000 lbs")
+
+  mpg_disp_plot + mpg_wt_plot
+
+```
+
+
 ### Statistical tests for differences of expected values/distribution between analysis groups
 
 With function `compare_variables()`, we can compare expected values of variables in a data 
