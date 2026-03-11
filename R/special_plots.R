@@ -898,7 +898,7 @@
                                 variables,
                                 split_factor = NULL,
                                 .drop = TRUE,
-                                scale = c("none", "percent"),
+                                frequency_scale = c("none", "percent"),
                                 palette = tableau10_colors(),
                                 shape_color = "black",
                                 shape_alpha = 1,
@@ -921,7 +921,7 @@
     stopifnot(is.logical(show_txt))
     show_txt <- show_txt[1]
 
-    scale <- match.arg(scale[1], c("none", "percent"))
+    frequency_scale <- match.arg(frequency_scale[1], c("none", "percent"))
 
     stopifnot(is.logical(show_txt))
     show_txt <- show_txt[1]
@@ -948,12 +948,12 @@
 
     }
 
-    ## X axis and fill scale labels and ploting variables ---------
+    ## X axis and fill scale labels and plotting variables ---------
 
     if(is.null(x_lab)) {
 
       x_lab <-
-        switch(scale,
+        switch(frequency_scale,
                none = "observations, N",
                percent = "% of complete observations")
 
@@ -963,7 +963,7 @@
     if(is.null(y_lab) & !is.null(split_factor)) y_lab <- split_factor
 
     plot_var <-
-      switch(scale,
+      switch(frequency_scale,
              none = "n",
              percent = "percent_complete")
 
@@ -1063,7 +1063,7 @@
 
     if(show_txt) {
 
-      if(scale == "none") {
+      if(frequency_scale == "none") {
 
         plot_data[["plot_label"]] <- plot_data[["n"]]
 

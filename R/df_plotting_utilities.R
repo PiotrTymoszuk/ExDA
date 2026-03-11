@@ -31,7 +31,7 @@
 #' @param line_width width of interquartile whiskers in violin plots, and
 #' lines depicting statistics in histograms.
 #' @param y_lab title of the Y axis, if `NULL` the title is set with a simple
-#' heuristics (e.g. if `scale = "none"`, `"observations, N`).
+#' heuristics (e.g. if `frequency_scale = "none"`, `"observations, N`).
 #' @param fill_lab title of the fill scale.
 #' @param x_n_labs logical. If `TRUE`, N numbers of complete observations in
 #' strata of `variable` defined by the `split_factor`'s categories are displayed
@@ -54,7 +54,7 @@
                              split_factor,
                              .drop = TRUE,
                              type = c("stack", "bar", "bubble"),
-                             scale = c("none", "percent"),
+                             frequency_scale = c("none", "percent"),
                              signif_digits = 2,
                              palette = tableau10_colors(),
                              shape_color = "black",
@@ -77,7 +77,7 @@
 
     type <- match.arg(type[1], c("stack", "bar", "bubble"))
 
-    scale <- match.arg(scale[1], c("none", "percent"))
+    frequency_scale <- match.arg(frequency_scale[1], c("none", "percent"))
 
     stopifnot(is.numeric(signif_digits))
     signif_digits <- as.integer(signif_digits[1])
@@ -133,13 +133,13 @@
 
     ### frequency variable to be presented in the plot, Y axis label
 
-    plot_var <- switch(scale,
+    plot_var <- switch(frequency_scale,
                        none = "n",
                        percent = "percent_complete")
 
     if(is.null(y_lab) & type %in% c("bar", "stack")) {
 
-      y_lab <- switch(scale,
+      y_lab <- switch(frequency_scale,
                       none = "observations, N",
                       percent = "% of complete observations")
 
@@ -174,7 +174,7 @@
 
     plot_data <- reduce(plot_data, rbind)
 
-    if(scale == "none") {
+    if(frequency_scale == "none") {
 
       plot_data[["plot_label"]] <- plot_data[["n"]]
 
@@ -276,7 +276,7 @@
       if(is.null(fill_lab)) {
 
         fill_lab <-
-          switch(scale,
+          switch(frequency_scale,
                  none = "observations, N",
                  percent = "% of complete observations")
 
@@ -1113,7 +1113,7 @@
                               variable1,
                               variable2,
                               type = c("heat_map", "bubble"),
-                              scale = c("none", "percent"),
+                              frequency_scale = c("none", "percent"),
                               shape_color = "black",
                               shape_alpha = 1,
                               show_txt = TRUE,
@@ -1133,7 +1133,7 @@
     ## entry control -------
 
     type <- match.arg(type[1], c("heat_map", "bubble"))
-    scale <- match.arg(scale[1], c("none", "percent"))
+    frequency_scale <- match.arg(frequency_scale[1], c("none", "percent"))
 
     stopifnot(is.numeric(shape_alpha))
     shape_alpha <- shape_alpha[1]
@@ -1184,7 +1184,7 @@
 
     }
 
-    ax_title_suffix <- switch(scale,
+    ax_title_suffix <- switch(frequency_scale,
                               none = "observations, N",
                               percent = "% of complete observations")
 
@@ -1215,7 +1215,7 @@
 
       } else {
 
-        if(scale == "none") {
+        if(frequency_scale == "none") {
 
           plot_data[["plot_label"]] <- plot_data[["n"]]
 
@@ -1233,7 +1233,7 @@
 
     ### fill variable
 
-    fill_var <- switch(scale,
+    fill_var <- switch(frequency_scale,
                        none = "n",
                        percent = "percent_complete")
 

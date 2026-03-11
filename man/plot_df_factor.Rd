@@ -14,7 +14,7 @@ plot_df_factor(
   split_factor,
   .drop = TRUE,
   type = c("stack", "bar", "bubble"),
-  scale = c("none", "percent"),
+  frequency_scale = c("none", "percent"),
   signif_digits = 2,
   palette = tableau10_colors(),
   shape_color = "black",
@@ -123,7 +123,7 @@ be used to split values of \code{variable} in the plot. Provided as a string.}
 
 \item{type}{plot type.}
 
-\item{scale}{type of frequency data to be presented in bar and stack plots:
+\item{frequency_scale}{type of frequency data to be presented in bar and stack plots:
 none (counts) or percents,}
 
 \item{signif_digits}{significant digits used to round numeric values displayed
@@ -159,7 +159,7 @@ observations are shown here.}
 \item{x_lab}{title of the X axis.}
 
 \item{y_lab}{title of the Y axis, if \code{NULL} the title is set with a simple
-heuristics (e.g. if \code{scale = "none"}, \verb{"observations, N}).}
+heuristics (e.g. if \code{frequency_scale = "none"}, \verb{"observations, N}).}
 
 \item{fill_lab}{title of the fill scale.}
 

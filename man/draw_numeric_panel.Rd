@@ -44,7 +44,7 @@ draw_factor_panel(
   variables,
   split_factor = NULL,
   .drop = TRUE,
-  scale = c("none", "percent"),
+  frequency_scale = c("none", "percent"),
   palette = tableau10_colors(),
   shape_color = "black",
   shape_alpha = 1,
@@ -127,7 +127,7 @@ observations are shown here.}
 \item{x_lab}{title of the X axis.}
 
 \item{y_lab}{title of the Y axis, if \code{NULL} the title is set with a simple
-heuristics (e.g. if \code{scale = "none"}, \verb{"observations, N}).}
+heuristics (e.g. if \code{frequency_scale = "none"}, \verb{"observations, N}).}
 
 \item{fill_lab}{title of the fill scale.}
 
@@ -159,7 +159,7 @@ factor's category frequencies the arguments are passed to
 
 \item{.drop}{logical, should empty levels of a factor be dropped?}
 
-\item{scale}{type of frequency data to be presented in bar and stack plots:
+\item{frequency_scale}{type of frequency data to be presented in bar and stack plots:
 none (counts) or percents,}
 
 \item{show_txt}{logical, should text labels with frequencies be

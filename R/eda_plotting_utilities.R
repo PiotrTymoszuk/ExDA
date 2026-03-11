@@ -13,7 +13,7 @@
 #' @param eda_object and \code{\link{eda}} object.
 #' @param type plot type.
 #' @param .drop logical, should empty levels of a factor be dropped?
-#' @param scale type of frequency data to be presented in bar and stack plots:
+#' @param frequency_scale type of frequency data to be presented in bar and stack plots:
 #' none (counts) or percents,
 #' @param signif_digits significant digits used to round numeric values displayed
 #' in the plot (e.g. percentages).
@@ -57,7 +57,7 @@
   plot_factor <- function(eda_object,
                           .drop = TRUE,
                           type = c("stack", "bar", "bubble"),
-                          scale = c("none", "percent"),
+                          frequency_scale = c("none", "percent"),
                           signif_digits = 2,
                           palette = tableau10_colors(),
                           shape_fill = "steelblue",
@@ -83,7 +83,7 @@
 
     type <- match.arg(type[1], c("stack", "bar", "bubble"))
 
-    scale <- match.arg(scale[1], c("none", "percent"))
+    frequency_scale <- match.arg(frequency_scale[1], c("none", "percent"))
 
     stopifnot(is.numeric(signif_digits))
     signif_digits <- as.integer(signif_digits[1])
@@ -117,17 +117,17 @@
 
     }
 
-    plot_var <- switch(scale,
+    plot_var <- switch(frequency_scale,
                        none = "n",
                        percent = "percent_complete")
 
-    y_lab <- switch(scale,
+    y_lab <- switch(frequency_scale,
                     none = "observations, N",
                     percent = "% of complete observations")
 
     category <- NULL
 
-    if(scale == "none") {
+    if(frequency_scale == "none") {
 
       plot_data[["plot_label"]] <- plot_data[["n"]]
 

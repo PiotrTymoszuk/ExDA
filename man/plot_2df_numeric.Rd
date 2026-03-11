@@ -31,7 +31,7 @@ plot_2df_factor(
   variable1,
   variable2,
   type = c("heat_map", "bubble"),
-  scale = c("none", "percent"),
+  frequency_scale = c("none", "percent"),
   shape_color = "black",
   shape_alpha = 1,
   show_txt = TRUE,
@@ -89,14 +89,14 @@ observations are shown here.}
 \item{x_lab}{title of the X axis.}
 
 \item{y_lab}{title of the Y axis, if \code{NULL} the title is set with a simple
-heuristics (e.g. if \code{scale = "none"}, \verb{"observations, N}).}
+heuristics (e.g. if \code{frequency_scale = "none"}, \verb{"observations, N}).}
 
 \item{...}{additional arguments passed to \code{\link[ggplot2]{geom_smooth}},
 \code{\link[ggplot2]{geom_tile}}, or \code{\link[ggplot2]{geom_point}}.}
 
 \item{type}{plot type.}
 
-\item{scale}{type of frequency data to be presented in bar and stack plots:
+\item{frequency_scale}{type of frequency data to be presented in bar and stack plots:
 none (counts) or percents,}
 
 \item{shape_color}{color of rims of bars, boxes, violins, and histograms.}

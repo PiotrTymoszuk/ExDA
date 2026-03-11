@@ -11,7 +11,7 @@ plot_factor(
   eda_object,
   .drop = TRUE,
   type = c("stack", "bar", "bubble"),
-  scale = c("none", "percent"),
+  frequency_scale = c("none", "percent"),
   signif_digits = 2,
   palette = tableau10_colors(),
   shape_fill = "steelblue",
@@ -93,7 +93,7 @@ plot_qq(
 
 \item{type}{plot type.}
 
-\item{scale}{type of frequency data to be presented in bar and stack plots:
+\item{frequency_scale}{type of frequency data to be presented in bar and stack plots:
 none (counts) or percents,}
 
 \item{signif_digits}{significant digits used to round numeric values displayed

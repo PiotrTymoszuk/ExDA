@@ -396,7 +396,7 @@ cars can be presented in a stack plot panel:
     plot_multi_variables(my_cars,
                          variables = fct_variables,
                          split_factor = "cyl",
-                         scale = "percent")
+                         frequency_scale = "percent")
 
 
 ```
@@ -596,7 +596,7 @@ labels:
                   variable = "vs",
                   split_factor = "cyl",
                   type = "stack",
-                  scale = "percent", ### percentages instead of counts shown
+                  frequency_scale = "percent", ### percentages instead of counts shown
                   plot_title = "Engine shape and cylinder number",
                   x_lab = "cylinder number",
                   y_lab = "% of cars in cylinder groups",

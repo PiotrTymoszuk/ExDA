@@ -193,7 +193,7 @@
   my_cars %>%
     plot_variable(variable = "vs",
                   type = "stack",
-                  scale = "percent",
+                  frequency_scale = "percent",
                   .drop = FALSE)
 
   my_cars %>%
@@ -204,12 +204,14 @@
   my_cars %>%
     plot_variable(variable = "vs",
                   type = "bubble",
+                  frequency_scale = "percent",
                   .drop = FALSE)
 
   ## plots for numeric objects
 
   my_cars %>%
-    plot_variable(variable = "mpg")
+    plot_variable(variable = "mpg",
+                  frequency_scale = "percent")
 
   my_cars %>%
     plot_variable(variable = "mpg",
@@ -232,6 +234,7 @@
     list(variable = names(my_cars)) %>%
     pmap(plot_variable,
          data = my_cars,
+         frequency_scale = "percent",
          cust_theme = NULL) %>%
     set_names(names(my_cars))
 
@@ -243,7 +246,7 @@
                 split_factor = "car_group",
                 variable = "vs",
                 type = "stack",
-                scale = "percent",
+                frequency_scale = "percent",
                 labeller = function(x) paste0("#", x),
                 x_n_labs = FALSE,
                 .drop = FALSE)
@@ -252,6 +255,7 @@
                 split_factor = "car_group",
                 variable = "mpg",
                 type = "box",
+                frequency_scale = "none",
                 labeller = function(x) paste0("#", x),
                 x_n_labs = FALSE,
                 fill_lab = "car group",
@@ -302,7 +306,7 @@
   plot_variable(data = my_cars,
                 split_factor = "car_group",
                 variable = "vs",
-                scale = "percent")
+                frequency_scale = "percent")
 
   ## two variables
 
@@ -322,14 +326,14 @@
                      variable2 = "car_pair",
                      txt_style = "full",
                      type = "heat_map",
-                     scale = "percent")
+                     frequency_scale = "percent")
 
   plot_two_variables(data = my_cars,
                      variable1 = "car_group",
                      variable2 = "car_pair",
                      txt_style = "full",
                      type = "bubble",
-                     scale = "percent")
+                     frequency_scale = "percent")
 
 # multi-variable panels -----------
 
@@ -449,7 +453,7 @@
   plot_multi_variables(my_biopsy,
                        variables = biopsy_vars,
                        split_factor = "class",
-                       scale = "percent",
+                       frequency_scale = "percent",
                        palette = tableau20_colors(),
                        fill_lab = "feature level",
                        .drop = FALSE,
