@@ -53,7 +53,7 @@
                                 face = "plain",
                                 color = "black")
 
-    theme() +
+    theme_void() +
       theme(plot.title = element_text(size = font_size,
                                       face = "bold"),
             plot.subtitle = common_text,

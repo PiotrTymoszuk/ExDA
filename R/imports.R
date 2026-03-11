@@ -108,6 +108,7 @@
 #' @importFrom ggplot2 is_theme
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 theme_classic
+#' @importFrom ggplot2 theme_void
 #' @importFrom ggplot2 as_labeller
 #' @importFrom ggplot2 guides
 #' @importFrom ggplot2 guide_legend
