@@ -516,25 +516,6 @@
           geom_violin(color = shape_color,
                       alpha = shape_alpha, ...)
 
-        if(show_stats) {
-
-          num_plot <- num_plot +
-            geom_point(data = stat_data,
-                       aes(y = .data[["median"]]),
-                       shape = 23,
-                       fill = line_color,
-                       color = line_color,
-                       size = point_size + 1) +
-            geom_errorbar(data = stat_data,
-                          aes(y = .data[["median"]],
-                              ymin = .data[["perc_25"]],
-                              ymax = .data[["perc_75"]]),
-                          color = line_color,
-                          linewidth = line_width,
-                          width = 0)
-
-        }
-
       }
 
       num_plot <- num_plot +
@@ -543,6 +524,25 @@
                    shape = 21,
                    size = point_size,
                    alpha = point_alpha)
+
+      if(type == "violin" & show_stats) {
+
+        num_plot <- num_plot +
+          geom_point(data = stat_data,
+                     aes(y = .data[["median"]]),
+                     shape = 23,
+                     fill = line_color,
+                     color = line_color,
+                     size = point_size + 1) +
+          geom_errorbar(data = stat_data,
+                        aes(y = .data[["median"]],
+                            ymin = .data[["perc_25"]],
+                            ymax = .data[["perc_75"]]),
+                        color = line_color,
+                        linewidth = line_width,
+                        width = 0)
+
+      }
 
     } else {
 

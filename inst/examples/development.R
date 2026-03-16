@@ -254,7 +254,7 @@
   plot_variable(data = my_cars,
                 split_factor = "car_group",
                 variable = "mpg",
-                type = "box",
+                type = "violin",
                 frequency_scale = "none",
                 labeller = function(x) paste0("#", x),
                 x_n_labs = FALSE,
