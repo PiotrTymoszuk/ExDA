@@ -528,7 +528,8 @@
 
   compare_distributions(my_cars,
                         variables = c("mpg", "cyl", "disp", "hp", "wt"),
-                        split_factor = "car_group")
+                        split_factor = "car_group",
+                        plot_caption_sep = ", ")
 
 # comparison of means/medians: statistical hypothesis testing ---------
 

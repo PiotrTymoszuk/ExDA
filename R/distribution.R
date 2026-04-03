@@ -276,7 +276,7 @@
             p_adjust_method = "none",
             p_adjusted = result[["p_value"]],
             effect_name = "D",
-            effect_size = result[["d"]])
+            effect_size = result[["d"]], ...)
 
     if(is.null(split_factor)) {
 
