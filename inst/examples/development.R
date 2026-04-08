@@ -255,17 +255,19 @@
                 split_factor = "car_group",
                 variable = "mpg",
                 type = "violin",
-                frequency_scale = "none",
+                scale = "width",
                 labeller = function(x) paste0("#", x),
                 x_n_labs = FALSE,
                 fill_lab = "car group",
-                x_lab = "car group")
+                x_lab = "car group",
+                .save_memory = FALSE)
 
   plot_variable(data = my_cars,
                 split_factor = "car_pair",
                 variable = "mpg",
                 type = "paired",
-                fill_lab = "car pair")
+                fill_lab = "car pair",
+                .save_memory = FALSE)
 
   plot_variable(data = my_cars,
                 split_factor = "car_group",
@@ -319,7 +321,8 @@
                      y_lab = "miles per galon",
                      plot_title = "Engine size and economics",
                      method = "gam",
-                     formula = y ~ s(x, bs = "cs", k = 3))
+                     formula = y ~ s(x, bs = "cs", k = 3),
+                     .save_memory = FALSE)
 
   plot_two_variables(data = my_cars,
                      variable1 = "car_group",
@@ -346,28 +349,32 @@
                        split_factor = NULL,
                        type = "violin",
                        labeller_fun = toupper,
-                       scale = "width")
+                       scale = "width",
+                       .save_memory = TRUE)
 
   plot_multi_variables(my_cars,
                        variables = car_numerics,
                        split_factor = NULL,
                        type = "histogram",
                        labeller_fun = toupper,
-                       bins = 10)
+                       bins = 10,
+                       .save_memory = FALSE)
 
   plot_multi_variables(my_cars,
                        variables = car_numerics,
                        split_factor = NULL,
                        type = "density",
                        labeller_fun = toupper,
-                       shape_color = "steelblue4")
+                       shape_color = "steelblue4",
+                       .save_memory = FALSE)
 
   plot_multi_variables(my_cars,
                        variables = car_numerics,
                        split_factor = NULL,
                        type = "bar",
                        labeller_fun = toupper,
-                       distribution_stat = "2sd")
+                       distribution_stat = "2sd",
+                       .save_memory = FALSE)
 
   plot_multi_variables(my_cars,
                        variables = car_numerics,
@@ -382,7 +389,8 @@
                        type = "ribbon",
                        labeller_fun = toupper,
                        central_stat = "median",
-                       distribution_stat = "iqr")
+                       distribution_stat = "iqr",
+                       .save_memory = FALSE)
 
   ## with a splitting factor
 
@@ -391,21 +399,24 @@
                        split_factor = "car_group",
                        type = "violin",
                        scale = "width",
-                       labeller_fun = toupper)
+                       labeller_fun = toupper,
+                       .save_memory = FALSE)
 
   plot_multi_variables(my_cars,
                        variables = car_numerics,
                        split_factor = "car_group",
                        type = "histogram",
                        labeller_fun = toupper,
-                       bins = 10)
+                       bins = 10,
+                       .save_memory = FALSE)
 
   plot_multi_variables(my_cars,
                        variables = car_numerics,
                        split_factor = "car_group",
                        type = "density",
                        labeller_fun = toupper,
-                       plot_title = "Cars Dataset")
+                       plot_title = "Cars Dataset",
+                       .save_memory = FALSE)
 
   plot_multi_variables(my_cars,
                        variables = car_numerics,

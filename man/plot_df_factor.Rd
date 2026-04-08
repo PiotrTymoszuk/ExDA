@@ -58,6 +58,7 @@ plot_df_numeric(
   fill_lab = NULL,
   x_n_labs = TRUE,
   labeller_fun = identity,
+  .save_memory = TRUE,
   ...
 )
 
@@ -83,6 +84,7 @@ plot_df_histogram(
   facet = c("none", "horizontal", "vertical"),
   facet_scales = "free",
   facet_space = "free",
+  .save_memory = TRUE,
   ...
 )
 
@@ -107,6 +109,7 @@ plot_df_qq(
   facet = c("none", "horizontal", "vertical"),
   facet_scales = "free",
   facet_space = "free",
+  .save_memory = TRUE,
   ...
 )
 }
@@ -193,6 +196,12 @@ lines depicting statistics in histograms.}
 
 \item{line_width}{width of interquartile whiskers in violin plots, and
 lines depicting statistics in histograms.}
+
+\item{.save_memory}{logical, if \code{.save_memory = TRUE} (default), the plotting
+data is restricted to to the minimal set of variables actually used by the
+plot, which may save a lot of memory for large data set. You may set \code{.save_memory}
+to false, if additional operations on the plot, e.g. faceting or additional
+geom layers are intended.}
 
 \item{facet}{"none": histograms/density plots are overlaid,
 "horizontal": horizontal or "vertical": vertical faceting.}

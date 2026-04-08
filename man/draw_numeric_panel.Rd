@@ -36,6 +36,7 @@ draw_numeric_panel(
   labeller_fun = identity,
   overlap_density = FALSE,
   show_stats = TRUE,
+  .save_memory = TRUE,
   ...
 )
 
@@ -147,6 +148,12 @@ categories won't be shown.}
 
 \item{show_stats}{logical. Violin plots: should diamonds and whiskers
 representing median with interquartile range be displayed?}
+
+\item{.save_memory}{logical, if \code{.save_memory = TRUE} (default), the plotting
+data is restricted to to the minimal set of variables actually used by the
+plot, which may save a lot of memory for large data set. You may set \code{.save_memory}
+to false, if additional operations on the plot, e.g. faceting or additional
+geom layers are intended.}
 
 \item{...}{additional arguments passed to \code{ggplot} \code{geom} objects.
 For violin and box plots, the arguments are passed to

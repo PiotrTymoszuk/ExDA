@@ -23,6 +23,7 @@ plot_2df_numeric(
   plot_subtitle = NULL,
   x_lab = NULL,
   y_lab = NULL,
+  .save_memory = TRUE,
   ...
 )
 
@@ -90,6 +91,12 @@ observations are shown here.}
 
 \item{y_lab}{title of the Y axis, if \code{NULL} the title is set with a simple
 heuristics (e.g. if \code{frequency_scale = "none"}, \verb{"observations, N}).}
+
+\item{.save_memory}{logical, if \code{.save_memory = TRUE} (default), the plotting
+data is restricted to to the minimal set of variables actually used by the
+plot, which may save a lot of memory for large data set. You may set \code{.save_memory}
+to false, if additional operations on the plot, e.g. faceting or additional
+geom layers are intended.}
 
 \item{...}{additional arguments passed to \code{\link[ggplot2]{geom_smooth}},
 \code{\link[ggplot2]{geom_tile}}, or \code{\link[ggplot2]{geom_point}}.}

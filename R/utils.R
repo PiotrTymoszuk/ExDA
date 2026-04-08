@@ -62,9 +62,9 @@
 
   }
 
-# Check validity of a data frame and it's variables ---------
+# Check validity of a data frame and its variables ---------
 
-#' Check validity of a plotting data frame and it's variables.
+#' Check validity of a plotting data frame and its variables.
 #'
 #' @description
 #' Internal functions used to validate if an object is a data frame, and whether
@@ -85,7 +85,11 @@
 #' If there are any requested variables in the data frame incompatible with
 #' the `format`, and error is raised.
 
-  validate_df <- function(data, variable, split_factor, .drop = TRUE) {
+  validate_df <- function(data,
+                          variable,
+                          split_factor,
+                          .drop = TRUE,
+                          .save_memory = TRUE) {
 
     ## validation --------
 
@@ -114,7 +118,7 @@
 
     n_numbers <- c("total" = nrow(data))
 
-    data <- data[, c(variable, split_factor)]
+    if(.save_memory) data <- data[, c(variable, split_factor)]
 
     if(!is.factor(data[[split_factor]])) {
 
@@ -137,7 +141,9 @@
 
     }
 
-    data <- data[complete.cases(data), ]
+    data <- filter(data,
+                   !is.na(.data[[variable]]),
+                   !is.na(.data[[split_factor]]))
 
     n_numbers <- c(n_numbers,
                    c("complete" = nrow(data)))
@@ -150,7 +156,11 @@
 
 #' @rdname validate_df
 
-  validate_2df <- function(data, variable1, variable2, .drop = TRUE) {
+  validate_2df <- function(data,
+                           variable1,
+                           variable2,
+                           .drop = TRUE,
+                           .save_memory = TRUE) {
 
     ## validation ------
 
@@ -188,9 +198,11 @@
 
     n_numbers <- c("total" = nrow(data))
 
-    data <- data[, c(variable1, variable2)]
+    if(.save_memory) data <- data[, c(variable1, variable2)]
 
-    data <- data[complete.cases(data), ]
+    data <- filter(data,
+                   !is.na(.data[[variable1]]),
+                   !is.na(.data[[variable2]]))
 
     n_numbers <- c(n_numbers,
                    c("complete" = nrow(data)))
@@ -214,7 +226,8 @@
                                 variables,
                                 split_factor = NULL,
                                 format = c("numeric", "factor"),
-                                .drop = TRUE) {
+                                .drop = TRUE,
+                                .save_memory = TRUE) {
 
     ## input control and validation --------
 
@@ -330,8 +343,9 @@
 
     if(!is.null(split_factor)) {
 
-      data <- data[!is.na(data[[split_factor]]),
-                   c(split_factor, variables)]
+      data <- data[!is.na(data[[split_factor]]), ]
+
+      if(.save_memory) data <- data[, c(split_factor, variables)]
 
       n_numbers <- c(n_numbers,
                      c("split_complete" = nrow(data)))
@@ -356,9 +370,9 @@
 
     } else {
 
-      data <- data[, variables]
+      if(.save_memory) data <- data[, variables]
 
-      n_categories <- map_dbl(data, ~length(.x[!is.na(.x)]))
+      n_categories <- map_dbl(data[, variables], ~length(.x[!is.na(.x)]))
 
     }
 

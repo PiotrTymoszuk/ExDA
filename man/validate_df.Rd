@@ -4,18 +4,19 @@
 \alias{validate_df}
 \alias{validate_2df}
 \alias{validate_multi_df}
-\title{Check validity of a plotting data frame and it's variables.}
+\title{Check validity of a plotting data frame and its variables.}
 \usage{
-validate_df(data, variable, split_factor, .drop = TRUE)
+validate_df(data, variable, split_factor, .drop = TRUE, .save_memory = TRUE)
 
-validate_2df(data, variable1, variable2, .drop = TRUE)
+validate_2df(data, variable1, variable2, .drop = TRUE, .save_memory = TRUE)
 
 validate_multi_df(
   data,
   variables,
   split_factor = NULL,
   format = c("numeric", "factor"),
-  .drop = TRUE
+  .drop = TRUE,
+  .save_memory = TRUE
 )
 }
 \arguments{
@@ -28,6 +29,12 @@ shown in the plot. Provided as a string.}
 be used to split values of \code{variable} in the plot. Provided as a string.}
 
 \item{.drop}{logical, should empty levels of a factor be dropped?}
+
+\item{.save_memory}{logical, if \code{.save_memory = TRUE} (default), the plotting
+data is restricted to to the minimal set of variables actually used by the
+plot, which may save a lot of memory for large data set. You may set \code{.save_memory}
+to false, if additional operations on the plot, e.g. faceting or additional
+geom layers are intended.}
 
 \item{variable1}{name of the data frame's variable whose distribution will be
 shown in the X axis of the plot. Provided as a string.}

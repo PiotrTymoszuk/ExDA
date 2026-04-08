@@ -46,6 +46,11 @@
 #' see: \code{\link[ggplot2]{facet_grid}} for details.
 #' @param facet_space specifies space in the faceted histogram/density plot,
 #' see: \code{\link[ggplot2]{facet_grid}} for details.
+#' @param .save_memory logical, if `.save_memory = TRUE` (default), the plotting
+#' data is restricted to to the minimal set of variables actually used by the
+#' plot, which may save a lot of memory for large data set. You may set `.save_memory`
+#' to false, if additional operations on the plot, e.g. faceting or additional
+#' geom layers are intended.
 #' @param ... additional arguments passed to \code{\link[ggplot2]{geom_boxplot}},
 #' \code{\link[ggplot2]{geom_violin}}, \code{\link[ggplot2]{geom_histogram}}.
 
@@ -113,7 +118,11 @@
 
     ### validation of the data frame format and pre-processing
 
-    data <- validate_df(data, variable, split_factor, .drop)
+    data <- validate_df(data,
+                        variable,
+                        split_factor,
+                        .drop = .drop,
+                        .save_memory = TRUE)
 
     if(!is.factor(data[[variable]])) {
 
@@ -344,7 +353,8 @@
                               y_lab = NULL,
                               fill_lab = NULL,
                               x_n_labs = TRUE,
-                              labeller_fun = identity, ...) {
+                              labeller_fun = identity,
+                              .save_memory = TRUE, ...) {
 
     ## input control ---------
 
@@ -394,7 +404,10 @@
 
     ### variables of interest, plot subtitles
 
-    data <- validate_df(data, variable, split_factor)
+    data <- validate_df(data,
+                        variable,
+                        split_factor,
+                        .save_memory = .save_memory)
 
     if(!is.numeric(data[[variable]])) {
 
@@ -598,7 +611,8 @@
                                           "horizontal",
                                           "vertical"),
                                 facet_scales = "free",
-                                facet_space = "free", ...) {
+                                facet_space = "free",
+                                .save_memory = TRUE, ...) {
 
     ## input control ---------
 
@@ -638,7 +652,10 @@
 
     ### variables of interest, plot subtitles
 
-    data <- validate_df(data, variable, split_factor)
+    data <- validate_df(data,
+                        variable,
+                        split_factor,
+                        .save_memory = .save_memory)
 
     if(!is.numeric(data[[variable]])) {
 
@@ -814,7 +831,8 @@
                                    "horizontal",
                                    "vertical"),
                          facet_scales = "free",
-                         facet_space = "free", ...) {
+                         facet_space = "free",
+                         .save_memory = TRUE, ...) {
 
     ## input control ---------
 
@@ -858,7 +876,10 @@
 
     ### variables of interest, plot subtitles
 
-    data <- validate_df(data, variable, split_factor)
+    data <- validate_df(data,
+                        variable,
+                        split_factor,
+                        .save_memory = .save_memory)
 
     if(!is.numeric(data[[variable]])) {
 
@@ -1010,7 +1031,8 @@
                                plot_title = NULL,
                                plot_subtitle = NULL,
                                x_lab = NULL,
-                               y_lab = NULL, ...) {
+                               y_lab = NULL,
+                               .save_memory = TRUE, ...) {
 
     ## entry control --------
 
@@ -1047,7 +1069,10 @@
 
     ## plotting data and meta-data ---------
 
-    data <- validate_2df(data, variable1, variable2)
+    data <- validate_2df(data,
+                         variable1,
+                         variable2,
+                         .save_memory = .save_memory)
 
     if(!is.numeric(data[[variable1]])) {
 
@@ -1157,7 +1182,7 @@
 
     ### raw plotting data and N numbers
 
-    data <- validate_2df(data, variable1, variable2)
+    data <- validate_2df(data, variable1, variable2, .save_memory = TRUE)
 
     if(!is.factor(data[[variable1]])) {
 

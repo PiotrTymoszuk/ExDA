@@ -113,6 +113,7 @@
                                  labeller_fun = identity,
                                  overlap_density = FALSE,
                                  show_stats = TRUE,
+                                 .save_memory = TRUE,
                                  ...) {
 
     ## entry control -------------
@@ -170,7 +171,7 @@
 
     if(is.null(x_lab)) {
 
-      if(type %in% c("violin", "box")) {
+      if(type %in% c("violin", "box", "histogram", "density")) {
 
         x_lab <- "value"
 
@@ -201,17 +202,8 @@
     data <- validate_multi_df(data,
                               variables,
                               split_factor,
-                              format = "numeric")
-
-    if(is.null(split_factor)) {
-
-      variables <- names(data)
-
-    } else {
-
-      variables <- names(data)[names(data) != split_factor]
-
-    }
+                              format = "numeric",
+                              .save_memory = .save_memory)
 
     if(is.null(plot_subtitle)) {
 
@@ -973,7 +965,8 @@
                               variables,
                               split_factor,
                               format = "factor",
-                              .drop = FALSE)
+                              .drop = FALSE,
+                              .save_memory = TRUE)
 
     if(is.null(split_factor)) {
 
