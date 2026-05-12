@@ -143,12 +143,25 @@
 
     ## test type management --------
 
+    activate_cat_warning <- TRUE
+
     if(is.null(type)) {
 
-      if(length(split_levs) == 2) num_type <- "wilcoxon" else num_type <- "kruskal"
+      cat_number <- map(variables,
+                        ~data[, c(split_factor, .x)])
+
+      cat_number <-
+        map(cat_number, ~filter(.x, complete.cases(.x))[[split_factor]])
+
+      cat_number <- map(cat_number, ~length(levels(droplevels(.x))))
+
+      #if(length(split_levs) == 2) num_type <- "wilcoxon" else num_type <- "kruskal"
 
       type <- ifelse(variable_types == "factor",
-                     "chisq", num_type)
+                     "chisq",
+                     ifelse(cat_number < 3, "wilcoxon", "kruskal"))
+
+      activate_cat_warning <- FALSE
 
     }
 
@@ -176,7 +189,8 @@
 
     }
 
-    if(any(type %in% c("t", "welch_t", "paired_t", "wilcoxon", "paired_wilcoxon"))) {
+    if(any(type %in% c("t", "welch_t", "paired_t", "wilcoxon", "paired_wilcoxon")) &
+       activate_cat_warning) {
 
       if(length(split_levs) > 2) {
 

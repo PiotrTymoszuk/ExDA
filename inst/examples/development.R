@@ -564,6 +564,14 @@
                     type = "welch_t",
                     split_factor = "class")
 
+  ## testing of handling of deficient levels
+  ## during automatic determination of the test type
+
+  my_cars %>%
+    mutate(wt_modified = ifelse(car_group == "A", NA, wt)) %>%
+    compare_variables(variables = c("wt", "wt_modified"),
+                      split_factor = "car_group")
+
 # Plotting of effect sizes and statistical significance p values -------
 
   tst_results <- my_cars %>%
