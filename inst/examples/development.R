@@ -188,7 +188,8 @@
 
   my_cars %>%
     plot_variable(variable = "vs",
-                  .drop = FALSE)
+                  .drop = FALSE,
+                  show_n_total = FALSE)
 
   my_cars %>%
     plot_variable(variable = "vs",
@@ -211,7 +212,8 @@
 
   my_cars %>%
     plot_variable(variable = "mpg",
-                  frequency_scale = "percent")
+                  frequency_scale = "percent",
+                  show_n_total = FALSE)
 
   my_cars %>%
     plot_variable(variable = "mpg",

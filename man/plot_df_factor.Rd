@@ -156,8 +156,9 @@ Plot type-specific defaults are applied if set to \code{NULL}.}
 
 \item{plot_title}{plot title.}
 
-\item{plot_subtitle}{plot subtitle; if \code{NULL} numbers of all and complete
-observations are shown here.}
+\item{plot_subtitle}{plot subtitle; if \code{NULL} numbers of complete
+observations and, optionally, all observations (when \code{show_n_total = TRUE}),
+are shown here.}
 
 \item{x_lab}{title of the X axis.}
 

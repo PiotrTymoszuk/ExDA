@@ -24,6 +24,7 @@ plot_factor(
   txt_hjust = NULL,
   plot_title = NULL,
   plot_subtitle = NULL,
+  show_n_total = TRUE,
   x_txt = "",
   x_lab = "category",
   ...
@@ -46,6 +47,7 @@ plot_numeric(
   cust_theme = eda_classic_theme(),
   plot_title = NULL,
   plot_subtitle = NULL,
+  show_n_total = TRUE,
   x_txt = "",
   x_lab = "",
   y_lab = "",
@@ -123,8 +125,12 @@ Plot type-specific defaults are applied if set to \code{NULL}.}
 
 \item{plot_title}{plot title.}
 
-\item{plot_subtitle}{plot subtitle; if \code{NULL} numbers of all and complete
-observations are shown here.}
+\item{plot_subtitle}{plot subtitle; if \code{NULL} numbers of complete
+observations and, optionally, all observations (when \code{show_n_total = TRUE}),
+are shown here.}
+
+\item{show_n_total}{logical, should the number of all observations
+(complete and \code{NA}) be shown in the plot subtitle?}
 
 \item{x_txt}{text to be displayed in the X axis. Concerns stack, box,
 and violin plots.}

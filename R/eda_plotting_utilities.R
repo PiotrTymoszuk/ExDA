@@ -42,8 +42,11 @@
 #' Violin plots: should diamonds and whiskers representing median with
 #' interquartile range be displayed?
 #' @param plot_title plot title.
-#' @param plot_subtitle plot subtitle; if `NULL` numbers of all and complete
-#' observations are shown here.
+#' @param plot_subtitle plot subtitle; if `NULL` numbers of complete
+#' observations and, optionally, all observations (when `show_n_total = TRUE`),
+#' are shown here.
+#' @param show_n_total logical, should the number of all observations
+#' (complete and `NA`) be shown in the plot subtitle?
 #' @param x_txt text to be displayed in the X axis. Concerns stack, box,
 #' and violin plots.
 #' @param x_lab title of the X axis.
@@ -70,6 +73,7 @@
                           txt_hjust = NULL,
                           plot_title = NULL,
                           plot_subtitle = NULL,
+                          show_n_total = TRUE,
                           x_txt = "",
                           x_lab = "category", ...) {
 
@@ -101,6 +105,7 @@
 
     }
 
+    stopifnot(is.logical(show_n_total))
     stopifnot(is.logical(show_txt))
     show_txt <- show_txt[1]
 
@@ -112,8 +117,16 @@
 
     if(is.null(plot_subtitle)) {
 
-      plot_subtitle <- paste0("total: n = ", plot_data[["n_total"]][1],
-                              ", complete: n = ", plot_data[["n_complete"]][1])
+      if(show_n_total) {
+
+        plot_subtitle <- paste0("total: n = ", plot_data[["n_total"]][1],
+                                ", complete: n = ", plot_data[["n_complete"]][1])
+
+      } else {
+
+        plot_subtitle <- paste0("complete: n = ", plot_data[["n_complete"]][1])
+
+      }
 
     }
 
@@ -258,6 +271,7 @@
                            cust_theme = eda_classic_theme(),
                            plot_title = NULL,
                            plot_subtitle = NULL,
+                           show_n_total = TRUE,
                            x_txt = "",
                            x_lab = "",
                            y_lab = "",
@@ -298,14 +312,24 @@
 
     }
 
+    stopifnot(is.logical(show_n_total))
+
     ## plotting data and metadata ---------
 
     n_numbers <- nobs(eda_object)
 
     if(is.null(plot_subtitle)) {
 
-      plot_subtitle <- paste0("total: n = ", n_numbers[["n"]][1],
-                              ", complete: n = ", n_numbers[["n"]][2])
+      if(show_n_total) {
+
+        plot_subtitle <- paste0("total: n = ", n_numbers[["n"]][1],
+                                ", complete: n = ", n_numbers[["n"]][2])
+
+      } else {
+
+        plot_subtitle <- paste0("complete: n = ", n_numbers[["n"]][2])
+
+      }
 
     }
 
@@ -341,6 +365,24 @@
                     color = shape_color,
                     alpha = shape_alpha, ...)
 
+    }
+
+    if(!is.null(cust_theme)) num_plot <- num_plot + cust_theme
+
+    num_plot <- num_plot +
+      geom_point(position = position_jitter(width = point_wjitter,
+                                            height = point_hjitter),
+                 shape = 21,
+                 size = point_size,
+                 fill = point_color,
+                 alpha = point_alpha) +
+      labs(title = plot_title,
+           subtitle = plot_subtitle,
+           y = y_lab,
+           x = x_lab)
+
+    if(type == "violin") {
+
       if(show_stats) {
 
         num_plot <- num_plot +
@@ -364,19 +406,7 @@
 
     }
 
-    if(!is.null(cust_theme)) num_plot <- num_plot + cust_theme
-
-    num_plot +
-      geom_point(position = position_jitter(width = point_wjitter,
-                                            height = point_hjitter),
-                 shape = 21,
-                 size = point_size,
-                 fill = point_color,
-                 alpha = point_alpha) +
-      labs(title = plot_title,
-           subtitle = plot_subtitle,
-           y = y_lab,
-           x = x_lab)
+    num_plot
 
   }
 
