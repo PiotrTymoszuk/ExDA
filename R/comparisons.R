@@ -209,7 +209,7 @@
       pmap(list(fun = tst_fun[type],
                 vars = variables),
            function(fun, vars) safely(fun)(x = data[[vars]],
-                                           f = data[[split_factor]], ...))
+                                           f = data[[split_factor]]))
 
     results <- set_names(results, variables)
 

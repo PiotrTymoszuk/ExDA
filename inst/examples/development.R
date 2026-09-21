@@ -560,7 +560,20 @@
   compare_variables(my_cars,
                     variables = c("mpg", "cyl", "disp"),
                     type = "paired_wilcoxon",
-                    split_factor = "car_pair")
+                    split_factor = "car_pair",
+                    exact = TRUE)
+
+  compare_variables(my_cars,
+                    variables = c("mpg", "cyl", "disp"),
+                    type = "wilcoxon",
+                    split_factor = "car_pair",
+                    exact = FALSE)
+
+  compare_variables(my_cars,
+                    variables = c("mpg", "cyl", "disp"),
+                    type = "wilcoxon",
+                    split_factor = "car_pair",
+                    exact = TRUE)
 
   compare_variables(map_dfc(my_biopsy[, -1], as.numeric),
                     type = "welch_t",
