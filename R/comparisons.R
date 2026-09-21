@@ -354,7 +354,7 @@
                        estimate_name = estimate_names[[y]],
                        estimate = if("estimate" %in% names(x)) x[["estimate"]] else NA,
                        lower_ci = if("lower_ci" %in% names(x)) x[["lower_ci"]] else NA,
-                       upper_ci = if("lower_ci" %in% names(x)) x[["lower_ci"]] else NA,
+                       upper_ci = if("upper_ci" %in% names(x)) x[["upper_ci"]] else NA,
                        p_value = x[["p_value"]],
                        p_adjust_method = adj_method,
                        p_adjusted = x[["p_adjusted"]],
