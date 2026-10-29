@@ -153,7 +153,7 @@
 
       ## empty at the moment
 
-      data_lst <- split(x[, variables], x[[split_factor]])
+      data_lst <- split(x[, variables, drop = FALSE], x[[split_factor]])
 
       if(what == "list") {
 
@@ -208,7 +208,7 @@
 
     variable <- NULL
 
-    obj_lst <- map(x[, variables], eda, .drop = .drop)
+    obj_lst <- map(x[, variables, drop = FALSE], eda, .drop = .drop)
 
     ## splitting factor absent, list output ----------
 
